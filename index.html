@@ -4884,7 +4884,6 @@ const AF_EFEKT={golge:['Yumuşak gölge','text-shadow:.4mm .6mm 1.4mm rgba(0,0,0
 const AF_ANIM={belir:['Yumuşak belirme','1s','ease-out',0],yukari:['Aşağıdan yukarı kayarak','1s','ease-out',0],sol:['Soldan kayarak gel','1s','ease-out',0],yakin:['Yakınlaşarak gel','.9s','cubic-bezier(.2,1.4,.4,1)',0],ziplat:['Zıplayarak gel','1.2s','ease-out',0],daktilo:['Daktilo (soldan açılır)','1.4s','steps(24,end)',0],cevir:['Yatıp kalkarak gel','1s','ease-out',0],parilti:['Parıltı (sürekli)','2.4s','ease-in-out',1],nabiz:['Nabız (sürekli)','1.8s','ease-in-out',1],neon:['Neon titreşim (sürekli)','2.6s','linear',1],yuzer:['Havada süzül (sürekli)','2.6s','ease-in-out',1]};
 const AF_FORMAT={a4:{ad:'A4 (yazdırma / PDF)',h:297},story:{ad:'Story / Reels (9:16)',h:373.3},post:{ad:'Gönderi (4:5)',h:262.5}};
 const AF_ORTALI=['b1','b2','sbas','davet','kurum','marka','hedef'],AF_SATIRICI=['tarih','saat','yer','setik','sunum'];
-function afFormat(h){return AF_FORMAT[afDurum(h).fm]||AF_FORMAT.a4;}
 function afAnimCss(key,d,an){if(!an||!AF_ANIM[key])return '';const x=AF_ANIM[key];return 'animation:afk-'+key+' '+x[1]+' '+x[2]+(x[3]?' infinite':'')+' both;animation-delay:calc('+d+'s - var(--t,0s));';}
 const AF_ALTIN='#c9a227';
 const LOGO_VAKIF='data:image/jpeg;base64,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';
@@ -4939,7 +4938,7 @@ const AF_CSS='.afs-dis{box-sizing:border-box;background:#fff;}.afs-dis *{box-siz
  +'.afs-kutu.fotolu{text-align:left;justify-content:flex-start;}.afs-foto{flex:none;width:34mm;height:34mm;border-radius:50%;overflow:hidden;border:.9mm solid '+AF_ALTIN+';background:#fff;}.afs-foto img{width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block;}'
  +'.afs-mt{flex:1;min-width:0;}.afs-mt .konu{display:block;margin-bottom:2.5mm;line-height:1.25;overflow-wrap:anywhere;}'
  +'.afs-alt{text-align:center;}.afs-alt .davet{display:block;margin-bottom:2mm;}.afs-alt .kurum{display:block;letter-spacing:.4mm;text-transform:uppercase;}'
- +'.afs-sec{outline:2px dashed #fff;outline-offset:2px;}'
+ +'.afs-sec{outline:2px dashed #fff;outline-offset:2px;}.afs-ic.yat{flex-direction:row;column-gap:8mm!important;}.afs-k{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between;}'
  +'@keyframes afk-belir{from{opacity:0}to{opacity:1}}@keyframes afk-yukari{from{opacity:0;transform:translateY(8mm)}to{opacity:1;transform:none}}@keyframes afk-sol{from{opacity:0;transform:translateX(-14mm)}to{opacity:1;transform:none}}@keyframes afk-yakin{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}'
  +'@keyframes afk-ziplat{0%{opacity:0;transform:translateY(-12mm)}55%{opacity:1;transform:translateY(2.5mm)}75%{transform:translateY(-1.2mm)}100%{opacity:1;transform:none}}@keyframes afk-daktilo{from{clip-path:inset(-5mm 100% -5mm -5mm)}to{clip-path:inset(-5mm -5mm -5mm -5mm)}}@keyframes afk-cevir{from{opacity:0;transform:perspective(60mm) rotateX(90deg)}to{opacity:1;transform:none}}'
  +'@keyframes afk-parilti{0%,100%{filter:brightness(1)}50%{filter:brightness(1.7) drop-shadow(0 0 2mm rgba(255,235,150,.9))}}@keyframes afk-nabiz{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}@keyframes afk-neon{0%,18%,22%,60%,64%,100%{opacity:1}20%,62%{opacity:.35}}@keyframes afk-yuzer{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.6mm)}}'
@@ -4968,9 +4967,8 @@ function afLogolar(h,bolge){
   [1,2].forEach(i=>{const l=afLogoAyar(h,i),src=afLogoSrc(l),p=l.p.split('-');if(!src||p[0]!==bolge)return;z[p[1]]+='<span class="afs-logo" style="height:'+l.h+'mm;max-width:'+Math.round(l.h*2.6)+'mm;"><img src="'+kacir(src)+'" alt="Logo"></span>';});
   return z;
 }
-function afGorselStandart(h){const A=afDurum(h),W=Math.round((A.k==='t'?184:168)/25.4*150),H=Math.round(afSayi(A.gh,25,150,60)/25.4*150);return{w:W,h:H};}
-function afisSayfaHtml(h,onz,an,mmH){
-  const A=afDurum(h),a=id=>afAlan(h,id,onz,0,an),M=A.k==='t'?0:8;mmH=mmH||297;
+function afisSayfaHtml(h,onz,an,mmH,mmW){
+  const A=afDurum(h),a=id=>afAlan(h,id,onz,0,an),M=(A.k==='t'||afOlcu(h).px)?0:8;mmH=mmH||297;mmW=mmW||210;
   const bg1=/^#[0-9a-f]{6}$/i.test(A.bg1||'')?A.bg1:'#0b4a72',bg2=/^#[0-9a-f]{6}$/i.test(A.bg2||'')?A.bg2:'#073349',E=afEkstra(h,an,A,bg1,bg2);
   const g=afGorsel(h),fo=afFoto(h),LU=afLogolar(h,'ust'),LA=afLogolar(h,'alt'),gp=['bas','sem','alt'].includes(A.gp)?A.gp:'bas',fr=A.fp==='sag';
   const CZ=afCerceve(h),gh=String(afSayi(A.gh,25,150,60)),gm=['sigdir','doldur','oto'].includes(A.gm)?A.gm:'sigdir',slot=g?afGorselSlot(h,A,g,gh,gm,an):(onz?'<div class="afs-yer-tut" style="height:'+gh+'mm" onclick="event.stopPropagation();$(\'af-gorsel-dosya\').click()">🖼️ Konu görseli ekle<br>(isteğe bağlı)<br>önerilen '+afGorselStandart(h).w+'×'+afGorselStandart(h).h+' px</div>':'');
@@ -4984,29 +4982,31 @@ function afisSayfaHtml(h,onz,an,mmH){
   const igBlok=igOn&&qk!=='serbest'?igIc:'';
   const igSerbest=igOn&&qk==='serbest'?'<div class="afs-igs" style="position:absolute;left:'+afSayi(A.qx,0,100,50)+'%;top:'+afSayi(A.qy,0,100,88)+'%;transform:translate(-50%,-50%);z-index:3;'+(onz?'cursor:move;touch-action:none;':'')+'"'+(onz?' onpointerdown="afisSurukle(event)"':'')+'>'+igIc+'</div>':'';
   const hedefSat=A.hd===0?'':'<span class="hedef"'+a('hedef').attrX('display:block;margin-bottom:2mm;')+'>'+a('hedef').m+'</span>';
-  return '<div class="afs-dis'+E.cls+'"'+(an&&an.fr?' data-fr="1"':'')+' style="'+E.vars+'--t:'+(an&&an.fr?an.t:0)+'s;width:210mm;height:'+mmH+'mm;padding:'+M+'mm;"><div class="afs" style="padding:'+(CZ.on?Math.max(afSayi(A.ic,4,30,12),CZ.m+CZ.w+3):afSayi(A.ic,4,30,12))+'mm;background:'+E.bg+';">'+E.desen+(CZ.on?'<div style="position:absolute;left:'+CZ.m+'mm;top:'+CZ.m+'mm;right:'+CZ.m+'mm;bottom:'+CZ.m+'mm;border:'+CZ.w+'mm '+CZ.t+' '+CZ.c+';border-radius:'+CZ.r+'mm;pointer-events:none;"></div>':'')+'<div class="afs-ic" style="gap:'+afSayi(A.bo,0,16,4)+'mm;">'
-   +'<div class="afs-ust"><div class="afs-zon">'+['sol','orta','sag'].map(b=>'<div class="z '+b+'">'+LU[b]+'</div>').join('')+'</div><span class="afs-marka"'+a('marka').attr+'>'+a('marka').m+'</span></div>'
-   +'<div class="afs-bas"><div'+a('b1').attr+'>'+a('b1').m+'</div><div'+a('b2').attr+'>'+a('b2').m+'</div></div>'
-   +(bp==='ust'?bilgi:'')
-   +(gp==='bas'?slot:'')
-   +(bp==='orta'?bilgi:'')
-   +(gp==='sem'?slot:'')
-   +'<div><div class="afs-sbas"'+a('sbas').attr+'>'+a('sbas').m+'</div><div class="afs-kutu'+(fo?' fotolu':'')+'"'+(fo&&fr?' style="flex-direction:row-reverse;text-align:right;justify-content:flex-start;"':'')+'>'+(fo?'<div class="afs-foto" style="width:'+afSayi(A.fh,18,80,34)+'mm;height:'+afSayi(A.fh,18,80,34)+'mm;'+(E.fr?'border-radius:'+E.fr+';':'')+'"><img src="'+kacir(fo)+'" alt="Sunumcu"></div>':'')+'<div class="afs-mt"><span class="konu"'+a('konu').attr+'>'+a('konu').m+'</span><div><span'+a('setik').attr+'>'+a('setik').m+'</span> <span'+a('sunum').attr+'>'+a('sunum').m+'</span></div></div></div></div>'
-   +(bp==='alt'?bilgi:'')
-   +(gp==='alt'?slot:'')
-   +'<div class="afs-alt">'+hedefSat+igBlok+'<span class="davet"'+a('davet').attr+'>'+a('davet').m+'</span><span class="kurum"'+a('kurum').attr+'>'+a('kurum').m+'</span>'+((LA.sol+LA.orta+LA.sag)?'<div class="afs-zon alt">'+['sol','orta','sag'].map(b=>'<div class="z '+b+'">'+LA[b]+'</div>').join('')+'</div>':'')+'</div>'
-   +'</div>'+igSerbest+'</div></div>';
+  const ustH='<div class="afs-ust"><div class="afs-zon">'+['sol','orta','sag'].map(b=>'<div class="z '+b+'">'+LU[b]+'</div>').join('')+'</div><span class="afs-marka"'+a('marka').attr+'>'+a('marka').m+'</span></div>';
+  const basH='<div class="afs-bas"><div'+a('b1').attr+'>'+a('b1').m+'</div><div'+a('b2').attr+'>'+a('b2').m+'</div></div>';
+  const konuH='<div><div class="afs-sbas"'+a('sbas').attr+'>'+a('sbas').m+'</div><div class="afs-kutu'+(fo?' fotolu':'')+'"'+(fo&&fr?' style="flex-direction:row-reverse;text-align:right;justify-content:flex-start;"':'')+'>'+(fo?'<div class="afs-foto" style="width:'+afSayi(A.fh,18,80,34)+'mm;height:'+afSayi(A.fh,18,80,34)+'mm;'+(E.fr?'border-radius:'+E.fr+';':'')+'"><img src="'+kacir(fo)+'" alt="Sunumcu"></div>':'')+'<div class="afs-mt"><span class="konu"'+a('konu').attr+'>'+a('konu').m+'</span><div><span'+a('setik').attr+'>'+a('setik').m+'</span> <span'+a('sunum').attr+'>'+a('sunum').m+'</span></div></div></div></div>';
+  const altH='<div class="afs-alt">'+hedefSat+igBlok+'<span class="davet"'+a('davet').attr+'>'+a('davet').m+'</span><span class="kurum"'+a('kurum').attr+'>'+a('kurum').m+'</span>'+((LA.sol+LA.orta+LA.sag)?'<div class="afs-zon alt">'+['sol','orta','sag'].map(b=>'<div class="z '+b+'">'+LA[b]+'</div>').join('')+'</div>':'')+'</div>';
+  const yat=mmW>mmH*1.15,icGap=afSayi(A.bo,0,16,4);
+  const govde=yat?'<div class="afs-k" style="gap:'+icGap+'mm;">'+ustH+basH+slot+'</div><div class="afs-k" style="gap:'+icGap+'mm;">'+bilgi+konuH+altH+'</div>':ustH+basH+(bp==='ust'?bilgi:'')+(gp==='bas'?slot:'')+(bp==='orta'?bilgi:'')+(gp==='sem'?slot:'')+konuH+(bp==='alt'?bilgi:'')+(gp==='alt'?slot:'')+altH;
+  return '<div class="afs-dis'+E.cls+'"'+(an&&an.fr?' data-fr="1"':'')+(mmW/mmH<0.62||mmW/mmH>0.9?' data-up="1"':'')+' style="'+E.vars+'--t:'+(an&&an.fr?an.t:0)+'s;width:'+mmW+'mm;height:'+mmH+'mm;padding:'+M+'mm;"><div class="afs" style="padding:'+(CZ.on?Math.max(afSayi(A.ic,4,30,12),CZ.m+CZ.w+3):afSayi(A.ic,4,30,12))+'mm;background:'+E.bg+';">'+E.desen+(CZ.on?'<div style="position:absolute;left:'+CZ.m+'mm;top:'+CZ.m+'mm;right:'+CZ.m+'mm;bottom:'+CZ.m+'mm;border:'+CZ.w+'mm '+CZ.t+' '+CZ.c+';border-radius:'+CZ.r+'mm;pointer-events:none;"></div>':'')+'<div class="afs-ic'+(yat?' yat':'')+'" style="gap:'+icGap+'mm;">'+govde+'</div>'+igSerbest+'</div></div>';
 }
 function afisSigdir(kok){
   const ic=kok&&kok.querySelector('.afs-ic');if(!ic)return;
   ic.style.zoom='';
-  if(ic.scrollHeight>ic.clientHeight+1)ic.style.zoom=String(Math.max(.5,ic.clientHeight/ic.scrollHeight));
+  if(ic.scrollHeight>ic.clientHeight+1)ic.style.zoom=String(Math.max(.3,ic.clientHeight/ic.scrollHeight));
+  else{const d=ic.closest&&ic.closest('.afs-dis');
+    if(d&&d.hasAttribute('data-up')){
+      const nat=()=>{const cs=getComputedStyle(ic),g=parseFloat(cs.rowGap)||0,top=(el)=>{const k=Array.from(el.children);return k.reduce((t,c)=>t+c.offsetHeight,0)+g*Math.max(0,k.length-1);};
+        return ic.classList.contains('yat')?Math.max(...Array.from(ic.children).map(top)):top(ic);};
+      const H=ic.clientHeight;
+      if(nat()*1.15<H){let ok='';for(const z of [1.7,1.55,1.4,1.28,1.16]){ic.style.zoom=String(z);if(nat()<=ic.clientHeight*0.97){ok=String(z);break;}}ic.style.zoom=ok;}
+    }}
 }
 let afSecili='b1';
 function afisYenile(an){
   const h=afisHafta();if(!h)return;const kap=$('af-onz-kap');if(!kap)return;
-  const fm=afFormat(h);kap.innerHTML='<div id="af-onz" style="transform-origin:0 0;position:absolute;left:0;top:0;">'+afisSayfaHtml(h,seviye()>=2,an,fm.h)+'</div>';
-  const w=kap.clientWidth||400,k=w/793.7;kap.style.height=(w*fm.h/210)+'px';
+  const fm=afFormat(h);kap.style.maxWidth=fm.w>fm.h*1.15?'560px':'400px';kap.innerHTML='<div id="af-onz" style="transform-origin:0 0;position:absolute;left:0;top:0;">'+afisSayfaHtml(h,seviye()>=2,an,fm.h,fm.w)+'</div>';
+  const w=kap.clientWidth||400,k=w/(fm.w*96/25.4);kap.style.height=(w*fm.h/fm.w)+'px';
   const o=$('af-onz');o.style.transform='scale('+k+')';afisSigdir(o);afisSecIsaretle();
 }
 function afisHafta(){return haftalar.find(x=>x.id===window._afisId);}
@@ -5065,7 +5065,7 @@ async function afisResim(inp,tur){
       const d=afisResimKucult(im,420,420,.85,false);A.fo=d;
       const x=h.sunumcuId&&hListesi.find(y=>String(y.id)===String(h.sunumcuId));if(x){x.foto=d;yaz(LS.hoca,hListesi);}
     }else if(tur==='bg'){
-      A.bgi=afisResimKucult(im,1200,1700,.78,false);
+      A.bgi=afisResimKucult(im,1800,1800,.78,false);
     }else if(tur==='qr'){
       if(Math.abs(im.width/im.height-1)>.15&&!confirm('ℹ️ Karekod kare olmalı (1:1). Seçtiğiniz görselin oranı '+afOran(im.width,im.height)+'. Yine de eklensin mi?'))return;
       A.qr=afisResimKucult(im,420,420,.9,true);
@@ -5156,7 +5156,7 @@ function afisAc(id){
     +'<div class="form-alan form-genis"><label for="af-an">🎬 Hareket (video / story için)</label><select id="af-an" onchange="afisAlanDegis()"><option value="">Hareketsiz</option>'+Object.keys(AF_ANIM).map(k=>'<option value="'+k+'">'+AF_ANIM[k][0]+'</option>').join('')+'</select></div>'
     +'<div class="form-alan"><label for="af-ad">Başlama gecikmesi (sn, boş = otomatik)</label><input type="number" id="af-ad" min="0" max="20" step="0.1" oninput="afisAlanDegis()"></div></div>'
     +'<div class="form-butonlar"><button type="button" class="btn btn-gri btn-k" onclick="afisAlanSifirla()">↺ Bu yazıyı sıfırla</button></div></div>'
-    +'<div class="kart" style="padding:10px;margin:0 0 10px;"><b>🎬 Sosyal medya ve hareket</b><p class="alt-yazi" style="margin:4px 0 8px;">Biçimi seçin; önizleme ve “Resim / Video” o ölçüde üretilir. Yazdırma her zaman A4’tür.</p><div class="form-grid"><div class="form-alan"><label for="af-fm">Biçim</label><select id="af-fm" onchange="afisBicimDegis()">'+Object.keys(AF_FORMAT).map(k=>'<option value="'+k+'"'+((A.fm||'a4')===k?' selected':'')+'>'+AF_FORMAT[k].ad+'</option>').join('')+'</select></div><div class="form-alan"><label for="af-vs">Video süresi (sn)</label><select id="af-vs" onchange="afisBicimDegis()">'+[4,6,8,10,12,15,20,25,30].map(n=>'<option value="'+n+'"'+(afSayi(A.vs,4,30,6)===n?' selected':'')+'>'+n+'</option>').join('')+'</select></div></div>'+afisMuzikHtml(h,A)+'<p class="alt-yazi" style="margin:6px 0 4px;">Hazır hareket paketleri (yazılara toplu uygular):</p><div class="form-butonlar" style="margin-bottom:8px;"><button type="button" class="btn btn-altin btn-k" onclick="afisPaket(1)">🎞️ Sinema</button><button type="button" class="btn btn-altin btn-k" onclick="afisPaket(2)">⚡ Enerjik</button><button type="button" class="btn btn-altin btn-k" onclick="afisPaket(3)">✨ Şık</button><button type="button" class="btn btn-gri btn-k" onclick="afisPaket(0)">⛔ Hareketi kaldır</button></div><div class="form-butonlar"><button type="button" class="btn btn-mavi btn-k" onclick="afisOynat()">▶ Önizle</button><button type="button" class="btn btn-mavi btn-k" onclick="afisVideo()">🎬 Video üret / paylaş</button></div><p class="alt-yazi" style="margin:6px 0 0;">Video, tarayıcıda üretilir (MP4 desteklenmiyorsa WebM). Telefonda paylaşma menüsünden Instagram’a gönderebilirsiniz. Yazı tipleri cihazda kurulu olanlardır; başka cihazda aynı görünmeyebilir, bu yüzden resim/video üretip paylaşmak en güvenlisidir.</p></div>'
+    +''+afisOlcuKart(h,A)+'<div class="kart" style="padding:10px;margin:0 0 10px;"><b>🎬 Sosyal medya ve hareket</b><p class="alt-yazi" style="margin:4px 0 8px;">Video, yukarıda seçtiğiniz ölçüde üretilir (ör. 9:16 story için 1080 × 1920 oranı).</p><div class="form-grid"><div class="form-alan"><label for="af-vs">Video süresi (sn)</label><select id="af-vs" onchange="afisBicimDegis()">'+[4,6,8,10,12,15,20,25,30].map(n=>'<option value="'+n+'"'+(afSayi(A.vs,4,30,6)===n?' selected':'')+'>'+n+'</option>').join('')+'</select></div></div>'+afisMuzikHtml(h,A)+'<p class="alt-yazi" style="margin:6px 0 4px;">Hazır hareket paketleri (yazılara toplu uygular):</p><div class="form-butonlar" style="margin-bottom:8px;"><button type="button" class="btn btn-altin btn-k" onclick="afisPaket(1)">🎞️ Sinema</button><button type="button" class="btn btn-altin btn-k" onclick="afisPaket(2)">⚡ Enerjik</button><button type="button" class="btn btn-altin btn-k" onclick="afisPaket(3)">✨ Şık</button><button type="button" class="btn btn-gri btn-k" onclick="afisPaket(0)">⛔ Hareketi kaldır</button></div><div class="form-butonlar"><button type="button" class="btn btn-mavi btn-k" onclick="afisOynat()">▶ Önizle</button><button type="button" class="btn btn-mavi btn-k" onclick="afisVideo()">🎬 Video üret / paylaş</button></div><p class="alt-yazi" style="margin:6px 0 0;">Video, tarayıcıda üretilir (MP4 desteklenmiyorsa WebM). Telefonda paylaşma menüsünden Instagram’a gönderebilirsiniz. Yazı tipleri cihazda kurulu olanlardır; başka cihazda aynı görünmeyebilir, bu yüzden resim/video üretip paylaşmak en güvenlisidir.</p></div>'
     +'<div class="kart" style="padding:10px;margin:0 0 10px;"><b>▭ Dış çerçeve</b><div class="form-alan" style="margin-top:6px;"><label class="onay"><input type="checkbox" id="af-cz-on" onchange="afisCerceveDegis()"'+(afCerceve(h).on?' checked':'')+'> Çerçeve çiz</label></div><div class="form-grid">'
     +'<div class="form-alan"><label for="af-cz-w">Çizgi kalınlığı: <b id="af-cz-w-d">'+afCerceve(h).w+'</b> mm</label><input type="range" id="af-cz-w" min="0.2" max="6" step="0.1" value="'+afCerceve(h).w+'" oninput="afisCerceveDegis()"></div>'
     +'<div class="form-alan"><label for="af-cz-m">Kenardan uzaklık (çerçeve boyutu): <b id="af-cz-m-d">'+afCerceve(h).m+'</b> mm</label><input type="range" id="af-cz-m" min="1" max="25" step="1" value="'+afCerceve(h).m+'" oninput="afisCerceveDegis()"></div>'
@@ -5172,7 +5172,7 @@ function afisAc(id){
     +'<div class="form-butonlar"><button type="button" class="btn btn-gri btn-k" onclick="afisTumSifirla()">↺ Tüm ayarları sıfırla</button></div></div>'
     :'';
   const html='<div class="afis-grid"><div><div id="af-onz-kap" style="position:relative;width:100%;max-width:400px;overflow:hidden;border-radius:6px;box-shadow:0 2px 10px rgba(0,0,0,.25);"></div>'
-    +'<div class="form-butonlar" style="margin-top:10px;"><button type="button" class="btn btn-altin" '+oc('afisYazdir',h.id)+'>🖨️ Yazdır / PDF (A4)</button><button type="button" class="btn btn-mavi" onclick="afisPng()">🖼️ Resim olarak paylaş / indir</button></div></div><div>'
+    +''+afisCiktiPanel(h)+'</div><div>'
     +kontrol
     +'<h4 style="margin:12px 0 8px;">📋 Kopyala</h4>'
     +'<div class="kopyala-blok" id="af-prompt" style="max-height:200px;overflow:auto;"></div><button class="kopyala-btn altin" onclick="kopyalaBlok(\'af-prompt\')">🤖 AI Prompt Kopyala</button>'
@@ -5180,7 +5180,7 @@ function afisAc(id){
     +'<div class="kopyala-blok" id="af-instagram" style="max-height:180px;overflow:auto;"></div><button class="kopyala-btn" onclick="kopyalaBlok(\'af-instagram\')">📷 Instagram</button>'
     +'<div class="kopyala-blok" id="af-twitter" style="max-height:180px;overflow:auto;"></div><button class="kopyala-btn" onclick="kopyalaBlok(\'af-twitter\')">🐦 Twitter / X</button></div></div>';
   modalGoster('📢 '+h.no+'. Hafta – Afiş & Duyuru','Afişi düzenleyin, yazdırın veya resim olarak paylaşın',html);
-  afisMetinleriGuncelle(h);afisYenile();if(y)afisAlanDoldur();
+  afisMetinleriGuncelle(h);afisYenile();afisOlcuBilgiYaz();if(y)afisAlanDoldur();
 }
 function afisGuncelle(id){
   const h=haftalar.find(x=>x.id===id);if(!h||seviye()<2)return;
@@ -5190,28 +5190,22 @@ function afisGuncelle(id){
 }
 function afisYazdir(id){
   const h=haftalar.find(x=>x.id===id);if(!h)return;
-  const doc='<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><title>'+kacir(dosyaAdiYap(['Afiş'].concat(haftaDosyaParca(h))))+'</title><style>@page{size:A4;margin:0;}html,body{margin:0;padding:0;background:#fff;}*{-webkit-print-color-adjust:exact;print-color-adjust:exact;}'+AF_CSS+afFontCss(afFontKullanilan(h))+'</style></head><body>'+afisSayfaHtml(h,false)+'</body></html>';
+  const doc='<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><title>'+kacir(dosyaAdiYap(['Afiş'].concat(haftaDosyaParca(h))))+'</title><style>@page{size:'+(Math.round(afOlcu(h).wmm*100)/100)+'mm '+(Math.round(afOlcu(h).hmm*100)/100)+'mm;margin:0;}html,body{margin:0;padding:0;background:#fff;}*{-webkit-print-color-adjust:exact;print-color-adjust:exact;}'+AF_CSS+afFontCss(afFontKullanilan(h))+'</style></head><body><div style="width:'+(Math.round(afOlcu(h).wmm*100)/100)+'mm;height:'+(Math.round(afOlcu(h).hmm*100)/100)+'mm;overflow:hidden;"><div style="width:'+afOlcu(h).wd+'mm;height:'+afOlcu(h).hd+'mm;transform:scale('+(afOlcu(h).wmm/afOlcu(h).wd)+');transform-origin:0 0;">'+afisSayfaHtml(h,false,null,afOlcu(h).hd,afOlcu(h).wd)+'</div></div></body></html>';
   const w=window.open('','_blank');
   if(!w){const u=URL.createObjectURL(new Blob([doc],{type:'text/html'})),a=document.createElement('a');a.href=u;a.download=dosyaAdiYap(['Afiş'].concat(haftaDosyaParca(h)))+'.html';document.body.appendChild(a);a.click();a.remove();bildir('Açılır pencere engellendi; afiş dosya olarak indirildi. Açıp yazdırın.',5000);return;}
   w.document.write(doc);w.document.close();
   setTimeout(()=>{try{w.document.title=dosyaAdiYap(['Afiş'].concat(haftaDosyaParca(h)));afisSigdir(w.document.body);w.print();}catch(e){}},600);
 }
 function afisSvgKur(h,fm,an){
-  const tut=document.createElement('div');tut.style.cssText='position:fixed;left:-12000px;top:0;';const FU=afFontKullanilan(h),FC=FU.length?afFontCss(FU):'';tut.innerHTML='<style>'+AF_CSS+FC+'</style>'+afisSayfaHtml(h,false,an,fm.h);document.body.appendChild(tut);
+  const tut=document.createElement('div');tut.style.cssText='position:fixed;left:-12000px;top:0;';const FU=afFontKullanilan(h),FC=FU.length?afFontCss(FU):'';tut.innerHTML='<style>'+AF_CSS+FC+'</style>'+afisSayfaHtml(h,false,an,fm.h,fm.w);document.body.appendChild(tut);
   const dis=tut.querySelector('.afs-dis');dis.style.padding='0';afisSigdir(dis);
   const xml=new XMLSerializer().serializeToString(dis);document.body.removeChild(tut);
-  const W=794,H=Math.ceil(fm.h*96/25.4),ic='<style>'+AF_CSS+FC+'</style>'+xml.replace(/width: 210mm; height: [\d.]+mm;/,'width:'+W+'px;height:'+H+'px;');
+  const W=Math.round(fm.w*96/25.4),H=Math.ceil(fm.h*96/25.4),ic='<style>'+AF_CSS+FC+'</style>'+xml.replace(/width: [\d.]+mm; height: [\d.]+mm;/,'width:'+W+'px;height:'+H+'px;');
   return{W,H,mk:(k,t)=>'<svg xmlns="http://www.w3.org/2000/svg" width="'+Math.round(W*k)+'" height="'+Math.round(H*k)+'" viewBox="0 0 '+W+' '+H+'"><foreignObject width="'+W+'" height="'+H+'"><div xmlns="http://www.w3.org/1999/xhtml" lang="tr">'+(t===undefined?ic:ic.replace(/--t: [\d.]+s/,'--t: '+t+'s'))+'</div></foreignObject></svg>'};
 }
 function afisResimYukleSvg(svg){return new Promise((ok,no)=>{const im=new Image();im.onload=()=>ok(im);im.onerror=()=>no(new Error('Resim üretilemedi'));im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);});}
-async function afisBlobUret(h,fm,k){
-  fm=fm||AF_FORMAT.a4;k=k||2;const S=afisSvgKur(h,fm,null),svg=S.mk(k);
-  window._afSvg=svg;const im=await afisResimYukleSvg(svg);
-  const c=document.createElement('canvas');c.width=Math.round(S.W*k);c.height=Math.round(S.H*k);c.getContext('2d').drawImage(im,0,0);
-  const blob=await new Promise(ok=>c.toBlob(ok,'image/png'));if(!blob)throw new Error('Resim üretilemedi');
-  return{blob,ad:dosyaAdiYap(['Afiş'].concat(haftaDosyaParca(h)))+(fm===AF_FORMAT.a4?'':'-'+(h.afis&&h.afis.fm||'sosyal'))+'.png'};
-}
-function afisBicimDegis(){const h=afisHafta();if(!h||seviye()<2)return;const A=afDurum(h);A.fm=$('af-fm').value;A.vs=Number($('af-vs').value);haftaDepo();afisYenile();}
+async function afisBlobUret(h){const r=await afisRender(h,{tur:'png',kenar:1800});return{blob:r.blob,ad:r.ad};}
+function afisBicimDegis(){const h=afisHafta();if(!h||seviye()<2)return;const A=afDurum(h);A.vs=Number($('af-vs').value);haftaDepo();afisYenile();}
 let _afOyn=null;
 function afisOynat(){
   const h=afisHafta();if(!h)return;clearTimeout(_afOyn);afisYenile({on:1});
@@ -5241,7 +5235,7 @@ async function afisVideo(){
   if(mz&&mz.k==='dosya'&&!window._afMz){alert('⚠️ Önce “Müzik dosyası seç” ile bir müzik seçin ya da hazır müziklerden birini kullanın.');return;}
   _afVid=true;let ctxA=null;
   try{
-    const fm=afFormat(h),dur=afSayi(A.vs,4,30,6),k=720/794,S=afisSvgKur(h,fm,{on:1,fr:1,t:0});
+    const fm=afFormat(h),dur=afSayi(A.vs,4,30,6),S=afisSvgKur(h,fm,{on:1,fr:1,t:0}),k=1280/Math.max(1,Math.max(S.W,S.H));
     const c=document.createElement('canvas');c.width=Math.round(S.W*k/2)*2;c.height=Math.round(S.H*k/2)*2;const cx=c.getContext('2d');
     const kare=async t=>{const im=await afisResimYukleSvg(S.mk(k,t.toFixed(3)));cx.drawImage(im,0,0,c.width,c.height);};
     await kare(0);await kare(0);
@@ -5262,20 +5256,171 @@ async function afisVideo(){
     while((performance.now()-t0)/1000<dur)await kare(Math.min(dur,(performance.now()-t0)/1000));
     await kare(dur);await new Promise(r=>setTimeout(r,500));rec.stop();await bitti;
     if(ctxA){try{ctxA.close().catch(function(){});}catch(e){}}
-    const tip=(rec.mimeType||mime||'video/webm').split(';')[0],uz=tip.includes('mp4')?'mp4':'webm',blob=new Blob(parca,{type:tip}),ad=dosyaAdiYap(['Afiş'].concat(haftaDosyaParca(h)))+'-'+(A.fm||'a4')+'.'+uz,f=new File([blob],ad,{type:tip});
+    const tip=(rec.mimeType||mime||'video/webm').split(';')[0],uz=tip.includes('mp4')?'mp4':'webm',blob=new Blob(parca,{type:tip}),ad=dosyaAdiYap(['Afiş'].concat(haftaDosyaParca(h)))+'-'+afOlcuEtiket(afOlcu(h))+'.'+uz,f=new File([blob],ad,{type:tip});
     window._afVideoSon={boyut:blob.size,tip,ad,sesli:!!dest};
     if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:'Afiş videosu'});return;}catch(e){if(e&&e.name==='AbortError')return;}}
     const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=ad;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),8000);bildir('✅ Video indirildi ('+uz.toUpperCase()+(dest?', müzikli':'')+')'+(uz==='webm'?' – Instagram MP4 ister; telefonda paylaş menüsünü deneyin':''),6000);
   }catch(e){console.log('AFVID',e&&e.message);alert('⚠️ Video üretilemedi: '+(e&&e.message||'bilinmeyen hata'));}
   finally{_afVid=false;if(ctxA){try{ctxA.close().catch(function(){});}catch(e){}}}
 }
-async function afisPng(){
-  const h=afisHafta();if(!h)return;
+async function afisPng(){afisCikti('indir','png');}
+
+/* ====== Afiş ölçüleri (davetiye / baskı / sosyal medya / özel) ve çıktı biçimleri (PDF • PNG • JPEG • BMP • WebP) • WhatsApp paylaşımı ====== */
+const AF_OLCU={
+  d12x17:['Davetiye','12 × 17 cm — klasik davetiye',120,170,'mm'],
+  a6:['Davetiye','10,5 × 14,8 cm — A6 (kompakt)',105,148,'mm'],
+  a5:['Davetiye','14,8 × 21 cm — A5 (geniş içerik)',148,210,'mm'],
+  dl:['Davetiye','10 × 21 cm — DL / uzun (zarif)',100,210,'mm'],
+  uzun7:['Davetiye','7 × 21 cm — ince uzun',70,210,'mm'],
+  k12:['Kare davetiye','12 × 12 cm',120,120,'mm'],
+  k14:['Kare davetiye','14 × 14 cm',140,140,'mm'],
+  k15:['Kare davetiye','15 × 15 cm — lüks / kutu davetiye',150,150,'mm'],
+  k17:['Kare davetiye','17 × 17 cm',170,170,'mm'],
+  k20:['Kare davetiye','20 × 20 cm',200,200,'mm'],
+  a4:['Afiş / baskı','A4 — 21 × 29,7 cm',210,297,'mm'],
+  a3:['Afiş / baskı','A3 — 29,7 × 42 cm',297,420,'mm'],
+  p50:['Afiş / baskı','50 × 70 cm — büyük afiş',500,700,'mm'],
+  story:['Sosyal medya','Story / Reels / WhatsApp durumu — 1080 × 1920 px (9:16)',1080,1920,'px'],
+  post:['Sosyal medya','Instagram gönderi — 1080 × 1350 px (4:5)',1080,1350,'px'],
+  kare1080:['Sosyal medya','Instagram kare — 1080 × 1080 px (1:1)',1080,1080,'px'],
+  yatay16:['Sosyal medya','Yatay ekran / YouTube — 1920 × 1080 px (16:9)',1920,1080,'px'],
+  fb1200:['Sosyal medya','Facebook / X / LinkedIn bağlantı görseli — 1200 × 630 px',1200,630,'px']
+};
+const AF_OLCU_GRUP=['Davetiye','Kare davetiye','Afiş / baskı','Sosyal medya'];
+const AF_CIKTI={pdf:['PDF','application/pdf','pdf'],png:['PNG (en net, şeffaflık yok)','image/png','png'],jpg:['JPEG (küçük dosya, WhatsApp için ideal)','image/jpeg','jpg'],bmp:['BMP (sıkıştırmasız)','image/bmp','bmp'],webp:['WebP (modern, çok küçük)','image/webp','webp']};
+function afMmBirim(v,b){return b==='cm'?v*10:(b==='px'?v*25.4/96:v);}
+/* seçili ölçüyü çözer: fiziksel boyut, tasarım tuvali (mm) ve varsayılan piksel */
+function afOlcu(h){
+  const A=afDurum(h);let id=A.fm,w,hh,px,ad,grup;
+  if(id==='ozel'){
+    const b=['cm','mm','px'].includes(A.ob)?A.ob:'cm',lo=b==='px'?100:20,hi=b==='px'?8000:2000;
+    const ow=afSayi(A.ow,0,1e5,b==='px'?1080:12),oh=afSayi(A.oh,0,1e5,b==='px'?1350:17);
+    const kw=Math.min(hi,Math.max(b==='px'?lo:b==='cm'?2:lo,ow)),kh=Math.min(hi,Math.max(b==='px'?lo:b==='cm'?2:lo,oh));
+    px=b==='px';w=px?kw:afMmBirim(kw,b);hh=px?kh:afMmBirim(kh,b);
+    ad='Özel — '+String(kw).replace('.',',')+' × '+String(kh).replace('.',',')+' '+b;grup='Özel';
+  }else{
+    const o=AF_OLCU[id]||AF_OLCU.a4;if(!AF_OLCU[id])id='a4';px=o[4]==='px';w=o[2];hh=o[3];ad=o[1];grup=o[0];
+  }
+  const asp=w/hh,wd=asp>1.15?297:(asp<0.45?150:210),hd=wd/asp;
+  return{id,ad,grup,px,wmm:px?w*25.4/96:w,hmm:px?hh*25.4/96:hh,w,h:hh,wd,hd,asp};
+}
+function afFormat(h){const o=afOlcu(h);return{ad:o.ad,w:o.wd,h:o.hd};}
+function afOlcuEtiket(o){return o.px?o.w+'x'+o.h+'px':(Math.round(o.wmm)/10)+'x'+(Math.round(o.hmm)/10)+'cm';}
+function afDpi(h){const d=Number(afDurum(h).dpi);return[96,150,200,300].includes(d)?d:150;}
+/* çıktı pikseli: sosyal medya = sabit; baskı = ölçü × çözünürlük (kenar sınırı 8000 px) */
+function afCiktiPx(o,dpi,kenar){
+  let w=o.px?o.w:o.wmm/25.4*dpi,hh=o.px?o.h:o.hmm/25.4*dpi;
+  if(kenar){const k=kenar/Math.max(w,hh);w*=k;hh*=k;}
+  const s=Math.min(1,8000/Math.max(w,hh),Math.sqrt(36e6/(w*hh)));
+  return{w:Math.max(2,Math.round(w*s)),h:Math.max(2,Math.round(hh*s)),kucuk:s<1};
+}
+/* arka plan görseli için önerilen piksel */
+function afArkaOneri(h){const o=afOlcu(h),p=afCiktiPx(o,150);return p.w+' × '+p.h+' px';}
+function afGorselStandart(h){
+  const A=afDurum(h),o=afOlcu(h),yat=o.wd>o.hd*1.15,kw=(A.k==='t'?o.wd-26:o.wd-42)*(yat?.5:1);
+  return{w:Math.round(kw/25.4*150),h:Math.round(afSayi(A.gh,25,150,60)/25.4*150)};
+}
+/* ---------- ölçü kartı ---------- */
+function afisOlcuKart(h,A){
+  const o=afOlcu(h),dpi=afDpi(h),opt=AF_OLCU_GRUP.map(g=>'<optgroup label="'+g+'">'+Object.keys(AF_OLCU).filter(k=>AF_OLCU[k][0]===g).map(k=>'<option value="'+k+'"'+(o.id===k?' selected':'')+'>'+AF_OLCU[k][1]+'</option>').join('')+'</optgroup>').join('')+'<option value="ozel"'+(o.id==='ozel'?' selected':'')+'>✏️ Özel ölçü (elle gir)</option>';
+  const ob=o.id==='ozel'&&['cm','mm','px'].includes(A.ob)?A.ob:'cm';
+  return'<div class="kart" style="padding:10px;margin:0 0 10px;"><b>📐 Afiş ölçüsü</b><p class="alt-yazi" style="margin:4px 0 8px;">Ölçüyü seçin; yerleşim, arka plan ve yazılar o ölçüye göre kendiliğinden uyarlanır. Önizleme, PDF ve resim çıktıları seçilen ölçüde üretilir.</p>'
+   +'<div class="form-alan"><label for="af-ol">Hazır ölçüler</label><select id="af-ol" onchange="afisOlcuSec()">'+opt+'</select></div>'
+   +'<div id="af-ol-ozel" style="'+(o.id==='ozel'?'':'display:none;')+'"><div class="form-grid"><div class="form-alan"><label for="af-ow">Genişlik</label><input type="number" id="af-ow" min="1" step="0.1" value="'+(o.id==='ozel'?(ob==='px'?o.w:ob==='cm'?Math.round(o.wmm)/10:Math.round(o.wmm*10)/10):12)+'" oninput="afisOlcuOzel()"></div>'
+   +'<div class="form-alan"><label for="af-oh">Yükseklik</label><input type="number" id="af-oh" min="1" step="0.1" value="'+(o.id==='ozel'?(ob==='px'?o.h:ob==='cm'?Math.round(o.hmm)/10:Math.round(o.hmm*10)/10):17)+'" oninput="afisOlcuOzel()"></div>'
+   +'<div class="form-alan"><label for="af-ob">Birim</label><select id="af-ob" onchange="afisOlcuOzel(1)"><option value="cm"'+(ob==='cm'?' selected':'')+'>cm</option><option value="mm"'+(ob==='mm'?' selected':'')+'>mm</option><option value="px"'+(ob==='px'?' selected':'')+'>piksel (px)</option></select></div>'
+   +'<div class="form-alan"><label>&nbsp;</label><button type="button" class="btn btn-gri btn-k" onclick="afisOlcuCevir()">🔄 Yönü çevir (dikey ↔ yatay)</button></div></div></div>'
+   +'<details style="margin-top:6px;"><summary class="alt-yazi" style="cursor:pointer;">İpuçları</summary><ul class="alt-yazi" style="margin:4px 0 0;padding-left:18px;"><li><b>Zarf uyumu:</b> Özel ölçü seçmeden önce o ölçüye uygun hazır zarf olup olmadığına bakın; standart dışı ölçü zarf maliyetini artırır.</li><li><b>Dijital paylaşım:</b> Telefon ve sosyal medya için dikey 1080 × 1920 px (9:16) önerilir.</li><li>Matbaa için PDF’i 300 dpi seçerek indirin; WhatsApp için JPEG yeterlidir.</li><li>Çok ince-uzun (7 × 21 cm) ya da yatay ölçülerde yazılar kendiliğinden küçülür veya iki sütuna dizilir.</li></ul></details></div>';
+}
+function afisOlcuBilgiYaz(){
+  const h=afisHafta(),k=$('af-ol-bilgi');if(!h||!k)return;
+  const o=afOlcu(h),dpi=afDpi(h),p=afCiktiPx(o,dpi),oran=afOran(Math.round(o.w*10),Math.round(o.h*10));
+  k.innerHTML='Seçili: <b>'+kacir(o.ad)+'</b> • oran '+oran+(o.px?'':' • '+dpi+' dpi')+' → çıktı <b>'+p.w+' × '+p.h+' px</b>'+(p.kucuk?' <span class="chip uyari">çok büyük; sınıra indirildi</span>':'')+(o.px?'':' • PDF sayfa boyutu '+(Math.round(o.wmm*10)/10)+' × '+(Math.round(o.hmm*10)/10)+' mm')+'<br>Önerilen arka plan görseli: <b>'+afArkaOneri(h)+'</b> (daha büyük olabilir, oran bozulmadan kaplanır).';
+}
+function afisOlcuSec(){
+  const h=afisHafta();if(!h||seviye()<2)return;const A=afDurum(h),v=$('af-ol').value;A.fm=v;
+  if(v==='ozel'){const o=afOlcu(h);if(A.ow===undefined){A.ow=12;A.oh=17;A.ob='cm';}}
+  haftaDepo();const oz=$('af-ol-ozel');if(oz)oz.style.display=v==='ozel'?'':'none';afisYenile();afisOlcuBilgiYaz();
+}
+function afisOlcuOzel(birimDegisti){
+  const h=afisHafta();if(!h||seviye()<2)return;const A=afDurum(h);
+  if(birimDegisti){const eski=A.ob||'cm',yeni=$('af-ob').value,mm=x=>afMmBirim(x,eski),don=(x)=>yeni==='px'?Math.round(x*96/25.4):yeni==='cm'?Math.round(x)/10:Math.round(x*10)/10;
+    const w0=Number($('af-ow').value)||12,h0=Number($('af-oh').value)||17;$('af-ow').value=don(mm(w0));$('af-oh').value=don(mm(h0));}
+  A.fm='ozel';A.ow=Number($('af-ow').value)||12;A.oh=Number($('af-oh').value)||17;A.ob=$('af-ob').value;
+  haftaDepo();afisYenile();afisOlcuBilgiYaz();
+}
+function afisOlcuCevir(){
+  const h=afisHafta();if(!h||seviye()<2)return;const A=afDurum(h),o=afOlcu(h);
+  if(A.fm!=='ozel'){A.ob=o.px?'px':'cm';A.ow=o.px?o.h:Math.round(o.hmm)/10;A.oh=o.px?o.w:Math.round(o.wmm)/10;A.fm='ozel';}
+  else{const t=A.ow;A.ow=A.oh;A.oh=t;}
+  haftaDepo();afisAc(h.id);
+}
+function afisCiktiAyar(){
+  const h=afisHafta();if(!h)return;const A=afDurum(h),ct=$('af-ct')?$('af-ct').value:'jpg',dpi=Number($('af-dpi')?$('af-dpi').value:150)||150;
+  if(seviye()>=2){A.ct=ct;A.dpi=dpi;haftaDepo();}else{A.ct=ct;A.dpi=dpi;}
+  afisOlcuBilgiYaz();
+}
+function afisCiktiPanel(h){
+  const A=afDurum(h),ct=AF_CIKTI[A.ct]?A.ct:'jpg',dpi=afDpi(h);
+  return'<div class="kart" style="padding:10px;margin:10px 0 0;"><b>⬇️ İndir ve paylaş</b>'
+   +'<div class="form-grid" style="margin-top:6px;"><div class="form-alan"><label for="af-ct">Dosya biçimi</label><select id="af-ct" onchange="afisCiktiAyar()">'+Object.keys(AF_CIKTI).map(k=>'<option value="'+k+'"'+(ct===k?' selected':'')+'>'+AF_CIKTI[k][0]+'</option>').join('')+'</select></div>'
+   +'<div class="form-alan"><label for="af-dpi">Baskı çözünürlüğü</label><select id="af-dpi" onchange="afisCiktiAyar()">'+[[96,'96 dpi — ekran / hızlı'],[150,'150 dpi — iyi (önerilen)'],[200,'200 dpi — çok iyi'],[300,'300 dpi — matbaa']].map(x=>'<option value="'+x[0]+'"'+(dpi===x[0]?' selected':'')+'>'+x[1]+'</option>').join('')+'</select></div></div>'
+   +'<div id="af-ol-bilgi" class="alt-yazi" style="margin:4px 0 8px;"></div>'
+   +'<div class="form-butonlar"><button type="button" class="btn btn-mavi" onclick="afisCikti(\'indir\')">⬇️ İndir</button><button type="button" class="btn btn-yesil" onclick="afisCikti(\'whatsapp\')" style="background:#1f9d55;color:#fff;">💬 WhatsApp’ta paylaş</button></div>'
+   +'<div class="form-butonlar" style="margin-top:6px;">'+['pdf','png','jpg','bmp','webp'].map(k=>'<button type="button" class="btn btn-gri btn-k" onclick="afisCikti(\'indir\',\''+k+'\')">'+k.toUpperCase().replace('JPG','JPEG')+'</button>').join('')+'<button type="button" class="btn btn-altin btn-k" '+oc('afisYazdir',h.id)+'>🖨️ Yazdır</button></div>'
+   +'<p class="alt-yazi" style="margin:6px 0 0;">Telefonda “WhatsApp’ta paylaş” paylaşım menüsünü açar; kişi veya grubu orada seçersiniz. Bilgisayarda dosya indirilir ve WhatsApp Web açılır, dosyayı sohbete sürükleyin.</p></div>';
+}
+/* ---------- üretim ---------- */
+function afBmpUret(c){
+  const w=c.width,hh=c.height,d=c.getContext('2d').getImageData(0,0,w,hh).data,row=(w*3+3)&~3,size=54+row*hh,buf=new ArrayBuffer(size),dv=new DataView(buf),u=new Uint8Array(buf);
+  dv.setUint16(0,0x4d42,true);dv.setUint32(2,size,true);dv.setUint32(10,54,true);dv.setUint32(14,40,true);dv.setInt32(18,w,true);dv.setInt32(22,hh,true);dv.setUint16(26,1,true);dv.setUint16(28,24,true);dv.setUint32(34,row*hh,true);dv.setInt32(38,2835,true);dv.setInt32(42,2835,true);
+  for(let y=0;y<hh;y++){let o=54+row*(hh-1-y),s=y*w*4;for(let x=0;x<w;x++){u[o++]=d[s+2];u[o++]=d[s+1];u[o++]=d[s];s+=4;}}
+  return new Blob([buf],{type:'image/bmp'});
+}
+function afPdfUret(jpg,pw,ph,wmm,hmm,baslik){
+  const enc=new TextEncoder(),W=(wmm/25.4*72).toFixed(2),H=(hmm/25.4*72).toFixed(2),parca=[],ofs=[];let n=0;
+  const it=b=>{parca.push(b);n+=b.length;},st=s=>it(enc.encode(s));
+  it(new Uint8Array([37,80,68,70,45,49,46,52,10,37,226,227,207,211,10]));
+  const nesne=(no,g)=>{ofs[no]=n;st(no+' 0 obj\n'+g+'\nendobj\n');};
+  nesne(1,'<< /Type /Catalog /Pages 2 0 R >>');nesne(2,'<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
+  nesne(3,'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+W+' '+H+'] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>');
+  ofs[4]=n;st('4 0 obj\n<< /Type /XObject /Subtype /Image /Width '+pw+' /Height '+ph+' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+jpg.length+' >>\nstream\n');it(jpg);st('\nendstream\nendobj\n');
+  const ic='q '+W+' 0 0 '+H+' 0 0 cm /Im0 Do Q';nesne(5,'<< /Length '+ic.length+' >>\nstream\n'+ic+'\nendstream');
+  const t='<< /Title ('+String(baslik||'Afiş').replace(/[^\x20-\x7e]/g,'').replace(/[()\\]/g,'')+') /Producer (Medeniyet Vakfi Ankara) >>';nesne(6,t);
+  const xr=n;st('xref\n0 7\n0000000000 65535 f \n');for(let i=1;i<=6;i++)st(String(ofs[i]).padStart(10,'0')+' 00000 n \n');
+  st('trailer\n<< /Size 7 /Root 1 0 R /Info 6 0 R >>\nstartxref\n'+xr+'\n%%EOF\n');
+  return new Blob(parca,{type:'application/pdf'});
+}
+/* ana üretici: {tur:'png'|'jpg'|'bmp'|'webp'|'pdf', dpi, kenar} → {blob,ad,pw,ph} */
+async function afisRender(h,opt){
+  opt=opt||{};const tur=AF_CIKTI[opt.tur]?opt.tur:'png',o=afOlcu(h),dpi=opt.dpi||afDpi(h),px=afCiktiPx(o,tur==='pdf'?Math.max(dpi,150):dpi,opt.kenar);
+  const S=afisSvgKur(h,{w:o.wd,h:o.hd},null),k=px.w/S.W,svg=S.mk(k);window._afSvg=svg;
+  const im=await afisResimYukleSvg(svg),c=document.createElement('canvas');c.width=px.w;c.height=px.h;const cx=c.getContext('2d');
+  cx.fillStyle='#fff';cx.fillRect(0,0,px.w,px.h);cx.drawImage(im,0,0,px.w,px.h);
+  const ad=dosyaAdiYap(['Afiş'].concat(haftaDosyaParca(h)).concat([afOlcuEtiket(o)]))+'.'+AF_CIKTI[tur][2];let blob;
+  if(tur==='bmp'){if(px.w*px.h>25e6)throw new Error('BMP için ölçü çok büyük; çözünürlüğü düşürün veya PNG/JPEG seçin.');blob=afBmpUret(c);}
+  else if(tur==='pdf'){const jb=await new Promise(ok=>c.toBlob(ok,'image/jpeg',.93));if(!jb)throw new Error('PDF üretilemedi');blob=afPdfUret(new Uint8Array(await jb.arrayBuffer()),px.w,px.h,o.wmm,o.hmm,ad.replace(/\.pdf$/,''));}
+  else{blob=await new Promise(ok=>c.toBlob(ok,AF_CIKTI[tur][1],tur==='jpg'?.93:tur==='webp'?.92:undefined));if(!blob||(tur==='webp'&&blob.type!=='image/webp'))throw new Error(tur==='webp'?'Bu tarayıcı WebP üretemiyor; PNG veya JPEG seçin.':'Resim üretilemedi');}
+  return{blob,ad,pw:px.w,ph:px.h};
+}
+function afIndir(blob,ad){const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=ad;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),8000);}
+let _afCikti=false;
+async function afisCikti(mod,tur){
+  const h=afisHafta();if(!h||_afCikti)return;
+  tur=tur||($('af-ct')?$('af-ct').value:afDurum(h).ct)||'jpg';const dpi=Number($('af-dpi')?$('af-dpi').value:0)||afDpi(h);
+  _afCikti=true;
   try{
-    const fm=afFormat(h),{blob,ad}=await afisBlobUret(h,fm,fm===AF_FORMAT.a4?2:1080/794),f=new File([blob],ad,{type:'image/png'});
-    if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:'Afiş'});return;}catch(e){if(e&&e.name==='AbortError')return;}}
-    const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=ad;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),8000);bildir('✅ Afiş resmi indirildi');
-  }catch(e){console.log('AFPNG',e&&e.message);alert('⚠️ Resim oluşturulamadı. “Yazdır / PDF” seçeneğiyle PDF olarak kaydedebilirsiniz.');}
+    bildir('⏳ '+AF_CIKTI[tur][2].toUpperCase()+' hazırlanıyor…',2500);
+    const r=await afisRender(h,{tur,dpi}),f=new File([r.blob],r.ad,{type:r.blob.type});
+    const metin=($('af-whatsapp')&&$('af-whatsapp').textContent||'').trim();
+    if(mod==='whatsapp'){
+      if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],text:metin,title:'Afiş'});return;}catch(e){if(e&&e.name==='AbortError')return;}}
+      afIndir(r.blob,r.ad);bildir('✅ Dosya indirildi. WhatsApp açılıyor; indirilen dosyayı sohbete ekleyin.',6000);
+      try{window.open('https://wa.me/?text='+encodeURIComponent(metin.slice(0,1500)),'_blank');}catch(e){}return;
+    }
+    afIndir(r.blob,r.ad);bildir('✅ '+AF_CIKTI[tur][2].toUpperCase()+' indirildi ('+r.pw+' × '+r.ph+' px, '+Math.max(1,Math.round(r.blob.size/1024))+' KB)',5000);
+  }catch(e){console.log('AFCIKTI',e&&e.message);alert('⚠️ '+(e&&e.message?e.message:'Çıktı oluşturulamadı')+'\n\nİpucu: çözünürlüğü düşürmeyi veya başka bir biçim seçmeyi deneyin.');}
+  finally{_afCikti=false;}
 }
 
 /* ====== İhtisas v2: gruplar (kaydırmalı) → dersler (6 haftalık) → oturum, hoca, kitap, ödev, yoklama, değerlendirme, mesaj, rapor ====== */
