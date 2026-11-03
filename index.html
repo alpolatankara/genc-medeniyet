@@ -2208,6 +2208,36 @@ function mesajMetin(k,h){
   const d=Object.assign({},$('ms-sablon')&&$('ms-sablon').value==='talimat'&&typeof talimatDegisken==='function'?talimatDegisken(k,h):{},{ad:k.hoca?String(k.ad||'').trim():hitap(k.ad),tarih:h.ay?h.tarih:h.tarih.replace(/ \S+$/,''),gun:GUNLER[haftaGunu(h.iso)],saat:SAAT,yer:YER,konu:h.seminerKonu||'Belirlenecek',sunumcu:h.seminerSunumcu||'Belirlenecek',menu:h.menu||'',cevap_link:cevapLinkiHazir(h,k),anket_link:anketLinkiHazir(h,k)});
   return $('ms-metin').value.replace(/\{(\w+)\}/g,(m,a)=>Object.prototype.hasOwnProperty.call(d,a)?d[a]:m);
 }
+
+/* ---- bağlantı kısaltma (TinyURL, Apps Script üzerinden) ---- */
+const LS_KISA='mv_kisalt';let _kisa=null,_kisaBek=[],_kisaT=null,_kisaKapali=false;const _kisaP={},_kisaDene={};
+function kisaOku(){if(_kisa)return _kisa;try{const d=JSON.parse(localStorage.getItem(LS_KISA)||'{}');_kisa=(d&&typeof d==='object'&&!Array.isArray(d))?d:{};}catch(e){_kisa={};}return _kisa;}
+function kisaYaz(){try{const k=Object.keys(_kisa);if(k.length>600)k.slice(0,k.length-500).forEach(x=>delete _kisa[x]);localStorage.setItem(LS_KISA,JSON.stringify(_kisa));}catch(e){}}
+function linkSon(u){const k=kisaOku();return k[u]||u;}
+function kisaIste(u){
+  kisaOku();if(!/^https:\/\/script\.google\.com\//.test(u)||_kisa[u]||_kisaDene[u]||_kisaKapali)return Promise.resolve();
+  if(_kisaP[u])return _kisaP[u];
+  return _kisaP[u]=new Promise(ok=>{_kisaBek.push({u,ok});clearTimeout(_kisaT);_kisaT=setTimeout(kisaGonder,40);});
+}
+async function kisaGonder(){
+  const B=_kisaBek.splice(0);
+  for(let i=0;i<B.length;i+=20){
+    const parca=B.slice(i,i+20),us=Array.from(new Set(parca.map(x=>x.u)));
+    try{const r=await sunucu({a:'kisalt',u:us},60000);
+      if(r&&r.ok&&r.k){Object.keys(r.k).forEach(x=>{_kisa[x]=r.k[x];});const bas=us.filter(x=>!r.k[x]).length;if(bas)bildir('🔗 '+bas+' bağlantı kısaltılamadı (uzun link kullanılır). '+((r.d||[]).join(' | ')||''),9000);}
+      else if(r&&r.hata==='bilinmeyen'){_kisaKapali=true;bildir('🔗 Bağlantı kısaltma için Apps Script kodunu yeniden dağıtmanız gerekiyor (Dağıt → Dağıtımları yönet → Yeni sürüm).',9000);}
+      else bildir('🔗 Kısaltma yanıtı alınamadı: '+((r&&r.hata)||'bilinmiyor'),7000);
+    }catch(e){bildir('🔗 Kısaltma servisine ulaşılamadı: '+String(e&&e.message||e).slice(0,80),7000);}
+    parca.forEach(x=>{_kisaDene[x.u]=1;delete _kisaP[x.u];x.ok();});
+  }
+  kisaYaz();
+}
+function kisaGerek(h,k){
+  const mt=($('ms-metin')||{}).value||'',L=[];
+  if(/\{cevap_link\}/.test(mt))L.push(cevapLinkiHazir(h,k,1));
+  if(/\{anket_link\}/.test(mt))L.push(anketLinkiHazir(h,k,1));
+  return L.filter(u=>/^https:\/\/script\.google\.com\//.test(u));
+}
 const _cl={};
 const _al={};
 const _sl={},_ml={};
@@ -2223,14 +2253,14 @@ function anketRev(tip,h,k){
 }
 function linkVar(h,k){
   const c=senkCfg(),sb=($('ms-sablon')||{}).value,tip=sb==='surec'?'s':(sb==='aylik'?'m':'q'),an=c.url+'|'+h.id+'|'+k.id;
-  return !!(_cl[an+'|'+mesajFlag()]&&(tip==='s'?_sl:(tip==='m'?_ml:_al))[an+'|'+anketRev(tip,h,k)+'|'+mesajFlag()]);
+  return !!(_cl[an+'|'+mesajFlag()]&&(tip==='s'?_sl:(tip==='m'?_ml:_al))[an+'|'+anketRev(tip,h,k)+'|'+mesajFlag()])&&kisaGerek(h,k).every(u=>kisaOku()[u]||_kisaDene[u]||_kisaKapali);
 }
-function anketLinkiHazir(h,k){
+function anketLinkiHazir(h,k,ham){
   const c=senkCfg(),sb=($('ms-sablon')||{}).value,tip=sb==='surec'?'s':(sb==='aylik'?'m':'q');
   const a=(tip==='s'?_sl:(tip==='m'?_ml:_al))[(c?c.url:'')+'|'+h.id+'|'+k.id+'|'+anketRev(tip,h,k)+'|'+mesajFlag()];
-  return a?a+mesajLogoParam()+(tip==='m'&&/^ay-/.test(h.id)&&ayProgramlar(h.id.slice(3)).length?'&pr='+encodeURIComponent(ayProgramlar(h.id.slice(3)).join('~')):''):'(Anket bağlantısı için Drive eşitlemesini açın)';
+  if(!a)return '(Anket bağlantısı için Drive eşitlemesini açın)';const u=a+mesajLogoParam()+(tip==='m'&&/^ay-/.test(h.id)&&ayProgramlar(h.id.slice(3)).length?'&pr='+encodeURIComponent(ayProgramlar(h.id.slice(3)).join('~')):'');return ham?u:linkSon(u);
 }
-function cevapLinkiHazir(h,k){const c=senkCfg();const a=_cl[(c?c.url:'')+'|'+h.id+'|'+k.id+'|'+mesajFlag()];return a?a+mesajLogoParam():'Lütfen şöyle yanıtlayın: 1 = Kahvaltı + Hasbihal, 2 = Yalnızca Hasbihal, 3 = Gelemem';}
+function cevapLinkiHazir(h,k,ham){const c=senkCfg();const a=_cl[(c?c.url:'')+'|'+h.id+'|'+k.id+'|'+mesajFlag()];return a?(ham?a+mesajLogoParam():linkSon(a+mesajLogoParam())):'Lütfen şöyle yanıtlayın: 1 = Kahvaltı + Hasbihal, 2 = Yalnızca Hasbihal, 3 = Gelemem';}
 async function cevapLinkiYap(h,k){
   const c=senkCfg();if(!c||!senkGuvenli()||k.id==null)return;
   const fl=mesajFlag(),an=c.url+'|'+h.id+'|'+k.id,d6=String(h.iso).replace(/-/g,'').slice(2);
@@ -2242,6 +2272,7 @@ async function cevapLinkiYap(h,k){
     if(mp[an2])continue;
     mp[an2]=yap(tip,await mac(h.id+'|'+k.id+'|'+tip+(r>0?'|'+r:'')+(f?'|'+f:'')),r,f);
   }
+  await Promise.all(kisaGerek(h,k).map(kisaIste));
 }
 function mesajAlicilar(){
   const sb=$('ms-sablon').value,tip=$('ms-tip').value,akt=$('ms-aktif').value,riza=$('ms-riza').checked,yf=$('ms-yanit').value,hh=mesajHafta(),ay=hh&&hh.ay?ayBul(hh.id):null;
@@ -2464,6 +2495,12 @@ function doGet(e) {
   return HtmlService.createHtmlOutput('<p style="font-family:sans-serif;padding:16px">Medeniyet Vakfı eşitleme servisi çalışıyor ✅</p>');
 }
 
+/* Bir kez elle çalıştırın: harici bağlantı (kısaltma) izni ister. */
+function izinVer() {
+  var r = UrlFetchApp.fetch('https://tinyurl.com/api-create.php?url=' + encodeURIComponent('https://example.com/'), {muteHttpExceptions: true});
+  Logger.log(r.getResponseCode() + ' ' + r.getContentText());
+}
+
 function doPost(e) {
   var kilit = LockService.getScriptLock(), tuttu = false;
   try {
@@ -2481,6 +2518,33 @@ function doPost(e) {
     if (!yetkili_(g.t)) { hataSay_(); return cevap_({ok: false, hata: 'yetkisiz'}); }
     CacheService.getScriptCache().remove('kilit');
 
+    if (a === 'kisalt') {
+      var us = (g.u || []).slice(0, 25), ixu = [], sonuc = {}, tani = [], tok = p.getProperty('TINYURL_TOKEN');
+      us.forEach(function (u) {
+        if (typeof u === 'string' && u.length <= 3000 && u.indexOf('https://script.google.com/') === 0 && u.indexOf('/exec?x=') > 0) ixu.push(u);
+      });
+      var iste = function (liste, tur) {
+        var rq = liste.map(function (u) {
+          if (tur === 't' && tok) return {url: 'https://api.tinyurl.com/create', method: 'post', contentType: 'application/json', headers: {Authorization: 'Bearer ' + tok}, payload: JSON.stringify({url: u, domain: 'tinyurl.com'}), muteHttpExceptions: true};
+          if (tur === 't') return {url: 'https://tinyurl.com/api-create.php?url=' + encodeURIComponent(u), muteHttpExceptions: true};
+          return {url: 'https://is.gd/create.php?format=simple&url=' + encodeURIComponent(u), muteHttpExceptions: true};
+        });
+        var rs = [];
+        try { rs = UrlFetchApp.fetchAll(rq); } catch (e1) { tani.push(tur + ':istek ' + String(e1).slice(0, 80)); return; }
+        rs.forEach(function (r, i2) {
+          var tx = '', kod = 0;
+          try { tx = r.getContentText(); kod = r.getResponseCode(); } catch (e3) {}
+          var kk = '';
+          try { if (tur === 't' && tok) { var jj = JSON.parse(tx); kk = (jj && jj.data && jj.data.tiny_url) || ''; } else kk = String(tx).trim(); } catch (e2) {}
+          if (/^https?:\/\/(tinyurl\.com|is\.gd)\/[A-Za-z0-9_-]{2,40}$/.test(kk)) sonuc[liste[i2]] = kk.replace(/^http:/, 'https:');
+          else if (tani.length < 4) tani.push(tur + ':' + kod + ' ' + String(tx).replace(/\s+/g, ' ').slice(0, 70));
+        });
+      };
+      if (ixu.length) iste(ixu, 't');
+      var kal = ixu.filter(function (u) { return !sonuc[u]; });
+      if (kal.length) iste(kal, 'i');
+      return cevap_({ok: true, k: sonuc, d: tani});
+    }
     if (a === 'durum') { var ix0 = indeks_(); return cevap_({ok: true, indeks: {kol: ix0.kol, resim: ix0.resim}}); }
     if (a === 'cek') {
       if (!/^[a-z]{2,20}$/.test(g.kol || '')) return cevap_({ok: false, hata: 'gecersiz'});
