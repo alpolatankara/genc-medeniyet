@@ -2525,7 +2525,7 @@ function doPost(e) {
       });
       var iste = function (liste, tur) {
         var rq = liste.map(function (u) {
-          if (tur === 't' && tok) return {url: 'https://api.tinyurl.com/create', method: 'post', contentType: 'application/json', headers: {Authorization: 'Bearer ' + tok}, payload: JSON.stringify({url: u, domain: 'tinyurl.com'}), muteHttpExceptions: true};
+          if ((tur === 'a' || tur === 'n') && tok) { var pl = {url: u, domain: 'tinyurl.com'}; if (tur === 'a') pl.alias = 'GencMedeniyet-' + Utilities.getUuid().replace(/-/g, '').slice(0, 5); return {url: 'https://api.tinyurl.com/create', method: 'post', contentType: 'application/json', headers: {Authorization: 'Bearer ' + tok}, payload: JSON.stringify(pl), muteHttpExceptions: true}; }
           if (tur === 't') return {url: 'https://tinyurl.com/api-create.php?url=' + encodeURIComponent(u), muteHttpExceptions: true};
           return {url: 'https://is.gd/create.php?format=simple&url=' + encodeURIComponent(u), muteHttpExceptions: true};
         });
@@ -2535,13 +2535,15 @@ function doPost(e) {
           var tx = '', kod = 0;
           try { tx = r.getContentText(); kod = r.getResponseCode(); } catch (e3) {}
           var kk = '';
-          try { if (tur === 't' && tok) { var jj = JSON.parse(tx); kk = (jj && jj.data && jj.data.tiny_url) || ''; } else kk = String(tx).trim(); } catch (e2) {}
+          try { if ((tur === 'a' || tur === 'n') && tok) { var jj = JSON.parse(tx); kk = (jj && jj.data && jj.data.tiny_url) || ''; } else kk = String(tx).trim(); } catch (e2) {}
           if (/^https?:\/\/(tinyurl\.com|is\.gd)\/[A-Za-z0-9_-]{2,40}$/.test(kk)) sonuc[liste[i2]] = kk.replace(/^http:/, 'https:');
           else if (tani.length < 4) tani.push(tur + ':' + kod + ' ' + String(tx).replace(/\s+/g, ' ').slice(0, 70));
         });
       };
-      if (ixu.length) iste(ixu, 't');
+      if (ixu.length) iste(ixu, tok ? 'a' : 't');
       var kal = ixu.filter(function (u) { return !sonuc[u]; });
+      if (kal.length && tok) { iste(kal, 'n'); kal = ixu.filter(function (u) { return !sonuc[u]; }); }
+      if (kal.length && tok) { iste(kal, 't'); kal = ixu.filter(function (u) { return !sonuc[u]; }); }
       if (kal.length) iste(kal, 'i');
       return cevap_({ok: true, k: sonuc, d: tani});
     }
