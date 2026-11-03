@@ -932,6 +932,7 @@ function pad(n){return String(n).padStart(2,'0');}
 /* onclick üreticisi: kimlikler yalnızca güvenli karakter içerir */
 function oc(fn,id,ek){return 'onclick="'+fn+"('"+kacir(id)+"'"+(ek!==undefined?','+Number(ek):'')+')"';}
 let _bt;
+function waUrl(tel,metin){const t=String(metin==null?'':metin).replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g,'');return 'https://api.whatsapp.com/send?'+(tel?'phone='+tel+'&':'')+'text='+encodeURIComponent(t);}
 function bildir(m,ms){const b=$('bildirim');if(!b)return;b.textContent=m||'✅';b.classList.add('aktif');clearTimeout(_bt);_bt=setTimeout(()=>b.classList.remove('aktif'),ms||2000);}
 /* Türkçe duyarsız arama: İ/ı/I/i, ç, ğ, ö, ş, ü eşitlenir */
 function norm(s){return String(s==null?'':s).toLocaleLowerCase('tr').replace(/̇/g,'').replace(/[çğıöşüâîû]/g,c=>({'ç':'c','ğ':'g','ı':'i','ö':'o','ş':'s','ü':'u','â':'a','î':'i','û':'u'}[c]));}
@@ -2365,7 +2366,7 @@ async function mesajGonder(id){
   const metin=mesajMetin(k,h),afis=await mesajAfisVer(h,metin);
   if(afis==='iptal')return;
   if(afis!=='paylasildi'){
-    const u='https://wa.me/'+telNorm(k.tel)+'?text='+encodeURIComponent(metin);
+    const u=waUrl(telNorm(k.tel),metin);
     const w=window.open(u,'_blank');if(w){try{w.opener=null;}catch(e){}}else{alert('⚠️ Tarayıcı açılır pencereyi engelledi. Bu site için izin verip tekrar deneyin.');return;}
     if(afis==='pano')bildir('🖼️ Afiş panoya kopyalandı — WhatsApp sohbetinde mesaj kutusuna yapıştırın (Ctrl+V)',6000);
     else if(afis==='indi')bildir('🖼️ Afiş resmi indirildi — sohbete ekleyin (ataç simgesi)',6000);
@@ -3622,7 +3623,7 @@ function tkRender(){
   kap.innerHTML='<div class="kart"><div class="ar-chipler" style="margin:0 0 6px;">'+Object.keys(TK_TUR).concat(['hepsi']).map(t=>'<button class="chip-btn'+(t===tkFiltre?' aktif':'')+'" onclick="tkFiltre=\''+t+'\';tkRender()">'+(t==='hepsi'?'Hepsi ('+L.length+')':TK_TUR[t]+' ('+say[t]+')')+'</button>').join('')+'</div>'
     +'<p class="alt-yazi" style="margin:6px 0 0;">'+yapilanHaftalar().length+' buluşma esas alındı. <b>Düşüşte</b>: önceden gelmiş, son 3+ buluşmada yok. <b>Yeni</b>: ilk katılımı son 3 buluşma içinde. <b>Düzenli</b>: katılım oranı %60+.</p></div>'
     +(f.length?f.map(x=>{
-      const d=telNorm(x.k.tel),wa=telGecerli(x.k.tel)?'<a class="btn btn-yesil btn-k" style="text-decoration:none;display:inline-block;" target="_blank" rel="noopener noreferrer" href="https://wa.me/'+d+'?text='+encodeURIComponent(tkMesaj(x))+'">💬 Yaz</a> ':'';
+      const d=telNorm(x.k.tel),wa=telGecerli(x.k.tel)?'<a class="btn btn-yesil btn-k" style="text-decoration:none;display:inline-block;" target="_blank" rel="noopener noreferrer" href="'+kacir(waUrl(d,tkMesaj(x)))+'">💬 Yaz</a> ':'';
       return '<div class="kart" style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center;"><div><b>'+kacir(x.k.ad)+'</b> <span class="chip">'+kacir(TK_TUR[x.tur])+'</span><div class="alt-yazi" style="margin:3px 0 0;">'+kacir([x.k.uni,x.k.bolum].filter(Boolean).join(' • '))+(x.k.uni||x.k.bolum?' • ':'')+x.sayi+'/'+x.toplam+' katılım • son: '+tarihYaz2(x.son)+(x.ard>0&&x.sayi?' • '+x.ard+' buluşmadır yok':'')+'</div></div><div>'+wa+(d?'<a class="btn btn-gri btn-k" style="text-decoration:none;display:inline-block;" href="tel:+'+d+'">📞</a>':'')+'</div></div>';
     }).join(''):'<div class="kart"><p class="alt-yazi" style="margin:0">Bu grupta kimse yok 🎉</p></div>');
 }
@@ -5537,7 +5538,7 @@ async function afisCikti(mod,tur){
     if(mod==='whatsapp'){
       if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],text:metin,title:'Afiş'});return;}catch(e){if(e&&e.name==='AbortError')return;}}
       afIndir(r.blob,r.ad);bildir('✅ Dosya indirildi. WhatsApp açılıyor; indirilen dosyayı sohbete ekleyin.',6000);
-      try{window.open('https://wa.me/?text='+encodeURIComponent(metin.slice(0,1500)),'_blank');}catch(e){}return;
+      try{window.open(waUrl('',metin.slice(0,1500)),'_blank');}catch(e){}return;
     }
     afIndir(r.blob,r.ad);bildir('✅ '+AF_CIKTI[tur][2].toUpperCase()+' indirildi ('+r.pw+' × '+r.ph+' px, '+Math.max(1,Math.round(r.blob.size/1024))+' KB)',5000);
   }catch(e){console.log('AFCIKTI',e&&e.message);alert('⚠️ '+(e&&e.message?e.message:'Çıktı oluşturulamadı')+'\n\nİpucu: çözünürlüğü düşürmeyi veya başka bir biçim seçmeyi deneyin.');}
@@ -5759,7 +5760,7 @@ function dersMesajYenile(){
 }
 function dersMesajGonder(kid){
   if(!izin(2)||!_ihMsg)return;const d=_ihMsg.d?dersBul(_ihMsg.d):null,o=d&&$('dm-oturum')?d.oturum[Number($('dm-oturum').value)]:null,k=kListesi.find(x=>String(x.id)===String(kid));if(!k)return;
-  const w=window.open('https://wa.me/'+telNorm(k.tel)+'?text='+encodeURIComponent(dersMesajMetin(k,d,o,_ihMsg.g)),'_blank');
+  const w=window.open(waUrl(telNorm(k.tel),dersMesajMetin(k,d,o,_ihMsg.g)),'_blank');
   if(!w){alert('⚠️ Tarayıcı açılır pencereyi engelledi. Bu site için izin verin.');return;}try{w.opener=null;}catch(e){}
   if(d){const a=dersMesajAnahtar();d.mlog[a]=d.mlog[a]||{};d.mlog[a][String(k.id)]=Date.now();dersKaydet(d);}
   dersMesajYenile();
@@ -5893,7 +5894,7 @@ function dvListeCiz(){
 function dvGonder(id){
   if(!izin(2))return;const l=dvOku(),d=l.find(x=>x.id===id),h=dvHaftaNesne(),k=d&&dvKisi(d.kid);if(!d||!h||!k||!telGecerli(k.tel))return;
   const sb=$('dv-sablon').value;if(sb!=='oto'&&!$('dv-metin').value.trim()){alert('⚠️ Mesaj boş.');return;}
-  const w=window.open('https://wa.me/'+telNorm(k.tel)+'?text='+encodeURIComponent(dvMetin(d,h)),'_blank');
+  const w=window.open(waUrl(telNorm(k.tel),dvMetin(d,h)),'_blank');
   if(!w){alert('⚠️ Tarayıcı açılır pencereyi engelledi. Bu site için izin verin.');return;}try{w.opener=null;}catch(e){}
   d.g.push({t:Date.now(),s:sb==='oto'?dvSablonRol(d.rol):sb});
   if(d.durum==='taslak'&&(sb==='oto'||(DV_SABLON[sb]&&DV_SABLON[sb].davet)))d.durum='bekliyor';
@@ -6178,7 +6179,7 @@ function ktpSozKaydet(eid){const e=ktpE().find(x=>esit(x.id,eid));if(!e)return;e
 function ktpHatirlat(eid){
   const e=ktpE().find(x=>esit(x.id,eid));if(!e)return;const b=ktpB().find(x=>esit(x.id,e.b));
   const t='Selamünaleyküm '+e.kim+', “'+(b?b.baslik:'kitap')+'” kitabını '+(e.soz?tarihYaz(e.soz,true)+' tarihine kadar ':'')+'getirmenizi rica ederiz. Medeniyet Vakfı Ankara – Genç Medeniyet';
-  window.open('https://wa.me/'+telNorm(e.tel)+'?text='+encodeURIComponent(t),'_blank');
+  window.open(waUrl(telNorm(e.tel),t),'_blank');
 }
 function ktpEmanetCiz(){
   const ic=$('ktp-ic'),y=seviye()>=2,t=norm(ktpEAra).split(/\s+/).filter(Boolean),bs={};ktpB().forEach(b=>{bs[b.id]=b;});
@@ -6247,7 +6248,7 @@ function ktpListePaylas(id){
 }
 function ktpMetinYenile(id){const l=ktpL().find(x=>esit(x.id,id));if($('ktp-pm')&&l)$('ktp-pm').value=ktpListeMetin(l,$('ktp-pg').checked,$('ktp-pd').checked);}
 function ktpMetinKopyala(){const t=$('ktp-pm');t.select();try{navigator.clipboard.writeText(t.value).then(()=>bildir('✅ Kopyalandı'),()=>{document.execCommand('copy');bildir('✅ Kopyalandı');});}catch(e){document.execCommand('copy');bildir('✅ Kopyalandı');}}
-function ktpMetinWa(){window.open('https://wa.me/?text='+encodeURIComponent($('ktp-pm').value),'_blank');}
+function ktpMetinWa(){window.open(waUrl('',$('ktp-pm').value),'_blank');}
 function ktpTabloCss(){return '<style>.kt-t{width:100%;border-collapse:collapse;font-size:12.5px;margin:6px 0 14px}.kt-t th,.kt-t td{border:1px solid #cfd8e0;padding:5px 7px;text-align:left;vertical-align:top}.kt-t th{background:#eef3f7}.kt-t h3{margin:0}</style>';}
 function ktpListeYazdir(id){
   const l=ktpL().find(x=>esit(x.id,id));if(!l)return;const grp=$('ktp-pg')&&$('ktp-pg').checked,L=ktpListeKitaplar(l);
@@ -7099,7 +7100,7 @@ function faalDavetCiz(id){
   k.innerHTML=L.length?L.map(c=>{
     const s=String(c.id),d=telNorm(c.tel),r=e.kayit[s],gonder=e.davet[s],yok=c.mesajYok;
     return '<div class="kart" style="padding:10px;display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px;"><div><b>'+kacir(c.ad)+'</b>'+(yok?' <span class="chip uyari">mesaj istemiyor</span>':'')+(gonder?' <span class="chip ok" id="fd-g-'+kacir(s)+'">davet gitti</span>':'<span id="fd-g-'+kacir(s)+'"></span>')+'</div><div style="display:flex;gap:4px;flex-wrap:wrap;">'
-      +(telGecerli(c.tel)&&!yok?'<a class="btn btn-yesil btn-k" style="text-decoration:none;" target="_blank" rel="noopener noreferrer" href="https://wa.me/'+d+'?text='+encodeURIComponent(faalMetin(e,hitap(c.ad)))+'" onclick="faalDavetIsaret(\''+kacir(id)+'\',\''+kacir(s)+'\')">💬 Davet</a>':'')
+      +(telGecerli(c.tel)&&!yok?'<a class="btn btn-yesil btn-k" style="text-decoration:none;" target="_blank" rel="noopener noreferrer" href="'+kacir(waUrl(d,faalMetin(e,hitap(c.ad))))+'" onclick="faalDavetIsaret(\''+kacir(id)+'\',\''+kacir(s)+'\')">💬 Davet</a>':'')
       +[['evet','✅'],['belki','❓'],['hayir','❌']].map(x=>'<button type="button" class="btn '+(r===x[0]?'btn-mavi':'btn-gri')+' btn-k" aria-label="'+x[0]+'" onclick="faalKayit(\''+kacir(id)+'\',\''+kacir(s)+'\',\''+x[0]+'\')">'+x[1]+'</button>').join('')+'</div></div>';
   }).join(''):'<p class="alt-yazi">Önce Kişiler bölümünden katılımcı ekleyin.</p>';
 }
