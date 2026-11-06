@@ -24,8 +24,15 @@ body.m-katilim .katilim-btn{display:inline-block!important;}
 body.m-katilim #menu a.katilim-nav,body.m-katilim #menu .grup.katilim-nav{display:block!important;}
 .il-pane{display:none;}.il-pane.aktif{display:block;}
 .afst-grid{display:grid;grid-template-columns:minmax(280px,420px) 1fr;gap:16px;align-items:start;}
-.afst-onz{position:sticky;top:calc(var(--hh,56px) + 6px);max-height:calc(100vh - 90px);overflow:auto;}
-@media(max-width:900px){.afst-grid{grid-template-columns:1fr;}.afst-onz{position:static;max-height:none;overflow:visible;}}
+.afst-onz{position:sticky;top:calc(var(--hh,56px) + 6px);max-height:calc(100vh - var(--hh,56px) - 16px);overflow:auto;align-self:start;}
+main:has(#afisstudyo.aktif){overflow:visible;}
+.afst-hizli{display:none;}.afst-boy{display:flex;gap:4px;justify-content:flex-end;margin:4px 0 0;}.afst-boy button{border:1px solid var(--kenar);background:#fff;border-radius:6px;padding:2px 9px;cursor:pointer;font-weight:700;font-size:13px;}
+@media(max-width:900px){
+ .afst-grid{grid-template-columns:1fr;gap:10px;}
+ .afst-onz{position:sticky;top:var(--hh,56px);z-index:30;max-height:none;overflow:visible;background:#fff;padding:6px 8px 6px;margin:0 -8px;border-bottom:2px solid var(--mavi);box-shadow:0 4px 10px rgba(0,0,0,.12);}
+ #af-onz-kap{margin-left:auto;margin-right:auto;}
+ .afst-hizli{display:inline-block;}.afst-boy{justify-content:space-between;align-items:center;}
+}
 .afst-sek{display:flex;gap:4px;flex-wrap:wrap;margin:0 0 10px;border-bottom:2px solid var(--kenar,#d6dee5);}
 .afst-sek button{border:0;background:transparent;padding:8px 12px;font-weight:700;cursor:pointer;border-radius:8px 8px 0 0;color:#33414e;font-size:14px;}
 .afst-sek button.aktif{background:#0b4a72;color:#fff;}
@@ -2225,7 +2232,7 @@ async function kisaGonder(){
   for(let i=0;i<B.length;i+=20){
     const parca=B.slice(i,i+20),us=Array.from(new Set(parca.map(x=>x.u)));
     try{const r=await sunucu({a:'kisalt',u:us},60000);
-      if(r&&r.ok&&r.k){Object.keys(r.k).forEach(x=>{_kisa[x]=r.k[x];});const bas=us.filter(x=>!r.k[x]).length;if(bas)bildir('🔗 '+bas+' bağlantı kısaltılamadı (uzun link kullanılır). '+((r.d||[]).join(' | ')||''),9000);}
+      if(r&&r.ok&&r.k){Object.keys(r.k).forEach(x=>{_kisa[x]=r.k[x];});const bas=us.filter(x=>!r.k[x]).length;if(bas)bildir('🔗 '+bas+' bağlantı kısaltılamadı (uzun link kullanılır). '+((r.d||[]).join(' | ')||''),9000);else if((r.d||[]).length)bildir('🔗 Kısaltıldı, ancak isimli link alınamadı: '+r.d.join(' | '),9000);}
       else if(r&&r.hata==='bilinmeyen'){_kisaKapali=true;bildir('🔗 Bağlantı kısaltma için Apps Script kodunu yeniden dağıtmanız gerekiyor (Dağıt → Dağıtımları yönet → Yeni sürüm).',9000);}
       else bildir('🔗 Kısaltma yanıtı alınamadı: '+((r&&r.hata)||'bilinmiyor'),7000);
     }catch(e){bildir('🔗 Kısaltma servisine ulaşılamadı: '+String(e&&e.message||e).slice(0,80),7000);}
@@ -5127,7 +5134,7 @@ function afisSigdir(kok){
 let afSecili='b1';
 function afisYenile(an){
   const h=afisHafta();if(!h)return;const kap=$('af-onz-kap');if(!kap)return;
-  const fm=afFormat(h);kap.style.maxWidth=fm.w>fm.h*1.15?'560px':'400px';kap.innerHTML='<div id="af-onz" style="transform-origin:0 0;position:absolute;left:0;top:0;">'+afisSayfaHtml(h,seviye()>=2,an,fm.h,fm.w)+'</div>';
+  const fm=afFormat(h),narow=window.innerWidth<=900,hb=Math.max(140,(narow?window.innerHeight*0.34:window.innerHeight-(window.afstCiktiGorunur?230:130))*(window.afstOnzK||1)),tw=fm.w>fm.h*1.15?560:400;kap.style.maxWidth=Math.round(Math.max(140,Math.min(tw,hb*fm.w/fm.h)))+'px';kap.innerHTML='<div id="af-onz" style="transform-origin:0 0;position:absolute;left:0;top:0;">'+afisSayfaHtml(h,seviye()>=2,an,fm.h,fm.w)+'</div>';
   const w=kap.clientWidth||400,k=w/(fm.w*96/25.4);kap.style.height=(w*fm.h/fm.w)+'px';
   const o=$('af-onz');o.style.transform='scale('+k+')';afisSigdir(o);afisSecIsaretle();
 }
@@ -8047,6 +8054,15 @@ function afStBilgiKaydet(){
   afDepo();afisMetinleriGuncelle(h);afisYenile();if($('af-alan'))afisAlanDoldur();
   const t=$('afst-baslik');if(t)t.textContent=h.baslik||'Afiş';
 }
+function afStYerles(){
+  const c=$('afst-cikti'),on=$('afst-onz');if(!c||!on)return;
+  const dar=window.innerWidth<=900,pay=document.querySelector('#afst-kap .afst-grup[data-k=paylasim]');
+  window.afstCiktiGorunur=!dar;
+  if(dar){if(pay&&c.parentNode!==pay)pay.insertBefore(c,pay.firstChild);}
+  else if(c.parentNode!==on){const b=on.querySelector('.afst-boy');(b||on.firstChild).insertAdjacentElement('afterend',c);}
+}
+function afStBoyut(d){window.afstOnzK=Math.min(1.6,Math.max(.5,(window.afstOnzK||1)+d));if(typeof afisYenile==='function')afisYenile();}
+let _afstRz=null;window.addEventListener('resize',()=>{clearTimeout(_afstRz);_afstRz=setTimeout(()=>{if($('afst-onz')){afStYerles();if(typeof afisYenile==='function')afisYenile();}},180);});
 function afStSekmeSec(k){
   afStSekme=k;
   document.querySelectorAll('#afst-sek button').forEach(b=>b.classList.toggle('aktif',b.dataset.k===k));
@@ -8066,13 +8082,16 @@ function afStEditorGoster(h,html){
   });
   const ust='<div class="form-butonlar" style="margin:0 0 10px;align-items:center;"><button class="btn btn-gri btn-k" onclick="afStKutuphane()">← Kütüphane</button><b style="font-size:16px;" id="afst-baslik">'+(poster?kacir(h.baslik||'Afiş'):kacir(h.no+'. Hafta afişi'))+'</b><span class="alt-yazi">'+AF_TURLER[h.tur||'kahvalti'].ik+' '+kacir(afTurAd(h.tur||'kahvalti'))+'</span></div>';
   kap.innerHTML=ust+'<div class="afst-grid"><div class="afst-onz" id="afst-onz"></div><div><div class="afst-sek" id="afst-sek">'+AF_SEKMELER.map(s=>'<button type="button" data-k="'+s[0]+'" onclick="afStSekmeSec(\''+s[0]+'\')">'+s[1]+'</button>').join('')+'</div>'+AF_SEKMELER.map(s=>'<div class="afst-grup" data-k="'+s[0]+'"></div>').join('')+'</div></div>';
+  const cikti=sol.children[1];if(cikti)cikti.id='afst-cikti';
   while(sol.firstChild)$('afst-onz').appendChild(sol.firstChild);
+  const boy=document.createElement('div');boy.className='afst-boy';boy.innerHTML='<button type="button" class="afst-hizli" onclick="afStSekmeSec(\'paylasim\');document.getElementById(\'afst-sek\').scrollIntoView({behavior:\'smooth\',block:\'start\'})">⬇️ İndir / Paylaş</button><span><button type="button" onclick="afStBoyut(-.2)" aria-label="Önizlemeyi küçült">➖</button> <button type="button" onclick="afStBoyut(.2)" aria-label="Önizlemeyi büyüt">➕</button></span>';
+  const kp=$('af-onz-kap');if(kp)kp.insertAdjacentElement('afterend',boy);
   const pn={};kap.querySelectorAll('.afst-grup').forEach(e=>pn[e.dataset.k]=e);
   if(poster){const d=document.createElement('div');d.innerHTML=afStBilgiKart(h);pn.icerik.appendChild(d.firstChild);}
   Object.keys(G).forEach(k=>G[k].forEach(e=>pn[k].appendChild(e)));
   const sek=$('afst-sek');if(sek)sek.id='afst-sek';
   document.querySelectorAll('#afst-sek button').forEach(b=>b.setAttribute('data-k',b.dataset.k));
-  afStSekmeSec(afStSekme);window.scrollTo(0,y0);
+  afStYerles();afStSekmeSec(afStSekme);window.scrollTo(0,y0);
 }
 
 
