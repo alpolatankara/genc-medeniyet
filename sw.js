@@ -1,4 +1,4 @@
-const SURUM='mv-v72',DOSYALAR=['./','index.html','manifest.json','icon-192.png','icon-512.png','apple-touch-icon.png'];
+const SURUM='mv-v73',DOSYALAR=['./','index.html','manifest.json','icon-192.png','icon-512.png','apple-touch-icon.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(SURUM).then(c=>c.addAll(DOSYALAR)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==SURUM).map(x=>caches.delete(x)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',e=>{
