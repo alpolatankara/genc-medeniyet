@@ -2183,6 +2183,111 @@ const MS_SABLON={
 function mesajLog(){const l=oku(LS_MESAJ,{});return l&&typeof l==='object'&&!Array.isArray(l)?l:{};}
 function mesajAnahtar(){return ($('ms-sablon')?$('ms-sablon').value:'hatirlatma')+'|'+($('ms-hafta')?$('ms-hafta').value:'');}
 function mesajGonderilenSay(anahtar){return Object.keys(mesajLog()[anahtar]||{}).length;}
+/* ---- Şablon kaydetme + logolu mesaj kartı ---- */
+const LS_MSABLON='mv_msablon';
+const KART_BAS={hoca:'Teşekkür',tesekkur:'Teşekkür',katilim:'Davet',hatirlatma:'Haftalık Hatırlatma',hasbihal:'Hasbihal Duyurusu',iptal:'Duyuru',anket:'Değerlendirme',surec:'Değerlendirme',aylik:'Değerlendirme',talimat:'Hazırlık Talimatı',serbest:'Mesaj'};
+const KART_TEMA={lacivert:{ad:'Lacivert',a:'#0b4a72',b:'#06304d',v:'#c9a24a'},zumrut:{ad:'Zümrüt',a:'#0f6b4f',b:'#073d2d',v:'#d4b25a'},bordo:{ad:'Bordo',a:'#7a1f33',b:'#4a0f1d',v:'#e0b867'},krem:{ad:'Krem',a:'#f3ead6',b:'#e4d6b6',v:'#8a6a1c',acik:1}};
+let _msSon='';
+function msablonOku(){const d=oku(LS_MSABLON,{});return d&&typeof d==='object'&&!Array.isArray(d)?d:{};}
+function msablonVarsayilan(k){const t=MS_SABLON[k]||{};return{metin:t.metin||'',bas:KART_BAS[k]||'Mesaj',tema:'lacivert',logo:'b',kart:(k==='hoca'||k==='tesekkur')?1:0,ms:0};}
+function msablonGecerli(k){const o=msablonOku()[k];return Object.assign(msablonVarsayilan(k),o&&typeof o==='object'?o:{});}
+function msablonForm(){return{metin:($('ms-metin')||{}).value||'',bas:($('ms-kbas')||{}).value||'',tema:($('ms-ktema')||{}).value||'lacivert',logo:($('ms-klogo')||{}).value||'b',kart:$('ms-kart')&&$('ms-kart').checked?1:0,ms:$('ms-kmetin')&&$('ms-kmetin').checked?1:0};}
+function msablonKirli(k){if(!k||!$('ms-metin'))return false;const a=msablonForm(),b=msablonGecerli(k);return Object.keys(a).some(x=>String(a[x])!==String(b[x]));}
+function msablonDoldur(k){
+  const g=msablonGecerli(k);$('ms-metin').value=g.metin;
+  if($('ms-kbas'))$('ms-kbas').value=g.bas;if($('ms-ktema'))$('ms-ktema').value=KART_TEMA[g.tema]?g.tema:'lacivert';if($('ms-klogo'))$('ms-klogo').value=g.logo;
+  if($('ms-kart'))$('ms-kart').checked=!!Number(g.kart);if($('ms-kmetin'))$('ms-kmetin').checked=!!Number(g.ms);
+  if($('ms-afis')){$('ms-afis').checked=!Number(g.kart)&&['katilim','hatirlatma','seminer'].includes(k);}
+  kartAyarGoster();msablonEtiket();
+}
+function msablonEtiket(){
+  const s=$('ms-sablon');if(!s)return;const o=msablonOku();
+  Array.from(s.options).forEach(x=>{const t=MS_SABLON[x.value];if(t)x.textContent=t.ad+(o[x.value]?' ✎':'');});
+  const d=$('ms-sablon-durum');if(d){const k=s.value;d.textContent=o[k]?'✎ Bu şablonun kaydedilmiş (düzenlenmiş) hali kullanılıyor.':'Hazır şablon. Değiştirip “Şablonu kaydet”e basarsanız bundan sonra hep sizin halinizle gelir.';}
+}
+function msablonKaydetK(k){const f=msablonForm(),o=msablonOku();o[k]=f;yaz(LS_MSABLON,o);msablonEtiket();}
+function msablonKaydet(){
+  if(!izin(2))return;const k=$('ms-sablon').value,f=msablonForm();
+  if(!f.metin.trim()){alert('⚠️ Mesaj metni boş olamaz.');return;}
+  const o=msablonOku();o[k]=f;if(yaz(LS_MSABLON,o)){msablonEtiket();bildir('✅ Şablon kaydedildi (hesaplar arasında eşitlenir)');}
+}
+function msablonSifirla(){
+  if(!izin(2))return;const k=$('ms-sablon').value;
+  if(!confirm('Bu şablonun kaydedilmiş hali silinip hazır (ilk) haline dönülsün mü?'))return;
+  const o=msablonOku();delete o[k];yaz(LS_MSABLON,o);msablonDoldur(k);mesajRender();bildir('↺ Hazır şablona dönüldü');
+}
+function kartIste(){return !!($('ms-kart')&&$('ms-kart').checked);}
+function kartAyarGoster(){const d=$('ms-kart-ayar');if(d)d.style.display=kartIste()?'':'none';if(kartIste()&&$('ms-afis')){$('ms-afis').checked=false;mesajAfisHazirla();}}
+function afisDegisti(e){if(e.checked&&$('ms-kart')){$('ms-kart').checked=false;kartAyarGoster();}mesajAfisHazirla();}
+function kartDegisti(){kartAyarGoster();mesajRender();}
+function kartResim(src){return new Promise(ok=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>ok(null);i.src=src;});}
+function kartMetinTemizle(m){
+  return String(m||'').split('\n').filter(s=>!/https?:\/\//i.test(s)).join('\n').replace(/\n{3,}/g,'\n\n').replace(/(^|[\s(])_([^_\n]+)_(?=[\s).,!?]|$)/g,'$1$2').trim();
+}
+function kartKelimeler(par){
+  const w=[];let kal=false;
+  par.split(/(\*)/).forEach(p=>{if(p==='*'){kal=!kal;return;}p.split(/(\s+)/).forEach(t=>{if(t==='')return;if(/^\s+$/.test(t))w.push({t:' ',b:kal,bos:1});else w.push({t,b:kal});});});
+  return w;
+}
+async function kartUret(metin,baslik,temaK,logoK,tur){
+  const T=KART_TEMA[temaK]||KART_TEMA.lacivert,W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  const g=x.createLinearGradient(0,0,W,H);g.addColorStop(0,T.a);g.addColorStop(1,T.b);x.fillStyle=g;x.fillRect(0,0,W,H);
+  /* ince desen */
+  x.globalAlpha=.07;x.strokeStyle=T.acik?'#8a6a1c':'#fff';x.lineWidth=2;for(let i=-H;i<W;i+=60){x.beginPath();x.moveTo(i,0);x.lineTo(i+H,H);x.stroke();}x.globalAlpha=1;
+  const M=56,R=36,bx=M,by=M,bw=W-2*M,bh=H-2*M;
+  const yuv=(px,py,w,h,r)=>{x.beginPath();x.moveTo(px+r,py);x.arcTo(px+w,py,px+w,py+h,r);x.arcTo(px+w,py+h,px,py+h,r);x.arcTo(px,py+h,px,py,r);x.arcTo(px,py,px+w,py,r);x.closePath();};
+  x.save();x.shadowColor='rgba(0,0,0,.35)';x.shadowBlur=40;x.shadowOffsetY=12;yuv(bx,by,bw,bh,R);x.fillStyle='#fffdf8';x.fill();x.restore();
+  x.strokeStyle=T.v;x.lineWidth=3;yuv(bx+18,by+18,bw-36,bh-36,R-12);x.stroke();
+  /* logolar */
+  const L=[];if(logoK==='v'||logoK==='b')L.push(await kartResim(GORSEL_VAKIF));if(logoK==='g'||logoK==='b')L.push(await kartResim(gencLogoSrc()));
+  const lh=150;let ly=by+52;const lw=L.filter(Boolean).map(i=>Math.min(lh*i.width/i.height,300));
+  if(lw.length){const gap=60,top=lw.reduce((a,b)=>a+b,0)+gap*(lw.length-1);let lx=(W-top)/2;L.filter(Boolean).forEach((im,i)=>{x.drawImage(im,lx,ly,lw[i],lh);lx+=lw[i]+gap;});}
+  let y=ly+(lw.length?lh:0)+34;
+  /* başlık */
+  x.textAlign='center';x.textBaseline='alphabetic';x.fillStyle=T.a===KART_TEMA.krem.a?'#0b4a72':T.a;
+  let fs=70;x.font='700 '+fs+'px Georgia,"Times New Roman",serif';const bsl=String(baslik||'').trim();
+  if(bsl){while(x.measureText(bsl).width>bw-160&&fs>34){fs-=2;x.font='700 '+fs+'px Georgia,serif';}y+=fs;x.fillStyle=T.acik?'#0b4a72':T.a;x.fillText(bsl,W/2,y);y+=26;
+    x.strokeStyle=T.v;x.lineWidth=4;x.beginPath();x.moveTo(W/2-120,y);x.lineTo(W/2+120,y);x.stroke();x.fillStyle=T.v;x.beginPath();x.arc(W/2,y,8,0,7);x.fill();y+=34;}
+  /* metin: sığana kadar küçült */
+  const alt=by+bh-120,ust=y,mw=bw-170,pars=kartMetinTemizle(metin).split('\n');
+  let f=44,satirlar;
+  for(;f>=24;f-=2){
+    const lh2=Math.round(f*1.42);satirlar=[];let top=0;
+    for(const p of pars){
+      if(!p.trim()){satirlar.push({bos:1,h:Math.round(f*.7)});continue;}
+      const w=kartKelimeler(p);let cur=[],cw=0;
+      const bitir=()=>{while(cur.length&&cur[cur.length-1].bos)cur.pop();if(cur.length)satirlar.push({r:cur,h:lh2});cur=[];cw=0;};
+      for(const k of w){x.font=(k.b?'700 ':'400 ')+f+'px "Segoe UI",Tahoma,Arial,sans-serif';const kw=x.measureText(k.t).width;k.w=kw;if(cw+kw>mw&&!k.bos){bitir();}if(!(k.bos&&!cur.length)){cur.push(k);cw+=kw;}}
+      bitir();
+    }
+    top=satirlar.reduce((a,s)=>a+s.h,0);if(top<=alt-ust)break;
+  }
+  const tot=satirlar.reduce((a,s)=>a+s.h,0);y=ust+Math.max(0,(alt-ust-tot)/2);
+  x.textAlign='left';x.fillStyle='#22303c';
+  for(const s of satirlar){if(s.bos){y+=s.h;continue;}y+=s.h;const sw=s.r.reduce((a,k)=>a+k.w,0);let px=(W-sw)/2;
+    if(tur==='sol')px=bx+85;
+    s.r.forEach(k=>{x.font=(k.b?'700 ':'400 ')+f+'px "Segoe UI",Tahoma,Arial,sans-serif';x.fillText(k.t,px,y-Math.round(f*.3));px+=k.w;});}
+  /* alt bilgi */
+  x.textAlign='center';x.fillStyle=T.v;x.font='600 26px "Segoe UI",Tahoma,Arial,sans-serif';x.fillText('Medeniyet Vakfı Ankara Üniversite Birimi  •  Genç Medeniyet',W/2,by+bh-62);
+  x.strokeStyle=T.v;x.globalAlpha=.5;x.lineWidth=2;x.beginPath();x.moveTo(bx+120,by+bh-96);x.lineTo(bx+bw-120,by+bh-96);x.stroke();x.globalAlpha=1;
+  return new Promise(ok=>c.toBlob(b=>ok({blob:b,url:null,ad:'kart-'+bugunIso()+'.png'}),'image/png'));
+}
+function kartBlobIste(k,h){
+  const f=msablonForm();return kartUret(mesajMetin(k,h),f.bas,f.tema,f.logo,'orta');
+}
+let _kartT=null,_kartUrl='';
+function kartOnizle(){
+  const kap=$('ms-kart-onizleme');if(!kap)return;
+  if(!kartIste()){kap.innerHTML='';return;}
+  clearTimeout(_kartT);_kartT=setTimeout(async()=>{
+    const h=mesajHafta()||haftalar[0];if(!h||!$('ms-metin'))return;
+    const sk=$('ms-kisi')&&$('ms-kisi').value&&mesajKisi($('ms-kisi').value);
+    let k=sk;if(!k){try{k=mesajAlicilar().liste[0];}catch(e){}}k=k||{ad:'Ahmet Yılmaz'};
+    try{const r=await kartBlobIste(k,h);if(!kartIste())return;if(_kartUrl)URL.revokeObjectURL(_kartUrl);_kartUrl=URL.createObjectURL(r.blob);
+      kap.innerHTML='<div class="alt-yazi" style="margin:6px 0 4px;">Kart önizlemesi ('+kacir(k.ad||'')+'):</div><img src="'+_kartUrl+'" alt="Mesaj kartı önizlemesi" style="max-width:100%;width:340px;border-radius:10px;border:1px solid var(--kenar);">';}
+    catch(e){kap.innerHTML='<span class="alt-yazi">Kart önizlemesi hazırlanamadı.</span>';}
+  },400);
+}
 function mesajKalipOlustur(){
   const kap=$('ms-kap');const rl=seviye()>=2?'a':'k';if(!kap||kap.dataset.hazir===rl)return;kap.dataset.hazir=rl;
   kap.innerHTML='<div class="banner bilgi"><b>Nasıl çalışır?</b> WhatsApp, toplu otomatik gönderime tarayıcıdan izin vermez. Bu bölüm her kişi için hazır mesajı WhatsApp\'ta açar; siz yalnızca <b>Gönder</b>\'e basarsınız. Mesaj almak istemeyenler ve numarası geçersiz olanlar listeye girmez.</div>'+
@@ -2192,15 +2297,16 @@ function mesajKalipOlustur(){
   '<div class="form-alan"><label for="ms-tip">Kimlere?</label><select id="ms-tip" onchange="mesajRender()"><option value="">Tüm katılımcılar</option>'+egitimOpts().map(x=>'<option>'+kacir(x)+'</option>').join('')+'</select></div>'+
   '<div class="form-alan"><label for="ms-aktif">Katılım durumu</label><select id="ms-aktif" onchange="mesajRender()"><option value="">Hepsi</option><option value="1">Son 4 haftada en az 1 kez gelenler</option><option value="0">Son 4 haftada hiç gelmeyenler (tekrar davet)</option></select></div>'+
   '<div class="form-alan"><label for="ms-yanit">Yanıt durumu</label><select id="ms-yanit" onchange="mesajRender()"><option value="">Hepsi</option><option value="yok">Henüz yanıt vermeyenler</option><option value="geldi">Yalnızca o hafta gelenler</option><option value="anketyok">Gelip anketi doldurmayanlar</option></select></div>'+
-  '<div class="form-alan form-genis"><label for="ms-metin">Mesaj metni <span style="font-weight:400;">({ad} {tarih} {gun} {saat} {yer} {konu} {sunumcu} {menu} kullanılabilir)</span></label><textarea id="ms-metin" style="min-height:190px;" oninput="mesajRender()"></textarea></div>'+
-  '<div class="form-alan form-genis"><label class="onay"><input type="checkbox" id="ms-afis" onchange="mesajAfisHazirla()"> 🖼️ Hazırlanan afişi de gönder (telefonda paylaşım menüsüyle, bilgisayarda panoya kopyalanır)</label><span class="alt-yazi" id="ms-afis-durum" style="margin:2px 0 0;"></span></div>'+
+  '<div class="form-alan form-genis"><label for="ms-metin">Mesaj metni <span style="font-weight:400;">({ad} {tarih} {gun} {saat} {yer} {konu} {sunumcu} {menu} kullanılabilir)</span></label><textarea id="ms-metin" style="min-height:190px;" oninput="mesajRender()"></textarea><div class="form-butonlar" style="margin-top:6px;">'+(seviye()>=2?'<button class="btn btn-mavi btn-k" onclick="msablonKaydet()">💾 Şablonu kaydet</button><button class="btn btn-gri btn-k" onclick="msablonSifirla()">↺ Hazır haline dön</button>':'')+'</div><span class="alt-yazi" id="ms-sablon-durum" style="margin:2px 0 0;"></span></div>'+
+  '<div class="form-alan form-genis"><label class="onay"><input type="checkbox" id="ms-afis" onchange="afisDegisti(this)"> 🖼️ Hazırlanan afişi de gönder (telefonda paylaşım menüsüyle, bilgisayarda panoya kopyalanır)</label><span class="alt-yazi" id="ms-afis-durum" style="margin:2px 0 0;"></span></div>'+
+  '<div class="form-alan form-genis"><label class="onay"><input type="checkbox" id="ms-kart" onchange="kartDegisti()"> 💳 Mesajı <b>logolu kart</b> (resim) olarak gönder</label><div id="ms-kart-ayar" style="display:none;margin-top:8px;"><div class="form-grid"><div class="form-alan"><label for="ms-kbas">Kart başlığı</label><input type="text" id="ms-kbas" maxlength="40" oninput="mesajRender()"></div><div class="form-alan"><label for="ms-ktema">Kart rengi</label><select id="ms-ktema" onchange="mesajRender()">'+Object.keys(KART_TEMA).map(t=>'<option value="'+t+'">'+KART_TEMA[t].ad+'</option>').join('')+'</select></div><div class="form-alan"><label for="ms-klogo">Kart logosu</label><select id="ms-klogo" onchange="mesajRender()"><option value="b">İkisi birlikte</option><option value="v">Medeniyet Vakfı</option><option value="g">Genç Medeniyet</option><option value="">Logo yok</option></select></div></div><label class="onay"><input type="checkbox" id="ms-kmetin" onchange="mesajRender()"> Kartla birlikte metni de yaz (altyazı / mesaj olarak)</label><span class="alt-yazi" style="display:block;margin-top:2px;">Kartın yazısı yukarıdaki mesaj metninden gelir; link satırları karta yazılmaz. Telefonda paylaşım menüsüyle, bilgisayarda panoya kopyalanarak gönderilir.</span></div></div>'+
   '<div class="form-alan"><label for="ms-logo">Ankette logo</label><select id="ms-logo" onchange="mesajRender()"><option value="">Logo yok</option><option value="v">Medeniyet Vakfı logosu</option><option value="g">Genç Medeniyet logosu</option><option value="b">İkisi birlikte</option></select></div>'+
   '<div class="form-alan"><label for="ms-cok">Cevap hakkı</label><select id="ms-cok" onchange="mesajRender()"><option value="">Varsayılan (anket: tek kullanımlık • katılım: değiştirilebilir)</option><option value="c">Birden fazla cevaplanabilsin (güncelleme için)</option><option value="t">Tek kullanımlık olsun</option></select></div>'+
   '<div class="form-alan form-genis"><label class="onay"><input type="checkbox" id="ms-misafir" onchange="mesajRender()"> Misafir alıcıları da dahil et</label><div id="mg-liste" style="margin:6px 0;"></div><div style="display:flex;gap:6px;flex-wrap:wrap;"><input type="text" id="mg-ad" placeholder="Misafir adı" maxlength="60" style="flex:1;min-width:130px;padding:7px 10px;border:1px solid var(--kenar);border-radius:5px;"><input type="tel" id="mg-tel" placeholder="05xx xxx xx xx" style="flex:1;min-width:120px;padding:7px 10px;border:1px solid var(--kenar);border-radius:5px;"><button type="button" class="btn btn-gri btn-k" onclick="misafirEkle()">➕ Misafir ekle</button></div></div>'+
   '<div class="form-alan form-genis"><label class="onay"><input type="checkbox" id="ms-riza" checked onchange="mesajRender()"> Yalnızca açık rızası işaretli kişilere gönder (önerilir)</label></div></div>'+
   '<div class="form-alan form-genis"><label for="ms-kisi">Tek kişiye gönder (isim seçin)</label><select id="ms-kisi" onchange="mesajRender()"><option value="">— Kişi seçin —</option>'+sirala(kListesi,'ad').filter(k=>telGecerli(k.tel)).map(k=>'<option value="'+kacir(k.id)+'">'+kacir(k.ad)+'</option>').join('')+'</select></div>'+
   '<div class="form-butonlar"><button class="kaydet-btn" onclick="mesajTekKisi()">💬 Seçilen kişiye kalıp mesajı gönder</button><button class="btn btn-mavi" onclick="mesajKopyala()">📋 Metni Kopyala</button><button class="btn btn-gri" onclick="mesajNumaralar()">⬇️ Alıcı Listesi (CSV)</button></div></div>'+
-  '<div class="kart"><h3>👀 Önizleme</h3><div class="kopyala-blok" id="ms-onizleme" style="white-space:pre-wrap;max-height:260px;overflow:auto;"></div></div>'+
+  '<div class="kart"><h3>👀 Önizleme</h3><div class="kopyala-blok" id="ms-onizleme" style="white-space:pre-wrap;max-height:260px;overflow:auto;"></div><div id="ms-kart-onizleme"></div></div>'+
   '<div class="kart"><h3>📨 Alıcılar <span class="kayit-sayaci" id="ms-sayaci">0</span></h3><div class="yanit-kutu" id="ms-yanit-ozet"></div><p class="alt-yazi" id="ms-ozet"></p><div class="form-butonlar" style="margin-bottom:10px;"><button class="kaydet-btn" onclick="mesajSonraki()">▶️ Sıradakini WhatsApp\'ta Aç</button><button class="btn btn-gri" onclick="mesajSifirla()">↺ İşaretleri Sıfırla</button></div><div class="tablo-kap"><table><thead><tr><th>Ad Soyad</th><th>Telefon</th><th>Katılım</th><th>Yanıt</th><th>Durum</th><th style="width:120px;">İşlem</th></tr></thead><tbody id="ms-tbody"></tbody></table></div></div>';
   mesajHaftaDoldur();misafirRender();mesajSablonSec();
 }
@@ -2211,7 +2317,7 @@ function mesajHaftaDoldur(){
   const sh=siradakiHafta();s.value=(o&&Array.from(s.options).some(x=>x.value===o))?o:(sh?sh.id:haftalar[0].id);
 }
 function mesajHafta(){const v=($('ms-hafta')||{}).value||'';if(/^ay-\d{4}-\d{2}$/.test(v))return ayHafta(v.slice(3));return haftalar.find(x=>x.id===v);}
-function mesajSablonSec(){if(!$('ms-sablon'))return;const t=MS_SABLON[$('ms-sablon').value];if(t)$('ms-metin').value=t.metin;if($('ms-afis')){$('ms-afis').checked=['katilim','hatirlatma','seminer'].includes($('ms-sablon').value);mesajAfisHazirla();}{const sb=$('ms-sablon').value,hs=$('ms-hafta');if(sb==='anket'&&$('ms-yanit'))$('ms-yanit').value='geldi';else if((sb==='surec'||sb==='aylik')&&$('ms-yanit'))$('ms-yanit').value='';if(hs){if(sb==='aylik')hs.value='ay-'+ayId(bugunIso());else if(/^ay-/.test(hs.value)){const sh=siradakiHafta();hs.value=sh?sh.id:haftalar[0].id;}}}mesajRender();}
+function mesajSablonSec(){if(!$('ms-sablon'))return;{const yk=$('ms-sablon').value;if(_msSon&&_msSon!==yk&&seviye()>=2&&msablonKirli(_msSon)&&confirm('“'+MS_SABLON[_msSon].ad+'” şablonunda yaptığınız değişiklikler kaydedilsin mi?\n\nTamam = kaydet, İptal = kaydetmeden devam'))msablonKaydetK(_msSon);_msSon=yk;if(MS_SABLON[yk])msablonDoldur(yk);mesajAfisHazirla();}{const sb=$('ms-sablon').value,hs=$('ms-hafta');if(sb==='anket'&&$('ms-yanit'))$('ms-yanit').value='geldi';else if((sb==='surec'||sb==='aylik')&&$('ms-yanit'))$('ms-yanit').value='';if(hs){if(sb==='aylik')hs.value='ay-'+ayId(bugunIso());else if(/^ay-/.test(hs.value)){const sh=siradakiHafta();hs.value=sh?sh.id:haftalar[0].id;}}}mesajRender();}
 function mesajMetin(k,h){
   const d=Object.assign({},$('ms-sablon')&&$('ms-sablon').value==='talimat'&&typeof talimatDegisken==='function'?talimatDegisken(k,h):{},{ad:k.hoca?String(k.ad||'').trim():hitap(k.ad),tarih:h.ay?h.tarih:h.tarih.replace(/ \S+$/,''),gun:GUNLER[haftaGunu(h.iso)],saat:SAAT,yer:YER,konu:h.seminerKonu||'Belirlenecek',sunumcu:h.seminerSunumcu||'Belirlenecek',menu:h.menu||'',cevap_link:cevapLinkiHazir(h,k),anket_link:anketLinkiHazir(h,k)});
   return $('ms-metin').value.replace(/\{(\w+)\}/g,(m,a)=>Object.prototype.hasOwnProperty.call(d,a)?d[a]:m);
@@ -2232,7 +2338,7 @@ async function kisaGonder(){
   for(let i=0;i<B.length;i+=20){
     const parca=B.slice(i,i+20),us=Array.from(new Set(parca.map(x=>x.u)));
     try{const r=await sunucu({a:'kisalt',u:us},60000);
-      if(r&&r.ok&&r.k){Object.keys(r.k).forEach(x=>{_kisa[x]=r.k[x];});const bas=us.filter(x=>!r.k[x]).length;if(bas)bildir('🔗 '+bas+' bağlantı kısaltılamadı (uzun link kullanılır). '+((r.d||[]).join(' | ')||''),9000);else if((r.d||[]).length)bildir('🔗 Kısaltıldı, ancak isimli link alınamadı: '+r.d.join(' | '),9000);}
+      if(r&&r.ok&&r.k){Object.keys(r.k).forEach(x=>{_kisa[x]=r.k[x];});const bas=us.filter(x=>!r.k[x]).length;if(bas)bildir('🔗 '+bas+' bağlantı kısaltılamadı (uzun link kullanılır). '+Array.from(new Set((r.d||[]).map(x=>String(x).slice(0,80)))).join(' | '),7000);else if((r.d||[]).length){const dd=Array.from(new Set(r.d.map(x=>String(x))));bildir('🔗 Kısaltıldı. İsimli (GencMedeniyet-…) link alınamadı'+(/limit/i.test(dd.join(' '))?': TinyURL günlük limiti doldu, yarın tekrar denenir.':'.'),6000);}}
       else if(r&&r.hata==='bilinmeyen'){_kisaKapali=true;bildir('🔗 Bağlantı kısaltma için Apps Script kodunu yeniden dağıtmanız gerekiyor (Dağıt → Dağıtımları yönet → Yeni sürüm).',9000);}
       else bildir('🔗 Kısaltma yanıtı alınamadı: '+((r&&r.hata)||'bilinmiyor'),7000);
     }catch(e){bildir('🔗 Kısaltma servisine ulaşılamadı: '+String(e&&e.message||e).slice(0,80),7000);}
@@ -2325,7 +2431,7 @@ function mesajKisiDoldur(){
   e.innerHTML='<option value="">— Kişi seçin —</option>'+l.map(x=>'<option value="'+kacir(x[0])+'">'+kacir(x[1]+x[3])+'</option>').join('');e.value=o;
 }
 function mesajRender(){
-  mesajKisiDoldur();if($('ms-afis'))mesajAfisHazirla();
+  mesajKisiDoldur();if($('ms-afis'))mesajAfisHazirla();kartOnizle();
   if(!$('ms-tbody')||!haftalar.length)return;
   if(seviye()<2){$('ms-tbody').innerHTML='';return;}
   const h=mesajHafta()||haftalar[0],{liste,hariç}=mesajAlicilar(),log=mesajLog()[mesajAnahtar()]||{};
@@ -2354,10 +2460,13 @@ function mesajAfisHazirla(){
   clearTimeout(_afZ);if(d)d.textContent='⏳ Afiş hazırlanıyor…';
   _afZ=setTimeout(async()=>{if(_afMesgul)return;_afMesgul=true;try{const r=await afisBlobUret(h);_afC={k,blob:r.blob,ad:r.ad};if($('ms-afis-durum'))$('ms-afis-durum').textContent=mesajAfisAnahtar(mesajHafta()||h)===k?'✅ Afiş hazır.':'';}catch(e){_afC=null;if($('ms-afis-durum'))$('ms-afis-durum').textContent='⚠️ Afiş hazırlanamadı (afiş bölümünden PNG paylaşabilirsiniz).';}_afMesgul=false;},500);
 }
-async function mesajAfisVer(h,metin){
+async function mesajAfisVer(h,metin,kisi){
   /* döner: 'paylasildi' (paylaşım menüsü), 'pano', 'yok', 'iptal' */
-  if(!mesajAfisIste()||h.ay)return 'yok';
-  let r=_afC&&_afC.k===mesajAfisAnahtar(h)?_afC:null;
+  const kartMi=kartIste();
+  if(!kartMi&&(!mesajAfisIste()||h.ay))return 'yok';
+  let r=null;
+  if(kartMi){try{r=await kartBlobIste(kisi,h);}catch(e){return 'yok';}if(!($('ms-kmetin')&&$('ms-kmetin').checked))metin='';}
+  else r=_afC&&_afC.k===mesajAfisAnahtar(h)?_afC:null;
   if(!r){try{const u=await afisBlobUret(h);r=_afC={k:mesajAfisAnahtar(h),blob:u.blob,ad:u.ad};}catch(e){return 'yok';}}
   const f=new File([r.blob],r.ad,{type:'image/png'}),mobil=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   if(mobil&&navigator.canShare&&navigator.canShare({files:[f]})){
@@ -2370,13 +2479,13 @@ async function mesajAfisVer(h,metin){
 async function mesajGonder(id){
   if(!katilimIzin())return;const k=mesajKisi(id),h=mesajHafta();if(!k||!h)return;
   if(/\{(cevap|anket)_link\}/.test($('ms-metin').value))try{await cevapLinkiYap(h,k);}catch(e){}
-  const metin=mesajMetin(k,h),afis=await mesajAfisVer(h,metin);
+  let metin=mesajMetin(k,h);const afis=await mesajAfisVer(h,metin,k);if(kartIste()&&!($('ms-kmetin')&&$('ms-kmetin').checked)&&afis!=='yok')metin='';
   if(afis==='iptal')return;
   if(afis!=='paylasildi'){
     const u=waUrl(telNorm(k.tel),metin);
     const w=window.open(u,'_blank');if(w){try{w.opener=null;}catch(e){}}else{alert('⚠️ Tarayıcı açılır pencereyi engelledi. Bu site için izin verip tekrar deneyin.');return;}
-    if(afis==='pano')bildir('🖼️ Afiş panoya kopyalandı — WhatsApp sohbetinde mesaj kutusuna yapıştırın (Ctrl+V)',6000);
-    else if(afis==='indi')bildir('🖼️ Afiş resmi indirildi — sohbete ekleyin (ataç simgesi)',6000);
+    if(afis==='pano')bildir('🖼️ '+(kartIste()?'Kart':'Afiş')+' panoya kopyalandı — WhatsApp sohbetinde mesaj kutusuna yapıştırın (Ctrl+V)',6000);
+    else if(afis==='indi')bildir('🖼️ '+(kartIste()?'Kart':'Afiş')+' resmi indirildi — sohbete ekleyin (ataç simgesi)',6000);
   }else bildir('🖼️ Paylaşım menüsünden '+k.ad+' kişisini seçip gönderin',5000);
   const l=mesajLog(),a=mesajAnahtar();l[a]=l[a]||{};l[a][String(k.id)]=Date.now();yaz(LS_MESAJ,l);mesajRender();dashboardCiz();
 }
@@ -2821,7 +2930,7 @@ const SENK_CFG='mv_senk_cfg',SENK_TS='mv_senk_ts',SENK_SON='mv_senk_son',DS_SENK
 const SENK={mesgul:false,bekle:false,zaman:null,hata:null,son:0,basladi:false,uyarildi:false};
 const _enc=new TextEncoder(),_dec=new TextDecoder();
 let _aesCache=null;
-function senkKolonlar(){return[{ad:'haftalar',k:LS.haftalar},{ad:'kutuphane',k:LS.kutuphane},{ad:'kuran',k:LS.kuran},{ad:'hadis',k:LS.hadis},{ad:'galeri',k:LS.galeri},{ad:'kisi',k:LS.kisi},{ad:'hoca',k:LS.hoca},{ad:'ihtisas',k:LS.ihtisas},{ad:'ihgrup',k:LS_IHG},{ad:'okuma',k:LS_OKUMA},{ad:'notlar',k:LS_NOT},{ad:'iftar',k:LS.iftar},{ad:'users',k:LS.users},{ad:'misafir',k:LS_MISAFIR},{ad:'aylik',k:LS_AYLIK},{ad:'analiz',k:LS_ANALIZ},{ad:'afisler',k:LS_AFISLER},{ad:'logo',k:LS.logo},{ad:'faaliyet',k:LS_FAAL},{ad:'ekip',k:LS_EKIP},{ad:'gorev',k:LS_GOREV},{ad:'istisare',k:LS_IST},{ad:'dosyalar',k:LS_DOSYA},{ad:'mesaj',k:LS_MESAJ},{ad:'menu',k:LS_MENU},{ad:'talimat',k:LS_TALIMAT},{ad:'dersler',k:LS_DERS},{ad:'davet',k:LS_DAVET},{ad:'davetli',k:LS_DAVETLI},{ad:'gunluk',k:LS_GUNLUK},{ad:'yplan',k:LS_YPLAN},{ad:'dplan',k:LS_DPLAN},{ad:'raporayar',k:LS_RAPORAYAR},{ad:'kitaplik',k:LS_KTP},{ad:'kitapemanet',k:LS_KTPE},{ad:'kitapliste',k:LS_KTPL},{ad:'kitapkat',k:LS_KTPK},{ad:'cop',k:LS_COP},{ad:'islemgunlugu',k:LS_GUN}];}
+function senkKolonlar(){return[{ad:'haftalar',k:LS.haftalar},{ad:'kutuphane',k:LS.kutuphane},{ad:'kuran',k:LS.kuran},{ad:'hadis',k:LS.hadis},{ad:'galeri',k:LS.galeri},{ad:'kisi',k:LS.kisi},{ad:'hoca',k:LS.hoca},{ad:'ihtisas',k:LS.ihtisas},{ad:'ihgrup',k:LS_IHG},{ad:'okuma',k:LS_OKUMA},{ad:'notlar',k:LS_NOT},{ad:'iftar',k:LS.iftar},{ad:'users',k:LS.users},{ad:'misafir',k:LS_MISAFIR},{ad:'aylik',k:LS_AYLIK},{ad:'analiz',k:LS_ANALIZ},{ad:'afisler',k:LS_AFISLER},{ad:'logo',k:LS.logo},{ad:'faaliyet',k:LS_FAAL},{ad:'ekip',k:LS_EKIP},{ad:'gorev',k:LS_GOREV},{ad:'istisare',k:LS_IST},{ad:'dosyalar',k:LS_DOSYA},{ad:'mesaj',k:LS_MESAJ},{ad:'msablon',k:LS_MSABLON},{ad:'menu',k:LS_MENU},{ad:'talimat',k:LS_TALIMAT},{ad:'dersler',k:LS_DERS},{ad:'davet',k:LS_DAVET},{ad:'davetli',k:LS_DAVETLI},{ad:'gunluk',k:LS_GUNLUK},{ad:'yplan',k:LS_YPLAN},{ad:'dplan',k:LS_DPLAN},{ad:'raporayar',k:LS_RAPORAYAR},{ad:'kitaplik',k:LS_KTP},{ad:'kitapemanet',k:LS_KTPE},{ad:'kitapliste',k:LS_KTPL},{ad:'kitapkat',k:LS_KTPK},{ad:'cop',k:LS_COP},{ad:'islemgunlugu',k:LS_GUN}];}
 function senkCfg(){const c=oku(SENK_CFG,null);return c&&c.url&&c.auth&&c.aes?c:null;}
 function senkGuvenli(){return !!(window.crypto&&crypto.subtle);}
 function hexDe(h){const u=new Uint8Array(h.length/2);for(let i=0;i<u.length;i++)u[i]=parseInt(h.substr(i*2,2),16);return u;}
@@ -8327,13 +8436,81 @@ function degFaalIcerik(){
 function degHaftaSecici(hs,deger,tumu){
   return '<select id="ka-hafta" aria-label="Hafta" onchange="degHafta=this.value;degRender()" style="padding:6px 8px;border:1px solid var(--kenar);border-radius:5px;">'+(tumu?'<option value="">Tüm haftalar</option>':'')+hs.map(w=>'<option value="'+kacir(w.id)+'"'+(deger&&esit(w.id,deger)?' selected':'')+'>'+kacir(tarihYaz(w.iso,true))+'</option>').join('')+'</select>';
 }
+/* ---- Yapay zekâya yorumlat: anket sonuçlarından hazır istem üretir ---- */
+let _aiKaynak=null;
+function aiSatir(ad,v){return '- '+ad+': '+f1(v)+' / 5';}
+function aiVeri(isim){
+  const gz=(c)=>isim&&c.ad?' ['+String(c.ad).slice(0,40)+']':'';
+  const Y=[];let baslik='',donem='',n=0,ozet=[];
+  const cik=(ad,list,fn)=>{const l=list.map(fn).filter(Boolean);if(l.length){Y.push('\n### '+ad);l.forEach(x=>Y.push('- '+x));}};
+  if(degSekme==='surec'){
+    const H=haftalar.filter(h=>anketOzet(h)&&(!degHafta||esit(h.id,degHafta))).sort((a,b)=>a.iso<b.iso?-1:1);
+    if(!H.length)return null;
+    const O=H.map(h=>anketOzet(h));n=O.reduce((t,o)=>t+o.n,0);
+    baslik='Süreç yönetimi anketi (ekip içi değerlendirme)';donem=degHafta?tarihYaz(H[0].iso,true):H.length+' haftalık dönem';
+    const soru=ANKET_KISA.map((_,i)=>ort(O.map(o=>o.soru[i])));
+    ozet.push('Genel ortalama: '+f1(ort(O.map(o=>o.genel)))+' / 5');
+    Y.push('\n### Soru bazında ortalamalar (1-5)');ANKET_KISA.forEach((k,i)=>Y.push(aiSatir(k,soru[i])));
+    if(!degHafta&&H.length>1){Y.push('\n### Haftalara göre genel ortalama');H.forEach((h,i)=>Y.push('- '+tarihYaz(h.iso,true)+': '+f1(O[i].genel)+' ('+O[i].n+' yanıt)'));}
+    const C=[];H.forEach(h=>anketOzet(h).C.forEach(c=>C.push(c)));
+    cik('İyi giden / teşekkür',C.filter(c=>c.iyi),c=>c.iyi+gz(c));
+    cik('Geliştirilecek',C.filter(c=>c.gelistir),c=>c.gelistir+gz(c));
+  }else if(degSekme==='katilimci'){
+    const hs=degHafta?[haftalar.find(x=>esit(x.id,degHafta))].filter(Boolean):kanketHaftalar();
+    const hepsi=[];hs.forEach(h=>kanketCevaplar(h).forEach(c=>hepsi.push(Object.assign({h},c))));
+    if(!hepsi.length)return null;const oz=kanketOzet(hepsi);n=oz.n;
+    baslik='Katılımcı anketi (Üniversiteli Gençlik Buluşmaları / Kahvaltı Programı)';donem=degHafta?tarihYaz(hs[0].iso,true):hs.length+' haftalık dönem';
+    ozet.push('Genel ortalama: '+f1(oz.genel)+' / 5','Arkadaşına tavsiye eder: Evet '+oz.o.e+', Belki '+oz.o.b+', Hayır '+oz.o.h);
+    Y.push('\n### Soru bazında ortalamalar (1-5)');KANKET_SORU.forEach((k,i)=>Y.push(aiSatir(k,oz.ort[i])));
+    if(!degHafta&&hs.length>1){Y.push('\n### Haftalara göre genel ortalama');hs.forEach(w=>{const o=kanketOzet(kanketCevaplar(w));Y.push('- '+tarihYaz(w.iso,true)+': '+f1(o.genel)+' ('+o.n+' yanıt)');});}
+    for(let t=0;t<3;t++)cik(KANKET_T[t],hepsi.filter(c=>c.t&&c.t[t]),c=>c.t[t]);
+  }else if(degSekme==='aylik'){
+    const L=ayCevaplar(ayBul(degAy));if(!L.length)return null;const o=ayOzet(L);n=o.n;
+    baslik='Aylık genel değerlendirme anketi (birimin tüm çalışmaları)';donem=ayAd(degAy);
+    ozet.push('Genel ortalama: '+f1(o.genel)+' / 5','Tavsiye puanı: '+f1(o.ort[o.D.tav])+' / 5');
+    const ay=ayListe().filter(x=>ayCevaplar(ayBul(x)).length).sort(),i0=ay.indexOf(degAy);
+    if(i0>0){const p=ayOzet(ayCevaplar(ayBul(ay[i0-1]))),f=o.genel-p.genel;ozet.push('Geçen ay ('+ayAd(ay[i0-1])+') genel ortalaması: '+f1(p.genel)+' → değişim '+(f>=0?'+':'')+f.toFixed(2).replace('.',',')+')');}
+    Y.push('\n### Başlık gruplarına göre ortalama (1-5)');o.grup.forEach(g=>Y.push(aiSatir(g[0],g[1])));
+    Y.push('\n### Soru bazında ortalama (1-5)');o.D.S.forEach((q,i)=>{if(o.say[i])Y.push('- '+(o.D.K[i]||q)+': '+f1(o.ort[i])+(o.say[i]<o.n?' ('+o.say[i]+' kişi)':''));});
+    const po=ayProgramOzet(L).filter(m=>m.kat);if(po.length){Y.push('\n### Programların ortalama puanı');po.forEach(m=>Y.push('- '+m.ad+': '+f1(m.ort)+' / 5 ('+m.kat+' katılımcı)'));}
+    for(let t=0;t<o.D.T.length;t++)cik(o.D.T[t],L.filter(c=>c.t&&c.t[t]),c=>c.t[t]);
+  }else if(degSekme==='faaliyet'){
+    const L=faalListesi.filter(e=>faalAnketOzet(e)).sort((a,b)=>a.iso<b.iso?-1:1);if(!L.length)return null;
+    const O=L.map(e=>faalAnketOzet(e));n=O.reduce((t,a)=>t+a.n,0);
+    baslik='Faaliyet organizasyon değerlendirme anketleri';donem=L.length+' faaliyet';
+    ozet.push('Genel ortalama: '+f1(ort(O.map(a=>a.genel)))+' / 5');
+    Y.push('\n### Faaliyetlere göre genel ortalama');L.forEach((e,i)=>Y.push('- '+e.baslik+' ('+faalTarihYaz(e)+'): '+f1(O[i].genel)+' ('+O[i].n+' yanıt)'));
+    Y.push('\n### Soru bazında ortalama (1-5)');FAAL_ANKET_KISA.forEach((k,i)=>Y.push(aiSatir(k,ort(O.map(a=>a.soru[i])))));
+    const C=[];O.forEach((a,i)=>a.C.forEach(c=>C.push(Object.assign({},c,{_e:L[i]}))));
+    cik('İyi giden / teşekkür',C.filter(c=>c.iyi),c=>c.iyi+' ('+c._e.baslik+')'+gz(c));
+    cik('Geliştirilecek',C.filter(c=>c.gelistir),c=>c.gelistir+' ('+c._e.baslik+')'+gz(c));
+  }else return null;
+  return 'Sen deneyimli bir gençlik/sivil toplum faaliyetleri danışmanısın. Aşağıda Medeniyet Vakfı Ankara Üniversite Birimi (Genç Medeniyet) için yapılan bir anketin sonuçları var. Sonuçları Türkçe, sade ve uygulanabilir şekilde yorumla.\n\n'
+   +'## Anket: '+baslik+'\nDönem: '+donem+'\nYanıt sayısı: '+n+'\n'+ozet.join('\n')+'\n'+Y.join('\n')
+   +'\n\n## İstediğim çıktı\n1. Genel durum özeti (3-4 cümle).\n2. Güçlü yönler (en fazla 5 madde, rakamlara dayanarak).\n3. Zayıf yönler / riskler (en fazla 5 madde).\n4. Açık uçlu cevaplardaki ortak temalar ve dikkat çeken tek tek görüşler.\n5. Önceliklendirilmiş eylem listesi (önce yapılacak 5 somut öneri; kim, ne, ne zaman).\n6. Bir sonraki ankette eklemeyi/çıkarmayı önerdiğin sorular.\nKısa, madde madde ve gerçekçi yaz; olmayan veriyi uydurma.';
+}
+function degAiAc(){
+  if(!izin(2))return;
+  const p=aiVeri(false);if(!p){alert('Bu sekmede yorumlanacak anket yanıtı yok.');return;}
+  modalGoster('🤖 Yapay zekâya yorumlat','Hazır istemi kopyalayıp Claude’a yapıştırın',
+    '<p style="font-size:13px;margin:0 0 8px;">1) <b>Kopyala</b> düğmesine basın. 2) Claude’u açıp yapıştırın. Yanıtlar, puanlar ve açık uçlu görüşler istemin içindedir; veri kendiliğinden hiçbir yere gitmez.</p>'
+    +'<label style="display:flex;gap:6px;align-items:center;font-size:13px;margin-bottom:8px;"><input type="checkbox" id="ai-isim" onchange="degAiYenile()"> Cevap yazanların adlarını da ekle (varsayılan: isimsiz)</label>'
+    +'<textarea id="ai-metin" style="width:100%;min-height:280px;font-size:12.5px;font-family:inherit;padding:8px;border:1px solid var(--kenar);border-radius:6px;" aria-label="Yapay zekâ istemi">'+kacir(p)+'</textarea>'
+    +'<div class="form-butonlar" style="margin-top:10px;"><button class="btn btn-mavi" onclick="degAiKopyala()">📋 Kopyala</button><a class="btn btn-gri" href="https://claude.ai/new" target="_blank" rel="noopener">Claude’u aç ↗</a></div>');
+}
+function degAiYenile(){const t=$('ai-metin'),c=$('ai-isim');if(!t)return;const p=aiVeri(!!(c&&c.checked));if(p)t.value=p;}
+function degAiKopyala(){
+  const t=$('ai-metin');if(!t)return;
+  const son=()=>{t.focus();t.select();try{document.execCommand('copy');bildir('Kopyalandı. Şimdi Claude’a yapıştırın.');}catch(e){bildir('Metni seçtim; Ctrl+C ile kopyalayın.');}};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t.value).then(()=>bildir('Kopyalandı. Şimdi Claude’a yapıştırın.'),son);else son();
+}
 function degRender(){
   const kap=$('dg-kap');if(!kap)return;if(seviye()<1){kap.innerHTML='';return;}
   if(seviye()<2)degSekme='takip';
   const S=seviye()<2?[['takip','📉 Takip']]:[['takip','📉 Kişi takibi'],['surec','👥 Süreç (ekip)'],['katilimci','📨 Katılımcı'],['aylik','📅 Aylık genel'],['faaliyet','🌿 Faaliyet']];
   if(seviye()>=2)S.unshift(S.shift());
   let h='<div class="banner bilgi">Anket analizleri yalnızca yöneticiye görünür. Analiz yazıları hafta/dönem raporlarına otomatik eklenir. Yanıtları Drive eşitlemesiyle çekebilirsiniz.</div>'
-    +'<div class="ar-chipler" style="margin:0 0 12px;">'+S.map(s=>'<button class="chip-btn'+(degSekme===s[0]?' aktif':'')+'" onclick="degSekme=\''+s[0]+'\';degRender()">'+s[1]+'</button>').join('')+(seviye()>=2?'<button class="btn btn-altin btn-k" onclick="degDonemRapor()">📄 Dönem Raporu</button>':'')+'</div><div class="kart">';
+    +'<div class="ar-chipler" style="margin:0 0 12px;">'+S.map(s=>'<button class="chip-btn'+(degSekme===s[0]?' aktif':'')+'" onclick="degSekme=\''+s[0]+'\';degRender()">'+s[1]+'</button>').join('')+(seviye()>=2?'<button class="btn btn-altin btn-k" onclick="degDonemRapor()">📄 Dönem Raporu</button>':'')+(seviye()>=2&&degSekme!=='takip'?'<button class="btn btn-mavi btn-k" onclick="degAiAc()">🤖 Yapay zekâya yorumlat</button>':'')+'</div><div class="kart">';
   const eski=(typeof SENK!=='undefined'&&SENK.eskiKod)?'<div class="banner">⚠️ Apps Script kodunuz eski. Eşitleme → kodu yeniden kopyalayıp yeni sürüm olarak dağıtın.</div>':'';
   if(degSekme==='takip'){kap.innerHTML=h.replace(/<div class="banner bilgi">Anket analizleri[^]*?<\/div>/,'')+'<div id="tk-kap"></div></div>';tkRender();return;}
   if(degSekme==='katilimci'){
@@ -8399,7 +8576,7 @@ async function kalicilikIste(){
 async function tamYedekIndir(resimli){
   if(!izin(2))return;
   bildir('⏳ Yedek hazırlanıyor…',6000);
-  const yedek={surum:4,tarih:new Date().toISOString(),haftalar,kutuphane:ktListesi,kuran:krListesi,hadis:hdListesi,galeri:glListesi,kisiler:kListesi,hocalar:hListesi,ihtisas,ihGruplar,okuma:okListesi,notlar:notListesi,sepet,iftar:iftarListesi,faaliyet:faalListesi,misafir:misafirListesi,aylik:aylikListesi,analiz:analizNot,afisler:afisListesi,menuKatalog:oku(LS_MENU,null),talimat:oku(LS_TALIMAT,null),dersler:oku(LS_DERS,[]),davet:oku(LS_DAVET,[]),davetli:oku(LS_DAVETLI,[]),gunluk:oku(LS_GUNLUK,[]),dplan:oku(LS_DPLAN,[]),raporayar:oku(LS_RAPORAYAR,{}),yplan:oku(LS_YPLAN,[]),kitaplik:oku(LS_KTP,[]),kitapEmanet:oku(LS_KTPE,[]),kitapListe:oku(LS_KTPL,[]),kitapKat:oku(LS_KTPK,{}),ekip:ekipListesi,gorevler:gorevListesi,istisare:istListesi,dosyalar:dsListesi,logo:oku(LS.logo,null),resimler:{}};
+  const yedek={surum:4,tarih:new Date().toISOString(),haftalar,kutuphane:ktListesi,kuran:krListesi,hadis:hdListesi,galeri:glListesi,kisiler:kListesi,hocalar:hListesi,ihtisas,ihGruplar,okuma:okListesi,notlar:notListesi,sepet,iftar:iftarListesi,faaliyet:faalListesi,misafir:misafirListesi,aylik:aylikListesi,analiz:analizNot,afisler:afisListesi,menuKatalog:oku(LS_MENU,null),talimat:oku(LS_TALIMAT,null),dersler:oku(LS_DERS,[]),davet:oku(LS_DAVET,[]),davetli:oku(LS_DAVETLI,[]),gunluk:oku(LS_GUNLUK,[]),dplan:oku(LS_DPLAN,[]),raporayar:oku(LS_RAPORAYAR,{}),yplan:oku(LS_YPLAN,[]),kitaplik:oku(LS_KTP,[]),kitapEmanet:oku(LS_KTPE,[]),kitapListe:oku(LS_KTPL,[]),kitapKat:oku(LS_KTPK,{}),ekip:ekipListesi,gorevler:gorevListesi,istisare:istListesi,dosyalar:dsListesi,logo:oku(LS.logo,null),msablon:oku(LS_MSABLON,{}),resimler:{}};
   if(resimli!==false){
     const anahtarlar=glListesi.map(g=>'g:'+g.id).concat(ktListesi.filter(k=>k.kapak).map(k=>'k:'+k.id)).concat(oku(LS_KTP,[]).filter(k=>k&&k.kapak).map(k=>'k:ktp'+k.id));
     for(const a of anahtarlar){try{const b=await idbGet(a);if(b)yedek.resimler[a]=await blobDataUrl(b);}catch(e){}}
@@ -8431,6 +8608,7 @@ function yedekYukle(){
       if(Array.isArray(y.misafir))yaz(LS_MISAFIR,nesneler(y.misafir));if(Array.isArray(y.aylik))yaz(LS_AYLIK,nesneler(y.aylik));if(Array.isArray(y.afisler))yaz(LS_AFISLER,nesneler(y.afisler));if(y.analiz&&typeof y.analiz==='object'&&!Array.isArray(y.analiz))yaz(LS_ANALIZ,y.analiz);if(y.menuKatalog&&typeof y.menuKatalog==='object'&&!Array.isArray(y.menuKatalog))yaz(LS_MENU,y.menuKatalog);if(y.talimat&&typeof y.talimat==='object'&&!Array.isArray(y.talimat))yaz(LS_TALIMAT,y.talimat);if(Array.isArray(y.dersler))yaz(LS_DERS,y.dersler);if(Array.isArray(y.davet))yaz(LS_DAVET,y.davet);if(Array.isArray(y.davetli))yaz(LS_DAVETLI,y.davetli);if(Array.isArray(y.gunluk))yaz(LS_GUNLUK,y.gunluk);if(Array.isArray(y.yplan))yaz(LS_YPLAN,y.yplan);if(Array.isArray(y.dplan))yaz(LS_DPLAN,y.dplan);if(y.raporayar&&typeof y.raporayar==='object'&&!Array.isArray(y.raporayar))yaz(LS_RAPORAYAR,y.raporayar);
       if(Array.isArray(y.ekip))yaz(LS_EKIP,nesneler(y.ekip));if(Array.isArray(y.gorevler))yaz(LS_GOREV,nesneler(y.gorevler));if(Array.isArray(y.istisare))yaz(LS_IST,nesneler(y.istisare));
       if(typeof y.logo==='string'&&y.logo.startsWith('data:image/'))yaz(LS.logo,y.logo);
+      if(y.msablon&&typeof y.msablon==='object'&&!Array.isArray(y.msablon))yaz(LS_MSABLON,y.msablon);
       if(resimVar){
         await idbIs('readwrite',s=>{s.openCursor().onsuccess=e=>{const c=e.target.result;if(c){if(/^[gkb]:/.test(c.key))c.delete();c.continue();}};});
         Object.keys(resimUrl).forEach(k=>{try{URL.revokeObjectURL(resimUrl[k]);}catch(e){}delete resimUrl[k];});
