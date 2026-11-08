@@ -3249,7 +3249,7 @@ function okRender(){
   let h='<div class="kart" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">'
     +'<select id="ok-alanf" aria-label="Alan" onchange="okAlanF=this.value;okRender()" style="padding:8px;border:1px solid var(--kenar);border-radius:6px;"><option value="">Tüm alanlar</option>'+alanlar.sort((a,b)=>a.localeCompare(b,'tr')).map(a=>'<option value="'+kacir(a)+'"'+(a===okAlanF?' selected':'')+'>'+kacir(a)+'</option>').join('')+'</select>'
     +'<input type="search" id="ok-ara" placeholder="Listelerde ara…" aria-label="Listelerde ara" value="'+kacir(okAra)+'" oninput="okAra=this.value;okAraGec()" style="flex:1;min-width:160px;padding:8px 12px;border:1px solid var(--kenar);border-radius:6px;">'
-    +'<button class="btn btn-mavi yetkili-only" onclick="okListeForm()">➕ Yeni Liste</button></div>';
+    +'<button class="btn btn-mavi yetkili-only" onclick="okListeForm()">➕ Yeni Liste</button><button class="btn btn-altin yetkili-only" onclick="ktpToplu(\'ok:+\')">📥 CSV / toplu kitap</button></div>';
   if(!okListesi.length)h+='<div class="kart"><p class="alt-yazi" style="margin:0">Henüz okuma listesi yok. “Yeni Liste” ile bir alan (örn. Siyer, Akaid) için tavsiye kitap listesi oluşturun; kitapları Kaynak Kitaplar’dan seçebilir ya da elle yazabilirsiniz.</p></div>';
   else if(!liste.length)h+='<div class="kart"><p class="alt-yazi" style="margin:0">Eşleşen liste yok.</p></div>';
   Object.keys(gruplar).sort((a,b)=>a.localeCompare(b,'tr')).forEach(a=>{
@@ -6764,7 +6764,7 @@ function ktpKitapCiz(){
    +sel('ktp-durumf','ktpDurumF=this.value;ktpKitapGovde()',[['','Hepsi'],['rafta','Rafta'],['emanet','Emanette'],['gecikmis','Gecikmiş']],ktpDurumF)
    +sel('ktp-gor','ktpUiYaz(\'gor\',this.value);ktpKitapGovde()',[['liste','Liste'],['kapak','Kapaklı']],u.gor)
    +sel('ktp-boy','ktpUiYaz(\'boy\',this.value);ktpKitapGovde()',[['s','Küçük resim'],['m','Orta resim'],['b','Büyük resim']],u.boy)
-   +'</div><div class="form-butonlar admin-only" style="margin:0 0 10px;"><button class="btn btn-mavi" onclick="ktpForm()">➕ Kitap Ekle</button><button class="btn btn-altin" onclick="ktpToplu()">📥 Toplu Ekle</button><button class="btn btn-gri" onclick="ktpKatEkle()">🗂️ Kategori Ekle</button></div>'
+   +'</div><div class="form-butonlar admin-only" style="margin:0 0 10px;"><button class="btn btn-mavi" onclick="ktpForm()">➕ Kitap Ekle</button><button class="btn btn-altin" onclick="ktpToplu()">📥 Toplu Ekle</button><button class="btn btn-altin" onclick="ktpToplu(0,1)">📂 Excel / CSV yükle</button><button class="btn btn-gri" onclick="ktpKatEkle()">🗂️ Kategori Ekle</button></div>'
    +'<div class="form-butonlar" style="margin:0 0 10px;"><button class="btn btn-gri btn-k" onclick="ktpEnvanterRapor()">📄 Envanter raporu</button><button class="btn btn-gri btn-k" onclick="ktpCsv()">⬇️ CSV</button></div>'
    +'<div id="ktp-ozet" class="alt-yazi" style="margin:4px 0 8px;"></div><div id="ktp-secim"></div><div id="ktp-govde"></div>';
   ktpKitapGovde();
@@ -6903,29 +6903,150 @@ function ktpKatBul(ad){
   for(const a of Object.keys(k)){const s=k[a].find(x=>norm(x).includes(n));if(s)return{kat:a,alt:s};}
   return null;
 }
-function ktpToplu(){
+/* ---- CSV dosyası yükleme (toplu ekleme pencereleri için) ---- */
+/* ---- Excel (.xlsx) okuyucu: zip + XML, kütüphane gerektirmez ---- */
+async function xlsxInflate(u8){
+  const ds=new DecompressionStream('deflate-raw'),w=ds.writable.getWriter();w.write(u8);w.close();
+  return new Uint8Array(await new Response(ds.readable).arrayBuffer());
+}
+async function xlsxDosyalar(buf){
+  const u=new Uint8Array(buf),dv=new DataView(buf);let e=-1;
+  for(let i=u.length-22;i>=Math.max(0,u.length-65600);i--){if(dv.getUint32(i,true)===0x06054b50){e=i;break;}}
+  if(e<0)throw new Error('Geçerli bir .xlsx dosyası değil.');
+  const n=dv.getUint16(e+10,true);let p=dv.getUint32(e+16,true);const F={};
+  for(let k=0;k<n;k++){
+    if(dv.getUint32(p,true)!==0x02014b50)break;
+    const yon=dv.getUint16(p+10,true),bo=dv.getUint32(p+20,true),ln=dv.getUint16(p+28,true),xn=dv.getUint16(p+30,true),cn=dv.getUint16(p+32,true),ofs=dv.getUint32(p+42,true);
+    const ad=new TextDecoder().decode(u.subarray(p+46,p+46+ln));p+=46+ln+xn+cn;
+    if(!/^xl\/(sharedStrings\.xml|workbook\.xml|_rels\/workbook\.xml\.rels|worksheets\/sheet\d+\.xml)$/.test(ad))continue;
+    const lh=ofs,ln2=dv.getUint16(lh+26,true),xn2=dv.getUint16(lh+28,true),bas=lh+30+ln2+xn2,ham=u.subarray(bas,bas+bo);
+    F[ad]={yon,ham};
+  }
+  return F;
+}
+async function xlsxMetin(f){if(!f)return '';const u=f.yon===0?f.ham:await xlsxInflate(f.ham);return new TextDecoder('utf-8').decode(u);}
+function xlsxSutun(r){const m=/^([A-Z]+)/.exec(r||'');if(!m)return -1;let n=0;for(const c of m[1])n=n*26+(c.charCodeAt(0)-64);return n-1;}
+async function xlsxOku(buf){
+  const F=await xlsxDosyalar(buf),dp=new DOMParser(),ayr=t=>dp.parseFromString(t,'application/xml');
+  const ss=[];const sx=await xlsxMetin(F['xl/sharedStrings.xml']);
+  if(sx)Array.from(ayr(sx).getElementsByTagName('si')).forEach(si=>ss.push(Array.from(si.getElementsByTagName('t')).map(t=>t.textContent).join('')));
+  /* ilk sayfa: workbook sırasına göre */
+  let yol='';
+  try{
+    const wb=ayr(await xlsxMetin(F['xl/workbook.xml'])),rl=ayr(await xlsxMetin(F['xl/_rels/workbook.xml.rels'])),sh=wb.getElementsByTagName('sheet')[0];
+    const rid=sh&&(sh.getAttribute('r:id')||sh.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships','id'));
+    const rel=Array.from(rl.getElementsByTagName('Relationship')).find(r=>r.getAttribute('Id')===rid);
+    if(rel){const t=rel.getAttribute('Target').replace(/^\/?(xl\/)?/,'');yol='xl/'+t;}
+  }catch(e){}
+  if(!F[yol])yol=Object.keys(F).filter(k=>/worksheets\/sheet\d+\.xml$/.test(k)).sort((a,b)=>parseInt(a.match(/\d+/g).pop())-parseInt(b.match(/\d+/g).pop()))[0];
+  if(!yol)throw new Error('Excel dosyasında sayfa bulunamadı.');
+  const doc=ayr(await xlsxMetin(F[yol])),R=[];
+  Array.from(doc.getElementsByTagName('row')).forEach(row=>{
+    const r=[];Array.from(row.getElementsByTagName('c')).forEach((c,i)=>{
+      let j=xlsxSutun(c.getAttribute('r'));if(j<0)j=r.length;const t=c.getAttribute('t'),ve=c.getElementsByTagName('v')[0];let x='';
+      if(t==='s')x=ss[Number(ve&&ve.textContent)]||'';
+      else if(t==='inlineStr')x=Array.from(c.getElementsByTagName('t')).map(z=>z.textContent).join('');
+      else if(ve){x=ve.textContent;if(!t||t==='n'){if(/e/i.test(x)&&isFinite(Number(x)))x=Number(x).toFixed(0);else if(/^-?\d+\.0+$/.test(x))x=x.replace(/\.0+$/,'');}}
+      while(r.length<j)r.push('');r[j]=String(x).trim();
+    });
+    if(r.some(z=>z))R.push(r);
+  });
+  return R;
+}
+function csvAyristir(t){
+  t=String(t||'').replace(/^﻿/,'');const ilk=t.split(/\r?\n/).find(s=>s.trim())||'';
+  const say=c=>(ilk.match(new RegExp(c==='\t'?'\t':'\\'+c,'g'))||[]).length;
+  const ay=say(';')>=say(',')&&say(';')>=say('\t')?';':(say('\t')>say(',')?'\t':',');
+  const R=[];let r=[],h='',q=false;
+  for(let i=0;i<t.length;i++){const c=t[i];
+    if(q){if(c==='"'){if(t[i+1]==='"'){h+='"';i++;}else q=false;}else h+=c;}
+    else if(c==='"'&&!h)q=true;
+    else if(c===ay){r.push(h.trim());h='';}
+    else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;r.push(h.trim());h='';if(r.some(x=>x))R.push(r);r=[];}
+    else h+=c;}
+  r.push(h.trim());if(r.some(x=>x))R.push(r);return R;
+}
+function csvMetin(buf){try{return new TextDecoder('utf-8',{fatal:true}).decode(buf);}catch(e){try{return new TextDecoder('windows-1254').decode(buf);}catch(e2){return new TextDecoder().decode(buf);}}}
+const CSV_KTP_BASLIK={baslik:['kitap','kitap adi','kitapadi','baslik','ad','eser','kitap ismi'],yazar:['yazar','muellif'],yayinevi:['yayinevi','yayinci','yayin evi'],yil:['yil','basim yili','yayin yili'],kat:['kategori','kat','alan'],alt:['alt kategori','altkategori','alt'],isbn:['isbn'],etiket:['etiket','etiketler','anahtar kelime'],not:['not','notlar','aciklama','yorum']};
+function csvKtpSatirlari(R){
+  if(!R.length)return[];
+  const nn=x=>norm(x).replace(/[^a-z0-9 ]/g,'');let idx={baslik:0,yazar:1,yayinevi:2,yil:3,kat:4,alt:5,isbn:-1,etiket:-1,not:-1},baslikVar=false;
+  const ilk=R[0].map(nn),bul=k=>ilk.findIndex(x=>CSV_KTP_BASLIK[k].includes(x));
+  if(bul('baslik')>=0||bul('yazar')>=0){baslikVar=true;idx={};Object.keys(CSV_KTP_BASLIK).forEach(k=>{idx[k]=bul(k);});if(idx.baslik<0)idx.baslik=0;}
+  const L=[];let sonK='';
+  R.slice(baslikVar?1:0).forEach(r=>{
+    const g=k=>idx[k]>=0?(r[idx[k]]||'').trim():'';const bas=g('baslik');if(!bas)return;
+    const kat=g('kat'),alt=g('alt'),k=kat+'›'+alt;
+    if((kat||alt)&&k!==sonK){L.push('# '+(kat&&alt?kat+' › '+alt:(alt||kat)));sonK=k;}else if(!kat&&!alt&&sonK&&sonK!=='›'&&(idx.kat>=0||idx.alt>=0)){L.push('# -');sonK='›';}
+    L.push([bas,g('yazar'),g('yayinevi'),g('yil'),g('isbn'),g('etiket'),g('not')].map(x=>String(x).replace(/[;\t\r\n]+/g,', ').trim()).join(' ; ').replace(/( ; )+$/,''));
+  });
+  return L;
+}
+function csvGenelSatirlari(R){
+  if(!R.length)return[];const a=R[0].map(x=>norm(x));
+  const baslikMi=!/\d/.test(R[0][0]||'')&&a.some(x=>/^(tarih|faaliyet|baslik|ad|konu|kitap)/.test(x));
+  return R.slice(baslikMi?1:0).map(r=>r.map(x=>x||'-').join(' ; ').replace(/( ; -)+$/,'')).filter(s=>s.replace(/[-; ]/g,''));
+}
+function csvDosyaSec(taId,mod){
+  const i=document.createElement('input');i.type='file';i.accept='.xlsx,.csv,.tsv,.txt,text/csv,text/plain,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+  i.onchange=async()=>{const f=i.files&&i.files[0];if(!f)return;
+    try{const ad=f.name.toLowerCase();if(/\.xls$/.test(ad)){alert('⚠️ Eski .xls biçimi okunamıyor. Excel’de “Farklı kaydet” ile .xlsx (Excel Çalışma Kitabı) ya da CSV olarak kaydedip yükleyin.');return;}const buf=await f.arrayBuffer(),R=/\.xlsx$/.test(ad)?await xlsxOku(buf):csvAyristir(csvMetin(buf)),S=mod==='ktp'?csvKtpSatirlari(R):csvGenelSatirlari(R),t=$(taId);
+      if(!t)return;if(!S.length){alert('⚠️ Dosyada okunabilir satır bulunamadı. İlk satır başlık olabilir; sütunlar “;” ya da “,” ile ayrılmış olmalı.');return;}
+      t.value=(t.value.trim()?t.value.replace(/\s+$/,'')+'\n':'')+S.join('\n');
+      const n=S.filter(x=>x[0]!=='#').length;bildir('📂 '+n+' satır yüklendi — kontrol edip “Ekle”ye basın',5000);
+      if(mod==='ktp'&&$('ktp-hn')&&!$('ktp-hn').value)$('ktp-hn').value=f.name.replace(/\.[^.]+$/,'');
+    }catch(e){alert('⚠️ Dosya okunamadı: '+(e&&e.message||e));}};
+  i.click();
+}
+function csvOrnekIndir(){csvIndir('ornek-kitap-listesi.csv',[['Kitap','Yazar','Yayınevi','Yıl','Kategori','Alt kategori'],['Risale-i Nur Külliyatı','Said Nursi','','',Object.keys(ktpKatlar())[0]||'',''],['Örnek Kitap Adı','Örnek Yazar','Örnek Yayınevi','2020','','']]);}
+function csvDugmeEkle(taId,mod){
+  const t=$(taId);if(!t||t.dataset.csv)return;t.dataset.csv=1;
+  const d=document.createElement('div');d.className='form-butonlar';d.style.margin='0 0 8px';
+  d.innerHTML='<button type="button" class="btn btn-mavi btn-k" onclick="csvDosyaSec(\''+taId+'\',\''+mod+'\')">📂 Excel / CSV yükle</button>'+(mod==='ktp'?'<button type="button" class="btn btn-gri btn-k" onclick="csvOrnekIndir()">⬇️ Örnek CSV</button>':'')+'<span class="alt-yazi" style="margin:0;align-self:center;">Excel (.xlsx) ya da CSV; ilk satır başlık olabilir.</span>';
+  t.parentNode.insertBefore(d,t);
+}
+function ktpHedefSecenekleri(){
+  return '<option value="">— Yalnızca kitaplığa ekle —</option><optgroup label="📚 Kitap listesi">'+'<option value="kl:+">➕ Yeni kitap listesi aç</option>'+ktpL().map(l=>'<option value="kl:'+kacir(l.id)+'">'+kacir(l.ad)+'</option>').join('')+'</optgroup><optgroup label="📖 Okuma listesi (program)">'+'<option value="ok:+">➕ Yeni okuma listesi aç</option>'+okListesi.map(o=>'<option value="ok:'+kacir(o.id)+'">'+kacir(o.ad)+'</option>').join('')+'</optgroup>';
+}
+function ktpHedefDegis(){const v_=v('ktp-hd');const d=$('ktp-hn-kap');if(d)d.style.display=/:\+$/.test(v_)?'':'none';}
+function ktpHedefeEkle(hedef,ad,B){
+  if(!hedef||!B.length)return '';
+  const m=/^(kl|ok):(.+)$/.exec(hedef);if(!m)return '';const yeni=m[2]==='+';let n=0,ada='';
+  if(m[1]==='kl'){
+    let l=yeni?null:ktpL().find(x=>esit(x.id,m[2]));
+    if(!l){l={id:uid(),ad:ad||'Yeni kitap listesi',not:'',ids:[],hedef:[],tarih:bugunIso()};ktpL().unshift(l);}
+    B.forEach(b=>{if(!l.ids.some(z=>esit(z,b.id))){l.ids.push(b.id);n++;}});ktpYL();ada='kitap listesi “'+l.ad+'”';
+  }else{
+    let o=yeni?null:okListesi.find(x=>esit(x.id,m[2]));
+    if(!o){o={id:uid(),ad:ad||'Yeni okuma listesi',alan:'Diğer',aciklama:'',ogeler:[],tarih:bugunIso()};okListesi.unshift(o);}
+    B.forEach(b=>{if(o.ogeler.some(z=>norm(okOgeBaslik(z).b)===norm(b.baslik)))return;o.ogeler.push({id:uid(),tip:'serbest',baslik:b.baslik,yazar:b.yazar||'',not:''});n++;});okKaydet();ada='okuma listesi “'+o.ad+'”';
+  }
+  return ' • '+n+' kitap '+ada+'ne eklendi';
+}
+function ktpToplu(hedef,dosya){
   if(!izin(2))return;const katlar=ktpKatlar();let son=['',''];try{son=JSON.parse(localStorage.getItem('mv_ktp_son')||'["",""]');}catch(e){}
   modalGoster('📥 Toplu Kitap Ekle','Her satıra bir kitap yazın',
    '<div class="form-grid"><div class="form-alan"><label for="ktp-tk">Kategori</label><select id="ktp-tk" onchange="ktpTopluAlt()"><option value="">(seçin)</option>'+Object.keys(katlar).map(a=>'<option value="'+kacir(a)+'"'+(a===son[0]?' selected':'')+'>'+kacir(a)+'</option>').join('')+'</select></div><div class="form-alan"><label for="ktp-ta">Alt kategori</label><select id="ktp-ta"></select></div></div>'
    +'<div class="form-alan"><label for="ktp-tm">Kitaplar</label><textarea id="ktp-tm" rows="9" placeholder="Kitap adı ; Yazar ; Yayınevi ; Yıl\nRisale-i Nur ; Said Nursi\n# Tarih\nOsmanlı Tarihi ; Halil İnalcık" style="width:100%;"></textarea></div>'
+   +'<div class="form-grid"><div class="form-alan"><label for="ktp-hd">📌 Eklenen kitapları programa da ekle</label><select id="ktp-hd" onchange="ktpHedefDegis()">'+ktpHedefSecenekleri()+'</select></div><div class="form-alan form-genis"><label class="onay"><input type="checkbox" id="ktp-ko" checked> Kitaplıkta olmayan kategorileri otomatik oluştur</label></div><div class="form-alan" id="ktp-hn-kap" style="display:none"><label for="ktp-hn">Yeni listenin adı</label><input type="text" id="ktp-hn" maxlength="80"></div></div>'
    +'<p class="alt-yazi">Ayırıcı “;” (ya da Excel’den yapıştırılan sekme). Yalnızca kitap adı yeterli. “# Kategori adı” satırı, sonraki kitapların kategorisini değiştirir (alt kategori adı da olabilir). Aynı kitap tekrar eklenmez.</p>'
    +'<div class="form-butonlar"><button class="kaydet-btn" onclick="ktpTopluKaydet()">➕ Ekle</button></div>');
-  ktpTopluAlt(son[1]);
+  ktpTopluAlt(son[1]);csvDugmeEkle('ktp-tm','ktp');if(dosya)csvDosyaSec('ktp-tm','ktp');if(typeof hedef==='string'&&hedef&&$('ktp-hd')){$('ktp-hd').value=hedef;ktpHedefDegis();}
 }
 function ktpTopluAlt(s){const l=ktpKatlar()[$('ktp-tk').value]||[];$('ktp-ta').innerHTML='<option value="">(alt kategori yok)</option>'+l.map(x=>'<option value="'+kacir(x)+'"'+(x===s?' selected':'')+'>'+kacir(x)+'</option>').join('');}
 function ktpTopluKaydet(){
-  if(!izin(2))return;let kat=v('ktp-tk'),alt=v('ktp-ta');const L=ktpB(),var_=new Set(L.map(b=>norm(b.baslik)+'|'+norm(b.yazar)));let n=0,tekrar=0,yok=[];
+  if(!izin(2))return;let kat=v('ktp-tk'),alt=v('ktp-ta');const L=ktpB(),var_=new Set(L.map(b=>norm(b.baslik)+'|'+norm(b.yazar)));let n=0,tekrar=0,yok=[];const HB=[],kitapAnahtar={},ko=!$('ktp-ko')||$('ktp-ko').checked;let yeniKat=0;L.forEach(b=>{kitapAnahtar[norm(b.baslik)+'|'+norm(b.yazar)]=b;});
   v('ktp-tm').split(/\r?\n/).forEach(s=>{
     s=s.trim();if(!s)return;
-    if(s[0]==='#'){const b=ktpKatBul(s.replace(/^#+\s*/,''));if(b){kat=b.kat;alt=b.alt;}else yok.push(s);return;}
-    if(!kat){yok.push(s);return;}
-    const p=s.split(/\t|;/).map(x=>x.trim()),bas=p[0];if(!bas)return;const k=norm(bas)+'|'+norm(p[1]||'');
-    if(var_.has(k)){tekrar++;return;}var_.add(k);
-    L.unshift({id:uid(),baslik:bas,yazar:p[1]||'',yayinevi:p[2]||'',yil:(p[3]||'').replace(/\D/g,'').slice(0,4),kat,alt,kapak:false,tarih:bugunIso()});n++;
+    if(s[0]==='#'){const raw=s.replace(/^#+\s*/,'');if(raw==='-'){kat='';alt='';return;}let b=null;if(raw.includes('›')){const pr=raw.split('›').map(x=>x.trim()),bk=ktpKatBul(pr[0]);if(bk)b={kat:bk.kat,alt:(ktpKatlar()[bk.kat]||[]).find(x=>norm(x)===norm(pr[1]))||''};}if(!b)b=ktpKatBul(raw);if(!b&&ko){const pr=raw.split('›').map(x=>x.trim()).filter(Boolean),ana=pr[0],al=pr[1]||'';if(ana){const o=ktpOzelKat();o[ana]=Array.from(new Set(dizi(o[ana]).concat(al?[al]:[])));yaz(LS_KTPK,o);_kk=null;b={kat:ana,alt:al};yeniKat++;}}if(b){kat=b.kat;alt=b.alt;}else yok.push(s);return;}
+        const p=s.split(/\t|;/).map(x=>x.trim()),bas=p[0];if(!bas)return;const k=norm(bas)+'|'+norm(p[1]||'');
+    if(var_.has(k)){tekrar++;if(kitapAnahtar[k])HB.push(kitapAnahtar[k]);return;}var_.add(k);
+    const yb={id:uid(),baslik:bas,yazar:p[1]||'',yayinevi:p[2]||'',yil:(p[3]||'').replace(/\D/g,'').slice(0,4),kat,alt,kapak:false,tarih:bugunIso()};if(p[4])yb.isbn=p[4].replace(/[^0-9Xx-]/g,'').slice(0,20);if(p[5])yb.etiket=p[5].slice(0,120);if(p[6])yb.not=p[6].slice(0,500);L.unshift(yb);kitapAnahtar[k]=yb;HB.push(yb);n++;
   });
-  if(!n&&!tekrar){alert('⚠️ Eklenecek satır bulunamadı. Önce kategori seçin ya da “# Kategori” satırı yazın.');return;}
+  if(!n&&!tekrar){alert('⚠️ Eklenecek satır bulunamadı.');return;}
   if(!ktpYB())return;try{localStorage.setItem('mv_ktp_son',JSON.stringify([kat,alt]));}catch(e){}
-  _kirli.modal=false;modalKapat(true);ktpRender();bildir('✅ '+n+' kitap eklendi'+(tekrar?' • '+tekrar+' tekrar atlandı':'')+(yok.length?' • '+yok.length+' satır kategorisiz atlandı':''),5000);
+  const hedefMsj=ktpHedefeEkle(v('ktp-hd'),v('ktp-hn'),HB);
+  _kirli.modal=false;modalKapat(true);ktpRender();if(typeof okRender==='function'&&$('ok-kap'))okRender();bildir('✅ '+n+' kitap eklendi'+(tekrar?' • '+tekrar+' tekrar atlandı':'')+hedefMsj+(yeniKat?' • '+yeniKat+' yeni kategori açıldı':'')+(yok.length?' • '+yok.length+' kategori satırı tanınmadı':''),5000);
 }
 /* ---- emanet ---- */
 function ktpKisiAdlari(){const s=new Set();kListesi.concat(hListesi).forEach(k=>{if(k&&k.ad)s.add(k.ad);});return Array.from(s).sort((a,b)=>a.localeCompare(b,'tr'));}
@@ -7255,6 +7376,7 @@ function gnTarihCoz(s){s=String(s).trim();let m=s.match(/^(\d{1,2})[.\/-](\d{1,2
 function gnToplu(){
   if(!izin(2))return;
   modalGoster('📋 Toplu ekle','Her satıra bir çalışma','<p class="alt-yazi">Her satır: <b>tarih ; başlık ; tür ; katılımcı sayısı ; yer</b> (tür, sayı ve yer isteğe bağlı). Tarih <b>25.10.2025</b> biçiminde yazılır.<br>Örnek: <code>25.10.2025 ; Tevhid hasbihali ; Hasbihal ; 42 ; Medeniyet Vakfı</code></p><textarea id="gn-toplu" style="min-height:200px;width:100%;" placeholder="25.10.2025 ; Güz dönemi açılış kahvaltısı ; Kahvaltı ; 55\n01.11.2025 ; Kapadokya gezisi ; Gezi ; 38 ; Nevşehir"></textarea><div class="form-butonlar" style="margin-top:10px;"><button class="kaydet-btn" onclick="gnTopluKaydet()">Ekle</button></div>');
+  csvDugmeEkle('gn-toplu','gn');
 }
 function gnTopluKaydet(){
   if(!izin(2))return;const sat=$('gn-toplu').value.split('\n').map(s=>s.trim()).filter(Boolean),l=gnOku(),hata=[];let n=0;
@@ -7429,6 +7551,7 @@ function ypYeniYilKaydet(){
 function ypToplu(){
   if(!izin(2))return;
   modalGoster('📋 Toplu ekle',kacir(ypYil)+' planı','<p class="alt-yazi">Her satır: <b>tarih ; faaliyet ; tür ; hedef ; gerçekleşen katılım ; sunan / görevli ; yer</b> (tür, sayılar, görevli ve yer isteğe bağlı; yazı olan ilk alan görevli, ikincisi yer sayılır; boş bırakmak için <b>-</b> yazın). Tarihi geçmiş satırlar <b>yapıldı</b> sayılır (tek sayı yazarsanız katılım kabul edilir); gelecek tarihliler Dönem Planı’na gider. Eğitim yılı tarihten otomatik belirlenir.<br>Örnek: <code>25.10.2025 ; Açılış kahvaltısı ; Kahvaltı ; 60 ; 55 ; Ahmet Hoca ; Vakıf binası</code></p><textarea id="yp-toplu" style="min-height:200px;width:100%;" placeholder="25.10.2025 ; Açılış kahvaltısı ; Kahvaltı ; 60 ; 55 ; Ahmet Hoca\n14.03.2026 ; Bahar kampı ; Kamp ; 40 ; Komisyon ; Abant"></textarea><div class="form-butonlar" style="margin-top:10px;"><button class="kaydet-btn" onclick="ypTopluKaydet()">Ekle</button></div>');
+  csvDugmeEkle('yp-toplu','yp');
 }
 function ypTopluKaydet(){
   if(!izin(2))return;const l=ypOku(),dl=dpOku(),hata=[],bugun=bugunIso();let n=0,g=0,ilkYil='';
@@ -7524,6 +7647,7 @@ function dpToplu(){
    +'<div class="form-alan"><label for="dpt-donem">Tarihsiz satırlar için dönem</label><select id="dpt-donem"><option value="guz">Güz</option><option value="bahar">Bahar</option></select></div>'
    +'<div class="form-alan"><textarea id="dpt-metin" style="min-height:160px;" placeholder="10.10.2026 ; Açılış kahvaltısı ; Kahvaltı ; Ahmet Hoca&#10;Bahar kampı ; Kamp ; Komisyon"></textarea></div>'
    +'<div class="form-butonlar" style="margin-top:10px;"><button class="kaydet-btn" onclick="dpTopluKaydet()">Ekle</button></div>');
+  csvDugmeEkle('dpt-metin','dp');
 }
 function dpTarihCoz(t){t=String(t||'').trim();let m=t.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(m)return isoGecerli(t)?t:'';m=t.match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})$/);if(m){const i=m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');return isoGecerli(i)?i:'';}return '';}
 function dpTopluKaydet(){
