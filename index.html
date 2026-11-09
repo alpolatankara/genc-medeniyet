@@ -427,6 +427,58 @@ body:not(.m-admin) header .araclar .arac-cift{display:none!important;}
 .dp-t{width:100%;border-collapse:collapse;font-size:13px}.dp-t th,.dp-t td{border:1px solid var(--kenar,#d6dee5);padding:6px 8px;vertical-align:top}.dp-t thead th{text-align:center;font-weight:800;background:#dfe9f1;color:#0b4a72;white-space:normal;overflow-wrap:normal;word-break:keep-all;hyphens:none}
 .afis-sablon{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}.afs-sbtn{display:flex;flex-direction:column;gap:3px;text-align:left;padding:8px;border:2px solid var(--kenar,#d6dee5);border-radius:10px;background:#fff;cursor:pointer;font:inherit}.afs-sbtn.on{border-color:#c9a227;box-shadow:0 0 0 2px #c9a22744}.afs-sbtn-k{display:block;height:30px;border-radius:6px;border:1px solid #0002}.afs-sbtn small{font-size:10.5px;color:#66727f;line-height:1.25}
 .afis-tema{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:6px}.afis-tema button{position:relative;height:46px;border:2px solid #fff;border-radius:8px;cursor:pointer;color:#fff;font-size:10.5px;font-weight:700;text-shadow:0 1px 2px #000a;box-shadow:0 0 0 1px #0003;overflow:hidden}.afis-tema button i{position:absolute;right:5px;top:5px;width:10px;height:10px;border-radius:50%;border:1px solid #fff8}.afis-tema button span{position:absolute;left:5px;bottom:3px}
+/* ===== BÖLÜM RENKLERİ + KÜTÜPHANE RAFI ===== */
+header{border-bottom:4px solid transparent;border-image:linear-gradient(90deg,#c9a227,#d9822b,#2e8b57,#1f9d8a,#7048e8,#d6336c,#c9a227) 1;}
+main>section{--ac:#0b4a72;--ac-a:#e8f1f8;}
+#dashboard{--ac:#0b4a72;--ac-a:#e8f1f8}#kahvalti{--ac:#c96a12;--ac-a:#fdf0e2}#faaliyet{--ac:#2e8b57;--ac-a:#e6f5ec}#dplan{--ac:#5b5fc7;--ac-a:#ececfb}#yplan{--ac:#14917f;--ac-a:#e0f5f1}#gunluk{--ac:#8a5a3b;--ac-a:#f5ebe3}
+#afisstudyo{--ac:#d6336c;--ac-a:#fde8ef}#iletisim{--ac:#1f9d55;--ac-a:#e3f6ea}#kisiler{--ac:#7048e8;--ac-a:#eee8fd}#ihtisas{--ac:#c2410c;--ac-a:#fdeadf}#ekip{--ac:#0e7490;--ac-a:#e0f3f8}#degerlendirme{--ac:#b7791f;--ac-a:#fbf0da}
+#kutuphane{--ac:#6b4a2f;--ac-a:#f3ebe3}#kitaplik{--ac:#a23e48;--ac-a:#fbe9eb}#arastirma{--ac:#3d5a80;--ac-a:#e5ecf4}#galeri{--ac:#e0613f;--ac-a:#fdece6}#raporlar{--ac:#4a5568;--ac-a:#eceef2}#arsiv{--ac:#5c677d;--ac-a:#eceef2}#kullanicilar{--ac:#b23b3b;--ac-a:#fbe7e7}
+main>section h2{color:var(--ac);border-bottom:3px solid var(--ac);background:linear-gradient(90deg,var(--ac-a),rgba(255,255,255,0) 75%);padding:9px 12px 7px;border-radius:10px 10px 0 0;}
+main>section h3{color:var(--ac);}
+main>section .kart{border-top:3px solid color-mix(in srgb,var(--ac) 60%,#fff);}
+main>section .sekme-grup{border-bottom-color:var(--ac);}
+main>section .sekme-grup button:hover{background:var(--ac-a);}
+main>section .sekme-grup button.aktif{color:var(--ac);border-color:var(--ac);background:#fff;border-top:3px solid var(--ac);}
+main>section .btn-mavi{background:var(--ac);}main>section .btn-mavi:hover{background:var(--ac);filter:brightness(1.15);}
+main>section .chip{background:var(--ac-a);color:var(--ac);}
+main>section .afst-sek button.aktif{background:var(--ac);}
+nav a{--c:#0b4a72;--ca:#e8f1f8;border-left-color:color-mix(in srgb,var(--c) 35%,transparent);}
+nav a:hover{background:var(--ca);}nav a.aktif{background:var(--ca);border-left-color:var(--c);color:var(--c);}
+nav a[data-hedef=kahvalti]{--c:#c96a12;--ca:#fdf0e2}nav a[data-hedef=faaliyet]{--c:#2e8b57;--ca:#e6f5ec}nav a[data-hedef=dplan]{--c:#5b5fc7;--ca:#ececfb}nav a[data-hedef=yplan]{--c:#14917f;--ca:#e0f5f1}nav a[data-hedef=gunluk]{--c:#8a5a3b;--ca:#f5ebe3}
+nav a[data-hedef=afisstudyo]{--c:#d6336c;--ca:#fde8ef}nav a[data-hedef=iletisim]{--c:#1f9d55;--ca:#e3f6ea}nav a[data-hedef=kisiler]{--c:#7048e8;--ca:#eee8fd}nav a[data-hedef=ihtisas]{--c:#c2410c;--ca:#fdeadf}nav a[data-hedef=ekip]{--c:#0e7490;--ca:#e0f3f8}nav a[data-hedef=degerlendirme]{--c:#b7791f;--ca:#fbf0da}
+nav a[data-hedef=kutuphane]{--c:#6b4a2f;--ca:#f3ebe3}nav a[data-hedef=kitaplik]{--c:#a23e48;--ca:#fbe9eb}nav a[data-hedef=arastirma]{--c:#3d5a80;--ca:#e5ecf4}nav a[data-hedef=galeri]{--c:#e0613f;--ca:#fdece6}nav a[data-hedef=raporlar]{--c:#4a5568;--ca:#eceef2}nav a[data-hedef=arsiv]{--c:#5c677d;--ca:#eceef2}nav a[data-hedef=kullanicilar]{--c:#b23b3b;--ca:#fbe7e7}
+nav .grup{display:flex;align-items:center;gap:7px;}nav .grup::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--gc,#0b4a72);flex:none;}
+nav .grup:nth-of-type(1){--gc:#0b4a72}nav .grup:nth-of-type(2){--gc:#c96a12}nav .grup:nth-of-type(3){--gc:#d6336c}nav .grup:nth-of-type(4){--gc:#7048e8}nav .grup:nth-of-type(5){--gc:#a23e48}nav .grup:nth-of-type(6){--gc:#4a5568}
+.hizli button{border-top:4px solid var(--hc,#0b4a72);transition:transform .15s,box-shadow .15s;}.hizli button:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.12);background:color-mix(in srgb,var(--hc,#0b4a72) 8%,#fff);}
+.hizli button .i{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--hc,#0b4a72) 14%,#fff);font-size:24px;}
+.hizli button{color:var(--hc,#0b4a72);}
+.hizli button:nth-child(8n+1){--hc:#0b4a72}.hizli button:nth-child(8n+2){--hc:#2e8b57}.hizli button:nth-child(8n+3){--hc:#c96a12}.hizli button:nth-child(8n+4){--hc:#7048e8}.hizli button:nth-child(8n+5){--hc:#d6336c}.hizli button:nth-child(8n+6){--hc:#14917f}.hizli button:nth-child(8n+7){--hc:#a23e48}.hizli button:nth-child(8n+8){--hc:#b7791f}
+@media(max-width:900px){nav a{border-left:none;border-bottom-color:color-mix(in srgb,var(--c) 35%,transparent);}nav a.aktif{border-bottom-color:var(--c);}nav .grup::before{display:none;}}
+@media print{main>section h2{background:none;border-radius:0}main>section .kart{border-top:1px solid var(--kenar)}}
+/* kütüphane rafı */
+.ktp-dolaplar{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;}
+.ktp-dolap{border:0;padding:0;cursor:pointer;text-align:left;background:linear-gradient(180deg,var(--kl) 0,#fff 100%);border-radius:12px;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,.14);transition:transform .15s,box-shadow .15s;font-family:inherit;border-bottom:8px solid var(--kd);}
+.ktp-dolap:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(0,0,0,.2);}
+.ktp-dolap-ust{background:linear-gradient(135deg,var(--kc),var(--kd));color:#fff;padding:14px 14px 12px;display:flex;flex-direction:column;gap:2px;}
+.ktp-dolap-ust .ik{font-size:30px;line-height:1.1}.ktp-dolap-ust b{font-size:16px;font-family:Georgia,serif;}.ktp-dolap-ust small{opacity:.9;font-size:12px}
+.ktp-mini{display:flex;align-items:flex-end;gap:2px;padding:10px 12px 8px;min-height:48px;}.ktp-mini span{width:7px;border-radius:2px 2px 0 0;display:block;}
+.ktp-rafust{display:flex;align-items:center;gap:12px;margin:0 0 12px;padding:10px 12px;border-radius:10px;background:linear-gradient(135deg,var(--kc),var(--kd));color:#fff;}.ktp-rafust b{font-size:18px;font-family:Georgia,serif;}
+.ktp-rafbolum{margin:0 0 20px;}
+.ktp-rafetiket{font-weight:700;color:var(--kd);margin:0 0 4px;padding-left:4px;font-family:Georgia,serif;}
+.ktp-raf{display:flex;flex-wrap:wrap;align-items:flex-end;gap:3px;padding:12px 12px 0;background:linear-gradient(180deg,rgba(0,0,0,.06),rgba(0,0,0,.015));border-radius:6px 6px 0 0;min-height:60px;}
+.ktp-tahta{height:14px;background:linear-gradient(180deg,#a9794a,#7b5030);border-radius:0 0 6px 6px;box-shadow:0 4px 6px rgba(0,0,0,.25);}
+.ktp-sirt{border:0;border-radius:3px 3px 1px 1px;cursor:pointer;color:#fff;padding:6px 2px;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:inset -2px 0 3px rgba(0,0,0,.25),inset 2px 0 2px rgba(255,255,255,.18);transition:transform .12s;font-family:Georgia,serif;}
+.ktp-sirt span{writing-mode:vertical-rl;font-size:12.5px;line-height:1.25;height:100%;max-height:100%;overflow:hidden;white-space:normal;overflow-wrap:anywhere;font-weight:600;letter-spacing:.1px;display:block;text-shadow:0 1px 1px rgba(0,0,0,.45);}
+.ktp-kvgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:12px 10px;padding:6px 2px 10px;}
+.ktp-kv{border:0;background:transparent;padding:0;cursor:pointer;text-align:left;font-family:inherit;display:flex;flex-direction:column;gap:3px;min-width:0;}
+.ktp-kv .kp{position:relative;aspect-ratio:2/3;border-radius:4px 8px 8px 4px;overflow:hidden;box-shadow:0 3px 8px rgba(0,0,0,.3),inset 4px 0 5px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;}
+.ktp-kv .kp img{width:100%;height:100%;object-fit:cover;display:block;}.ktp-kv .kp span{color:#fff;font:700 12px/1.25 Georgia,serif;text-align:center;padding:8px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;}
+.ktp-kv .kp i{position:absolute;top:3px;right:3px;font-style:normal;background:rgba(255,255,255,.9);border-radius:8px;padding:0 3px;font-size:12px;}
+.ktp-kv .bs{font-weight:700;font-size:12px;line-height:1.25;color:var(--yazi);overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}.ktp-kv .yz{font-size:11px;color:var(--soluk);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.ktp-kv:hover .kp{transform:translateY(-4px);}.ktp-kv.emanet{opacity:.6;}.ktp-kv.sec .kp{outline:3px solid #f2c200;outline-offset:1px;}
+.ktp-altchip{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px;}.ktp-altchip a{text-decoration:none;font-size:12px;background:#fff;border:1px solid var(--kc);color:var(--kc);padding:3px 9px;border-radius:14px;}.ktp-altchip a b{background:var(--kc);color:#fff;border-radius:9px;padding:0 6px;margin-left:3px;font-size:11px;}
+.ktp-sirt:hover{transform:translateY(-8px);}.ktp-sirt.emanet{opacity:.55;}.ktp-sirt i{position:absolute;top:2px;font-style:normal;font-size:11px;}
+.ktp-sirt.sec{outline:3px solid #f2c200;outline-offset:1px;transform:translateY(-8px);}
 </style>
 </head>
 <body>
@@ -959,7 +1011,7 @@ function tarihDamgasi(){return bugunIso();}
 
 /* ---------- localStorage ---------- */
 function oku(k,v0){try{const x=localStorage.getItem(k);return x===null?v0:JSON.parse(x);}catch(e){return v0;}}
-const YETKILI_YASAK=()=>[LS.kisi,LS.hoca,LS.kutuphane,LS.kuran,LS.hadis,LS.galeri,LS.ihtisas,LS.iftar,LS.logo,typeof LS_IHG!=='undefined'&&LS_IHG,typeof LS_OKUMA!=='undefined'&&LS_OKUMA,typeof LS_KTP!=='undefined'&&LS_KTP,typeof LS_KTPE!=='undefined'&&LS_KTPE,typeof LS_KTPL!=='undefined'&&LS_KTPL,typeof LS_KTPK!=='undefined'&&LS_KTPK,typeof LS_NOT!=='undefined'&&LS_NOT,typeof LS_SEPET!=='undefined'&&LS_SEPET,typeof LS_SEPETB!=='undefined'&&LS_SEPETB,typeof LS_DOSYA!=='undefined'&&LS_DOSYA,typeof LS_EKIP!=='undefined'&&LS_EKIP,typeof LS_GOREV!=='undefined'&&LS_GOREV,typeof LS_IST!=='undefined'&&LS_IST,typeof LS_COP!=='undefined'&&LS_COP,typeof LS_MESAJ!=='undefined'&&LS_MESAJ,typeof LS_MISAFIR!=='undefined'&&LS_MISAFIR,typeof LS_AYLIK!=='undefined'&&LS_AYLIK,typeof LS_ANALIZ!=='undefined'&&LS_ANALIZ,typeof LS_AFISLER!=='undefined'&&LS_AFISLER,typeof LS_MENU!=='undefined'&&LS_MENU,typeof LS_TALIMAT!=='undefined'&&LS_TALIMAT,typeof LS_DERS!=='undefined'&&LS_DERS,typeof LS_DAVET!=='undefined'&&LS_DAVET,typeof LS_DAVETLI!=='undefined'&&LS_DAVETLI,typeof LS_GUNLUK!=='undefined'&&LS_GUNLUK,typeof LS_YPLAN!=='undefined'&&LS_YPLAN];
+const YETKILI_YASAK=()=>[LS.kisi,LS.hoca,LS.kutuphane,LS.kuran,LS.hadis,LS.galeri,LS.ihtisas,LS.iftar,LS.logo,typeof LS_IHG!=='undefined'&&LS_IHG,typeof LS_OKUMA!=='undefined'&&LS_OKUMA,typeof LS_KTP!=='undefined'&&LS_KTP,typeof LS_KTPE!=='undefined'&&LS_KTPE,typeof LS_KTPL!=='undefined'&&LS_KTPL,typeof LS_KTPK!=='undefined'&&LS_KTPK,typeof LS_KTPG!=='undefined'&&LS_KTPG,typeof LS_NOT!=='undefined'&&LS_NOT,typeof LS_SEPET!=='undefined'&&LS_SEPET,typeof LS_SEPETB!=='undefined'&&LS_SEPETB,typeof LS_DOSYA!=='undefined'&&LS_DOSYA,typeof LS_EKIP!=='undefined'&&LS_EKIP,typeof LS_GOREV!=='undefined'&&LS_GOREV,typeof LS_IST!=='undefined'&&LS_IST,typeof LS_COP!=='undefined'&&LS_COP,typeof LS_MESAJ!=='undefined'&&LS_MESAJ,typeof LS_MISAFIR!=='undefined'&&LS_MISAFIR,typeof LS_AYLIK!=='undefined'&&LS_AYLIK,typeof LS_ANALIZ!=='undefined'&&LS_ANALIZ,typeof LS_AFISLER!=='undefined'&&LS_AFISLER,typeof LS_MENU!=='undefined'&&LS_MENU,typeof LS_TALIMAT!=='undefined'&&LS_TALIMAT,typeof LS_DERS!=='undefined'&&LS_DERS,typeof LS_DAVET!=='undefined'&&LS_DAVET,typeof LS_DAVETLI!=='undefined'&&LS_DAVETLI,typeof LS_GUNLUK!=='undefined'&&LS_GUNLUK,typeof LS_YPLAN!=='undefined'&&LS_YPLAN];
 function httpUrl(u){u=String(u||'').trim();return /^https?:\/\//i.test(u)?u:'';}
 function hitap(ad){const a=String(ad||'').trim().split(/\s+/)[0];return (!a||/^kardeşim$/i.test(a))?'kardeşim':a+' kardeşim';}
 let _kirli={modal:false,sayfa:false};
@@ -2635,6 +2687,16 @@ function doPost(e) {
     if (!yetkili_(g.t)) { hataSay_(); return cevap_({ok: false, hata: 'yetkisiz'}); }
     CacheService.getScriptCache().remove('kilit');
 
+    if (a === 'sayfa') {
+      var su = String(g.u || '');
+      if (su.length > 600 || !/^https:\/\/(www\.)?(kitapyurdu\.com|idefix\.com|dr\.com\.tr|kitapsepeti\.com|nadirkitap\.com|1000kitap\.com|goodreads\.com|openlibrary\.org)\//.test(su)) return cevap_({ok: false, hata: 'adres'});
+      try {
+        var rr = UrlFetchApp.fetch(su, {muteHttpExceptions: true, followRedirects: true, headers: {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36', 'Accept-Language': 'tr-TR,tr;q=0.9,en;q=0.5'}});
+        var kd = rr.getResponseCode(), tx5 = rr.getContentText('UTF-8');
+        return cevap_({ok: kd < 400, kod: kd, html: tx5.length > 700000 ? tx5.slice(0, 700000) : tx5});
+      } catch (e5) { return cevap_({ok: false, hata: 'getirilemedi: ' + String(e5).slice(0, 80)}); }
+    }
+
     if (a === 'kisalt') {
       var us = (g.u || []).slice(0, 25), ixu = [], sonuc = {}, tani = [], tok = p.getProperty('TINYURL_TOKEN');
       us.forEach(function (u) {
@@ -2930,7 +2992,7 @@ const SENK_CFG='mv_senk_cfg',SENK_TS='mv_senk_ts',SENK_SON='mv_senk_son',DS_SENK
 const SENK={mesgul:false,bekle:false,zaman:null,hata:null,son:0,basladi:false,uyarildi:false};
 const _enc=new TextEncoder(),_dec=new TextDecoder();
 let _aesCache=null;
-function senkKolonlar(){return[{ad:'haftalar',k:LS.haftalar},{ad:'kutuphane',k:LS.kutuphane},{ad:'kuran',k:LS.kuran},{ad:'hadis',k:LS.hadis},{ad:'galeri',k:LS.galeri},{ad:'kisi',k:LS.kisi},{ad:'hoca',k:LS.hoca},{ad:'ihtisas',k:LS.ihtisas},{ad:'ihgrup',k:LS_IHG},{ad:'okuma',k:LS_OKUMA},{ad:'notlar',k:LS_NOT},{ad:'iftar',k:LS.iftar},{ad:'users',k:LS.users},{ad:'misafir',k:LS_MISAFIR},{ad:'aylik',k:LS_AYLIK},{ad:'analiz',k:LS_ANALIZ},{ad:'afisler',k:LS_AFISLER},{ad:'logo',k:LS.logo},{ad:'faaliyet',k:LS_FAAL},{ad:'ekip',k:LS_EKIP},{ad:'gorev',k:LS_GOREV},{ad:'istisare',k:LS_IST},{ad:'dosyalar',k:LS_DOSYA},{ad:'mesaj',k:LS_MESAJ},{ad:'msablon',k:LS_MSABLON},{ad:'menu',k:LS_MENU},{ad:'talimat',k:LS_TALIMAT},{ad:'dersler',k:LS_DERS},{ad:'davet',k:LS_DAVET},{ad:'davetli',k:LS_DAVETLI},{ad:'gunluk',k:LS_GUNLUK},{ad:'yplan',k:LS_YPLAN},{ad:'dplan',k:LS_DPLAN},{ad:'raporayar',k:LS_RAPORAYAR},{ad:'kitaplik',k:LS_KTP},{ad:'kitapemanet',k:LS_KTPE},{ad:'kitapliste',k:LS_KTPL},{ad:'kitapkat',k:LS_KTPK},{ad:'cop',k:LS_COP},{ad:'islemgunlugu',k:LS_GUN}];}
+function senkKolonlar(){return[{ad:'haftalar',k:LS.haftalar},{ad:'kutuphane',k:LS.kutuphane},{ad:'kuran',k:LS.kuran},{ad:'hadis',k:LS.hadis},{ad:'galeri',k:LS.galeri},{ad:'kisi',k:LS.kisi},{ad:'hoca',k:LS.hoca},{ad:'ihtisas',k:LS.ihtisas},{ad:'ihgrup',k:LS_IHG},{ad:'okuma',k:LS_OKUMA},{ad:'notlar',k:LS_NOT},{ad:'iftar',k:LS.iftar},{ad:'users',k:LS.users},{ad:'misafir',k:LS_MISAFIR},{ad:'aylik',k:LS_AYLIK},{ad:'analiz',k:LS_ANALIZ},{ad:'afisler',k:LS_AFISLER},{ad:'logo',k:LS.logo},{ad:'faaliyet',k:LS_FAAL},{ad:'ekip',k:LS_EKIP},{ad:'gorev',k:LS_GOREV},{ad:'istisare',k:LS_IST},{ad:'dosyalar',k:LS_DOSYA},{ad:'mesaj',k:LS_MESAJ},{ad:'msablon',k:LS_MSABLON},{ad:'menu',k:LS_MENU},{ad:'talimat',k:LS_TALIMAT},{ad:'dersler',k:LS_DERS},{ad:'davet',k:LS_DAVET},{ad:'davetli',k:LS_DAVETLI},{ad:'gunluk',k:LS_GUNLUK},{ad:'yplan',k:LS_YPLAN},{ad:'dplan',k:LS_DPLAN},{ad:'raporayar',k:LS_RAPORAYAR},{ad:'kitaplik',k:LS_KTP},{ad:'kitapemanet',k:LS_KTPE},{ad:'kitapliste',k:LS_KTPL},{ad:'kitapkat',k:LS_KTPK},{ad:'kitapkatg',k:LS_KTPG},{ad:'cop',k:LS_COP},{ad:'islemgunlugu',k:LS_GUN}];}
 function senkCfg(){const c=oku(SENK_CFG,null);return c&&c.url&&c.auth&&c.aes?c:null;}
 function senkGuvenli(){return !!(window.crypto&&crypto.subtle);}
 function hexDe(h){const u=new Uint8Array(h.length/2);for(let i=0;i<u.length;i++)u[i]=parseInt(h.substr(i*2,2),16);return u;}
@@ -6725,10 +6787,10 @@ const ktpB=()=>_kb||(_kb=dizi(oku(LS_KTP,[])).filter(x=>x&&x.id!=null));
 const ktpE=()=>_ke||(_ke=dizi(oku(LS_KTPE,[])).filter(x=>x&&x.id!=null));
 const ktpL=()=>_kl||(_kl=dizi(oku(LS_KTPL,[])).filter(x=>x&&x.id!=null).map(l=>{l.ids=dizi(l.ids);l.hedef=dizi(l.hedef);return l;}));
 function ktpOzelKat(){if(_kk)return _kk;const o=oku(LS_KTPK,{});return _kk=(o&&typeof o==='object'&&!Array.isArray(o))?o:{};}
-function ktpKatlar(){const r={};Object.keys(KTP_KAT_METIN).forEach(a=>{r[a]=KTP_KAT_METIN[a].split('|');});const o=ktpOzelKat();Object.keys(o).forEach(a=>{r[a]=Array.from(new Set((r[a]||[]).concat(dizi(o[a]))));});return r;}
-const ktpYB=()=>yaz(LS_KTP,_kb),ktpYE=()=>yaz(LS_KTPE,_ke),ktpYL=()=>yaz(LS_KTPL,_kl);
+
+const ktpYB=()=>{_kkM=null;return yaz(LS_KTP,_kb);},ktpYE=()=>yaz(LS_KTPE,_ke),ktpYL=()=>yaz(LS_KTPL,_kl);
 let ktpSekme='kitap',ktpAra='',ktpKatF='',ktpDurumF='',ktpEF='aktif',ktpEAra='',ktpSecKume=new Set(),_ktpZ=null;
-function ktpUi(){try{return Object.assign({gor:'liste',boy:'m',px:500},JSON.parse(localStorage.getItem(LS_KTPUI)||'{}'));}catch(e){return{gor:'liste',boy:'m',px:500};}}
+function ktpUi(){try{return Object.assign({gor:'raf',boy:'m',px:500},JSON.parse(localStorage.getItem(LS_KTPUI)||'{}'));}catch(e){return{gor:'liste',boy:'m',px:500};}}
 function ktpUiYaz(k,x){const u=ktpUi();u[k]=x;try{localStorage.setItem(LS_KTPUI,JSON.stringify(u));}catch(e){}}
 function ktpKatAd(b){return b.kat||'Kategorisiz';}
 function ktpAcikEmanet(bid){return ktpE().find(e=>esit(e.b,bid)&&!e.iade);}
@@ -6748,7 +6810,7 @@ function ktpEslesenler(){
 }
 function ktpSekmeSec(s){ktpSekme=s;ktpRender();}
 function ktpRender(){
-  const kap=$('ktp-kap');if(!kap)return;_kb=_ke=_kl=_kk=null;
+  const kap=$('ktp-kap');if(!kap)return;_kb=_ke=_kl=_kk=_kg=_kkM=null;
   const y=seviye()>=2;
   const sek=[['kitap','📚 Kitaplar'],['emanet','🤝 Emanet'],['liste','📋 Listeler']].map(x=>'<button type="button" class="'+(ktpSekme===x[0]?'aktif':'')+'" onclick="ktpSekmeSec(\''+x[0]+'\')">'+x[1]+'</button>').join('');
   kap.innerHTML='<div class="sekme-grup">'+sek+'</div><div id="ktp-ic"></div>';
@@ -6760,11 +6822,11 @@ function ktpKitapCiz(){
   const sel=(id,fn,opts,val)=>'<select id="'+id+'" onchange="'+fn+'" style="padding:8px;border:1px solid var(--kenar);border-radius:6px;">'+opts.map(o=>'<option value="'+kacir(o[0])+'"'+(o[0]===val?' selected':'')+'>'+kacir(o[1])+'</option>').join('')+'</select>';
   ic.innerHTML='<div class="kart" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">'
    +'<input type="search" id="ktp-ara" placeholder="🔎 Kitap, yazar, yayınevi, kelime…" aria-label="Kitap ara" value="'+kacir(ktpAra)+'" oninput="ktpAra=this.value;ktpAraGec()" style="flex:1;min-width:180px;padding:9px 12px;border:1px solid var(--kenar);border-radius:6px;">'
-   +sel('ktp-katf','ktpKatF=this.value;ktpKitapGovde()',[['','Tüm kategoriler']].concat(Object.keys(katlar).map(a=>[a,a])),ktpKatF)
+   +sel('ktp-katf','ktpKatF=this.value;ktpKitapGovde()',[['','Tüm kategoriler']].concat(Array.from(new Set(ktpB().map(b=>ktpKatAd(b)))).sort((p,q)=>p.localeCompare(q,'tr')).map(a=>[a,a])),ktpKatF)
    +sel('ktp-durumf','ktpDurumF=this.value;ktpKitapGovde()',[['','Hepsi'],['rafta','Rafta'],['emanet','Emanette'],['gecikmis','Gecikmiş']],ktpDurumF)
-   +sel('ktp-gor','ktpUiYaz(\'gor\',this.value);ktpKitapGovde()',[['liste','Liste'],['kapak','Kapaklı']],u.gor)
+   +sel('ktp-gor','ktpUiYaz(\'gor\',this.value);ktpKitapGovde()',[['raf','🗄️ Kütüphane rafı'],['liste','Liste'],['kapak','Kapaklı']],u.gor)
    +sel('ktp-boy','ktpUiYaz(\'boy\',this.value);ktpKitapGovde()',[['s','Küçük resim'],['m','Orta resim'],['b','Büyük resim']],u.boy)
-   +'</div><div class="form-butonlar admin-only" style="margin:0 0 10px;"><button class="btn btn-mavi" onclick="ktpForm()">➕ Kitap Ekle</button><button class="btn btn-altin" onclick="ktpToplu()">📥 Toplu Ekle</button><button class="btn btn-altin" onclick="ktpToplu(0,1)">📂 Excel / CSV yükle</button><button class="btn btn-gri" onclick="ktpKatEkle()">🗂️ Kategori Ekle</button></div>'
+   +'</div><div class="form-butonlar admin-only" style="margin:0 0 10px;"><button class="btn btn-mavi" onclick="ktpForm()">➕ Kitap Ekle</button><button class="btn btn-altin" onclick="ktpToplu()">📥 Toplu Ekle</button><button class="btn btn-altin" onclick="ktpToplu(0,1)">📂 Excel / CSV yükle</button><button class="btn btn-gri" onclick="ktpKatDuzenle()">🗂️ Kategorileri düzenle</button><button class="btn btn-gri" onclick="ktpTopluKapak()">🖼️ Eksik kapakları getir</button><button class="btn btn-gri" onclick="ktpKatEkle()">🗂️ Kategori Ekle</button></div>'
    +'<div class="form-butonlar" style="margin:0 0 10px;"><button class="btn btn-gri btn-k" onclick="ktpEnvanterRapor()">📄 Envanter raporu</button><button class="btn btn-gri btn-k" onclick="ktpCsv()">⬇️ CSV</button></div>'
    +'<div id="ktp-ozet" class="alt-yazi" style="margin:4px 0 8px;"></div><div id="ktp-secim"></div><div id="ktp-govde"></div>';
   ktpKitapGovde();
@@ -6776,8 +6838,8 @@ function ktpKitapGovde(){
   if(!liste.length){g.innerHTML='<div class="kart"><p class="alt-yazi" style="margin:0">Eşleşen kitap yok.</p></div>';ktpSecGuncelle();return;}
   const filtre=!!(ktpAra.trim()||ktpKatF||ktpDurumF),grp={};
   liste.forEach(b=>{const a=ktpKatAd(b),s=b.alt||'—';((grp[a]=grp[a]||{})[s]=grp[a][s]||[]).push(b);});
-  const sira=Object.keys(ktpKatlar()),anas=Object.keys(grp).sort((p,q)=>{const i=sira.indexOf(p),j=sira.indexOf(q);return (i<0?999:i)-(j<0?999:j)||p.localeCompare(q,'tr');});
-  window._ktpGrp=grp;let h='',say=0;
+  const sira=Object.keys(ktpKatTum()),anas=Object.keys(grp).sort((p,q)=>{const i=sira.indexOf(p),j=sira.indexOf(q);return (i<0?999:i)-(j<0?999:j)||p.localeCompare(q,'tr');});
+  window._ktpGrp=grp;if(u.gor==='raf'){g.innerHTML=ktpRafHtml(grp,anas);ktpKapakYukle(g);ktpSecGuncelle();return;}let h='',say=0;
   anas.forEach(a=>{
     const n=Object.keys(grp[a]).reduce((t,s)=>t+grp[a][s].length,0);
     const ac2=filtre&&say<300;
@@ -6813,7 +6875,7 @@ function ktpKapakYukle(kok){
 function ktpSecDegis(el){const id=String(el.dataset.b);if(el.checked)ktpSecKume.add(id);else ktpSecKume.delete(id);ktpSecGuncelle();}
 function ktpSecGuncelle(){
   const k=$('ktp-secim');if(!k)return;const n=ktpSecKume.size;
-  k.innerHTML=n?'<div class="kart" style="position:sticky;top:0;z-index:5;padding:8px 10px;margin:0 0 8px;background:#fff8e1;display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><b>'+n+' kitap seçili</b><button class="btn btn-mavi btn-k" onclick="ktpYeniListe()">📋 Yeni liste yap</button><button class="btn btn-altin btn-k" onclick="ktpListeyeEkleSec()">➕ Listeye ekle</button><button class="btn btn-gri btn-k" onclick="ktpSecTemizle()">✖ Temizle</button></div>':'';
+  k.innerHTML=n?'<div class="kart" style="position:sticky;top:0;z-index:5;padding:8px 10px;margin:0 0 8px;background:#fff8e1;display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><b>'+n+' kitap seçili</b><button class="btn btn-mavi btn-k" onclick="ktpYeniListe()">📋 Yeni liste yap</button><button class="btn btn-altin btn-k" onclick="ktpListeyeEkleSec()">➕ Listeye ekle</button><button class="btn btn-yesil btn-k" onclick="ktpOneriAc()">💌 Kişiye öner (kart)</button>'+(seviye()>=2?'<button class="btn btn-gri btn-k" onclick="ktpSecTasiForm()">📦 Kategoriye taşı</button>':'')+'<button class="btn btn-gri btn-k" onclick="ktpSecTemizle()">✖ Temizle</button></div>':'';
 }
 function ktpSecTemizle(){ktpSecKume.clear();document.querySelectorAll('#ktp-govde input[data-b]').forEach(c=>{c.checked=false;});ktpSecGuncelle();}
 /* ---- kitap formu ---- */
@@ -6833,12 +6895,12 @@ function ktpForm(id,kal){
    +'<div class="form-alan"><label for="ktp-yayinevi">Yayınevi</label><input id="ktp-yayinevi" maxlength="120" value="'+kacir(b?b.yayinevi:'')+'"></div>'
    +'<div class="form-alan"><label for="ktp-yil">Basım yılı</label><input id="ktp-yil" inputmode="numeric" maxlength="4" value="'+kacir(b?b.yil:'')+'"></div>'
    +'<div class="form-alan"><label for="ktp-isbn">ISBN</label><input id="ktp-isbn" inputmode="numeric" maxlength="20" value="'+kacir(b?b.isbn:'')+'"></div>'
-   +'<div class="form-alan form-genis"><button type="button" class="btn btn-altin btn-k" onclick="ktpNetAra()">🔎 İnternetten bul (bilgi + kapak otomatik gelsin)</button><div id="ktp-net" class="alt-yazi" style="margin-top:6px;"></div></div>'
+   +'<div class="form-alan form-genis" style="background:#fff8e1;border-radius:8px;padding:8px;"><label for="ktp-url">🔗 Kitap sayfası linki (Kitapyurdu, İdefix, D&amp;R, Nadir Kitap…)</label><div style="display:flex;gap:6px;flex-wrap:wrap;"><input id="ktp-url" placeholder="https://www.kitapyurdu.com/kitap/…" style="flex:1;min-width:200px;"><button type="button" class="btn btn-altin btn-k" onclick="ktpLinktenCek()">⬇️ Bilgileri çek</button></div><div class="form-butonlar" style="margin:6px 0 0;"><button type="button" class="btn btn-gri btn-k" onclick="ktpKyAra()">🔎 Kitapyurdu’nda ara</button><button type="button" class="btn btn-gri btn-k" onclick="ktpNetAra()">🔎 Google Kitaplar’da ara</button></div><div id="ktp-net" class="alt-yazi" style="margin-top:6px;"></div></div>'
    +'<div class="form-alan"><label for="ktp-kat">Kategori *</label><select id="ktp-kat" onchange="ktpAltDoldur(\'\')"><option value="">(seçin)</option>'+Object.keys(katlar).map(a=>'<option value="'+kacir(a)+'"'+(a===kat?' selected':'')+'>'+kacir(a)+'</option>').join('')+'</select></div>'
    +'<div class="form-alan"><label for="ktp-alt">Alt kategori</label><select id="ktp-alt"></select></div>'
    +'<div class="form-alan"><label for="ktp-etiket">Etiket (isteğe bağlı)</label><input id="ktp-etiket" maxlength="60" value="'+kacir(b?b.etiket:'')+'"></div>'
    +'<div class="form-alan"><label for="ktp-not">Not</label><input id="ktp-not" maxlength="200" value="'+kacir(b?b.not:'')+'"></div>'
-   +'<div class="form-alan"><label for="ktp-kapak">Kapak resmi</label><input type="file" id="ktp-kapak" accept="image/*"></div>'
+   +'<div class="form-alan"><label for="ktp-kapak">Kapak resmi (dosya / kamera)</label><input type="file" id="ktp-kapak" accept="image/*"><div class="alt-yazi" id="ktp-kapak-not" style="margin-top:2px;">İpucu: bir resmi kopyalayıp bu pencerede Ctrl+V ile yapıştırabilirsiniz.</div></div><div class="form-alan"><label for="ktp-kurl">veya kapak resmi adresi</label><input id="ktp-kurl" placeholder="https://… .jpg" value="'+kacir(b&&b.kapakUrl&&!b.kapak?b.kapakUrl:'')+'"></div>'
    +'<div class="form-alan"><label for="ktp-px">Kapak boyutu (kayıt)</label><select id="ktp-px">'+[[300,'Küçük (300 px)'],[500,'Orta (500 px)'],[800,'Büyük (800 px)']].map(x=>'<option value="'+x[0]+'"'+(ktpUi().px===x[0]?' selected':'')+'>'+x[1]+'</option>').join('')+'</select></div></div>'
    +'<div class="form-butonlar"><button class="kaydet-btn" onclick="ktpKaydet(\''+(b?kacir(b.id):'')+'\',false)">💾 Kaydet</button>'+(b?'':'<button class="btn btn-altin" onclick="ktpKaydet(\'\',true)">💾 Kaydet ve yeni ekle</button>')+'</div>');
   ktpAltDoldur(alt||'');
@@ -6873,7 +6935,7 @@ async function ktpKaydet(id,yeniden){
   const dosya=$('ktp-kapak').files[0];
   try{
     if(dosya){const bl=await resimKucult(dosya,px,.82,'image/jpeg');await idbSet('k:ktp'+b.id,bl);resimUrlAyarla('k:ktp'+b.id,bl);b.kapak=true;delete b.kapakUrl;}
-    else if(_ktpNetKapak){try{const r=await fetch(_ktpNetKapak);if(!r.ok)throw 0;const bl=await resimKucult(await r.blob(),px,.82,'image/jpeg');await idbSet('k:ktp'+b.id,bl);resimUrlAyarla('k:ktp'+b.id,bl);b.kapak=true;delete b.kapakUrl;}catch(e){b.kapakUrl=_ktpNetKapak;}}
+    else if((($('ktp-kurl')&&$('ktp-kurl').value.trim())||_ktpNetKapak)){const ku=($('ktp-kurl')&&$('ktp-kurl').value.trim())||_ktpNetKapak;try{const r=await fetch(ku);if(!r.ok)throw 0;const bl=await resimKucult(await r.blob(),px,.82,'image/jpeg');await idbSet('k:ktp'+b.id,bl);resimUrlAyarla('k:ktp'+b.id,bl);b.kapak=true;delete b.kapakUrl;}catch(e){b.kapakUrl=ku;}}
   }catch(e){alert('⚠️ Kapak kaydedilemedi: '+(e&&e.message)+'\nKitap kapaksız kaydedilecek.');}
   Object.assign(b,{baslik:bas,yazar:yz,yayinevi:v('ktp-yayinevi'),yil:v('ktp-yil'),isbn:v('ktp-isbn'),kat,alt:v('ktp-alt'),etiket:v('ktp-etiket'),not:v('ktp-not')});
   if(yeni)L.unshift(b);if(!ktpYB())return;
@@ -6893,11 +6955,11 @@ function ktpKatEkle(){
   if(!izin(2))return;const katlar=ktpKatlar();
   const ana=(prompt('Ana kategori adı (mevcut ya da yeni):\n'+Object.keys(katlar).join(', '),ktpKatF||'')||'').trim();if(!ana)return;
   const alt=(prompt('“'+ana+'” altına eklenecek alt kategori (boş bırakabilirsiniz):','')||'').trim();
-  const o=ktpOzelKat();o[ana]=Array.from(new Set(dizi(o[ana]).concat(alt?[alt]:[])));yaz(LS_KTPK,o);_kk=null;bildir('✅ Kategori eklendi');ktpRender();
+  const o=ktpOzelKat();o[ana]=Array.from(new Set(dizi(o[ana]).concat(alt?[alt]:[])));yaz(LS_KTPK,o);_kk=_kkM=null;bildir('✅ Kategori eklendi');ktpRender();
 }
 /* ---- toplu ekleme ---- */
 function ktpKatBul(ad){
-  const n=norm(ad),k=ktpKatlar();let ana=Object.keys(k).find(a=>norm(a)===n);if(ana)return{kat:ana,alt:''};
+  const n=norm(ad),k=ktpKatTum();let ana=Object.keys(k).find(a=>norm(a)===n);if(ana)return{kat:ana,alt:''};
   for(const a of Object.keys(k)){const s=k[a].find(x=>norm(x)===n);if(s)return{kat:a,alt:s};}
   ana=Object.keys(k).find(a=>norm(a).includes(n));if(ana)return{kat:ana,alt:''};
   for(const a of Object.keys(k)){const s=k[a].find(x=>norm(x).includes(n));if(s)return{kat:a,alt:s};}
@@ -7023,6 +7085,325 @@ function ktpHedefeEkle(hedef,ad,B){
   }
   return ' • '+n+' kitap '+ada+'ne eklendi';
 }
+/* ---- Kütüphane rafı görünümü ---- */
+let ktpRafKat='';
+function ktpHash(s){let h=0;s=String(s||'');for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
+function ktpKatRenk(ad){const h=ktpHash(ad)%360;return{h,a:'hsl('+h+',48%,36%)',b:'hsl('+h+',52%,22%)',acik:'hsl('+h+',60%,94%)'};}
+const KTP_KAT_IKON={'İslam':'🕌','Tarih':'🏛️','Felsefe - Düşünce':'💭','Sanat - Mimarlık':'🎨','Çocuk - Genç':'🧒','Spor':'⚽','Hobi':'🧩','Çanta':'🎒','Etnik':'🌍','Aile Kitaplığı':'🏠','Kategorisiz':'📦'};
+/* ---- Kütüphane rafı v2: okunur sırtlar, kapak modu, sayfalama (1000+ kitap) ---- */
+let _rafSay={};
+/* ---- Kategori düzenleyici + toplu taşıma ---- */
+const LS_KTPG='mv_kitap_katg';let _kg=null,_kkM=null;
+function ktpGizli(){if(_kg)return _kg;const o=oku(LS_KTPG,[]);return _kg=new Set(dizi(o).map(String));}
+function ktpGizliYaz(){_kkM=null;yaz(LS_KTPG,Array.from(ktpGizli()));}
+function ktpKatTum(){
+  const r={};Object.keys(KTP_KAT_METIN).forEach(a=>{r[a]=KTP_KAT_METIN[a].split('|');});
+  const o=ktpOzelKat();Object.keys(o).forEach(a=>{r[a]=Array.from(new Set((r[a]||[]).concat(dizi(o[a]))));});
+  ktpB().forEach(b=>{const a=b.kat;if(!a)return;if(!r[a])r[a]=[];if(b.alt&&!r[a].includes(b.alt))r[a].push(b.alt);});
+  return r;
+}
+function ktpKatlar(){
+  if(_kkM)return _kkM;const t=ktpKatTum(),g=ktpGizli(),kul={};
+  ktpB().forEach(b=>{if(b.kat){kul[b.kat]=1;if(b.alt)kul[b.kat+'|'+b.alt]=1;}});
+  const r={};Object.keys(t).forEach(a=>{if(g.has(a)&&!kul[a])return;r[a]=t[a].filter(s=>!g.has(a+'|'+s)||kul[a+'|'+s]);});
+  return _kkM=r;
+}
+function ktpKatSayilar(){const S={},A={};ktpB().forEach(b=>{const a=b.kat||'Kategorisiz';S[a]=(S[a]||0)+1;if(b.alt){const k=a+'|'+b.alt;A[k]=(A[k]||0)+1;}});return{S,A};}
+function ktpKatDuzenle(goster){
+  if(!izin(2))return;const T=ktpKatTum(),C=ktpKatSayilar(),g=ktpGizli(),gg=!!goster;
+  const anas=Object.keys(T).filter(a=>gg||!g.has(a)||C.S[a]).sort((p,q)=>(C.S[q]||0)-(C.S[p]||0)||p.localeCompare(q,'tr'));
+  const bos=[].concat.apply([],Object.keys(T).map(a=>T[a].filter(s=>!(C.A[a+'|'+s])&&!g.has(a+'|'+s)).map(s=>a+'|'+s))).length;
+  const q=s=>kacir(s).replace(/'/g,'&#39;');
+  modalGoster('🗂️ Kategorileri Düzenle','Adlandır • birleştir • gizle — kitaplar kaybolmaz',
+   '<div class="form-butonlar" style="margin:0 0 8px;"><button class="btn btn-altin btn-k" onclick="ktpKatYeni()">➕ Yeni kategori</button><button class="btn btn-gri btn-k" onclick="ktpKatBosGizle()">🧹 Boş '+bos+' hazır alt kategoriyi gizle</button><button class="btn btn-gri btn-k" onclick="ktpKatDuzenle('+(gg?0:1)+')">'+(gg?'Gizlenenleri sakla':'👁 Gizlenenleri de göster')+'</button></div>'
+   +'<div style="max-height:56vh;overflow:auto;">'+anas.map(a=>{
+      const alt=T[a].filter(s=>gg||!g.has(a+'|'+s)||C.A[a+'|'+s]).sort((p,q2)=>(C.A[a+'|'+q2]||0)-(C.A[a+'|'+p]||0)||p.localeCompare(q2,'tr'));
+      return '<details class="kart" style="padding:0;margin:0 0 6px;"><summary style="cursor:pointer;padding:8px 10px;font-weight:700;">'+(g.has(a)?'🙈 ':'📂 ')+kacir(a)+' <span class="chip">'+(C.S[a]||0)+' kitap</span> <span class="chip">'+alt.length+' alt</span></summary><div style="padding:4px 10px 10px;">'
+       +'<div class="form-butonlar" style="margin:0 0 6px;"><button class="btn btn-gri btn-k" onclick="ktpKatAdla(\''+q(a)+'\',\'\')">✏️ Ad değiştir</button><button class="btn btn-gri btn-k" onclick="ktpKatTasiForm(\''+q(a)+'\',\'\')">🔀 Başka kategoriyle birleştir</button><button class="btn btn-gri btn-k" onclick="ktpKatAltEkle(\''+q(a)+'\')">➕ Alt kategori</button><button class="btn btn-gri btn-k" onclick="ktpKatGizleDegis(\''+q(a)+'\',\'\')">'+(g.has(a)?'👁 Göster':'🙈 Gizle')+'</button></div>'
+       +alt.map(s=>'<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:3px 0;border-top:1px dashed var(--kenar);"><span style="flex:1;min-width:140px;">'+(g.has(a+'|'+s)?'🙈 ':'')+kacir(s)+' <span class="chip">'+(C.A[a+'|'+s]||0)+'</span></span><button class="btn btn-gri btn-k" onclick="ktpKatAdla(\''+q(a)+'\',\''+q(s)+'\')">✏️</button><button class="btn btn-gri btn-k" onclick="ktpKatTasiForm(\''+q(a)+'\',\''+q(s)+'\')">🔀 Taşı</button><button class="btn btn-gri btn-k" onclick="ktpKatGizleDegis(\''+q(a)+'\',\''+q(s)+'\')">'+(g.has(a+'|'+s)?'👁':'🙈')+'</button></div>').join('')
+       +'</div></details>';}).join('')+'</div>'
+   +'<p class="alt-yazi">Gizlenen kategoriler formlardan kalkar; içindeki kitaplar yerinde durur.</p>');
+}
+function ktpKatBitir(msj){_kk=_kkM=null;ktpYB();modalKapat(true);if(typeof ktpRender==='function')ktpRender();bildir(msj||'✅ Kategori güncellendi');}
+function ktpOzelYaz(o){yaz(LS_KTPK,o);_kk=_kkM=null;}
+function ktpKatYeni(){
+  const ana=(prompt('Yeni (ya da mevcut) ana kategori adı:','')||'').trim();if(!ana)return;
+  const alt=(prompt('“'+ana+'” altına alt kategori (boş bırakabilirsiniz):','')||'').trim();
+  const o=ktpOzelKat();o[ana]=Array.from(new Set(dizi(o[ana]).concat(alt?[alt]:[])));ktpOzelYaz(o);const g=ktpGizli();g.delete(ana);if(alt)g.delete(ana+'|'+alt);ktpGizliYaz();ktpKatDuzenle();bildir('✅ Eklendi');
+}
+function ktpKatAltEkle(ana){const alt=(prompt('“'+ana+'” altına eklenecek alt kategori:','')||'').trim();if(!alt)return;const o=ktpOzelKat();o[ana]=Array.from(new Set(dizi(o[ana]).concat([alt])));ktpOzelYaz(o);const g=ktpGizli();g.delete(ana+'|'+alt);ktpGizliYaz();ktpKatDuzenle();}
+function ktpKatGizleDegis(ana,alt){const k=alt?ana+'|'+alt:ana,g=ktpGizli();if(g.has(k))g.delete(k);else g.add(k);ktpGizliYaz();ktpKatDuzenle();}
+function ktpKatBosGizle(){
+  const T=ktpKatTum(),C=ktpKatSayilar(),g=ktpGizli();let n=0;
+  Object.keys(T).forEach(a=>T[a].forEach(s=>{if(!C.A[a+'|'+s]&&!g.has(a+'|'+s)){g.add(a+'|'+s);n++;}}));
+  Object.keys(T).forEach(a=>{if(!C.S[a]&&!g.has(a)&&!(ktpOzelKat()[a]||[]).length&&!T[a].length){g.add(a);}});
+  ktpGizliYaz();ktpKatDuzenle();bildir('🧹 '+n+' boş alt kategori gizlendi');
+}
+/* kaynağı (ana ya da ana|alt) hedefe taşı: kitapların kat/alt alanları güncellenir */
+function ktpKatTasi(a,s,ha,hs){
+  const B=ktpB();let n=0;
+  B.forEach(b=>{
+    if(!s&&(b.kat||'Kategorisiz')===a){b.kat=ha;if(hs)b.alt=hs;n++;}
+    else if(s&&(b.kat||'Kategorisiz')===a&&b.alt===s){b.kat=ha;b.alt=hs||'';n++;}
+  });
+  const o=ktpOzelKat(),g=ktpGizli();
+  const ekle=(x,y)=>{if(!x)return;o[x]=Array.from(new Set(dizi(o[x]).concat(y?[y]:[])));g.delete(x);if(y)g.delete(x+'|'+y);};
+  if(!s){
+    const altlar=new Set();B.filter(b=>b.kat===ha&&b.alt).forEach(b=>altlar.add(b.alt));ekle(ha,'');altlar.forEach(x=>ekle(ha,x));
+    delete o[a];if(a!==ha)g.add(a);
+  }else{
+    ekle(ha,hs);o[a]=dizi(o[a]).filter(x=>x!==s);if(!o[a].length&&!KTP_KAT_METIN[a])delete o[a];if(a!==ha||s!==hs)g.add(a+'|'+s);
+  }
+  ktpOzelYaz(o);ktpGizliYaz();return n;
+}
+function ktpKatAdla(a,s){
+  if(!izin(2))return;const yeni=(prompt((s?'“'+s+'” alt kategorisinin':'“'+a+'” kategorisinin')+' yeni adı:',s||a)||'').trim();
+  if(!yeni||yeni===(s||a))return;
+  const T=ktpKatTum();
+  if(s){if((T[a]||[]).includes(yeni)&&!confirm('“'+yeni+'” zaten var. Birleştirilsin mi?'))return;const n=ktpKatTasi(a,s,a,yeni);ktpKatBitir('✅ '+n+' kitap “'+yeni+'” altına alındı');}
+  else{if(T[yeni]&&!confirm('“'+yeni+'” zaten var. İki kategori birleştirilsin mi?'))return;const n=ktpKatTasi(a,'',yeni,'');ktpKatBitir('✅ '+n+' kitap “'+yeni+'” kategorisine alındı');}
+}
+function ktpKatTasiForm(a,s){
+  const T=ktpKatlar();
+  modalGoster('🔀 '+(s?a+' › '+s:a)+' — taşı / birleştir','Hedef kategoriyi seçin',
+   '<div class="form-grid"><div class="form-alan"><label for="kt-ha">Hedef ana kategori</label><select id="kt-ha" onchange="ktpKatTasiAlt()">'+Object.keys(T).map(x=>'<option value="'+kacir(x)+'"'+(x===a?' selected':'')+'>'+kacir(x)+'</option>').join('')+'</select></div><div class="form-alan"><label for="kt-hs">Hedef alt kategori</label><select id="kt-hs"></select></div></div>'
+   +'<p class="alt-yazi">'+(s?'Bu alt kategorideki':'Bu kategorideki tüm')+' kitaplar hedefe taşınır; boş kalan kategori gizlenir.</p><div class="form-butonlar"><button class="kaydet-btn" onclick="ktpKatTasiOnay(\''+kacir(a).replace(/'/g,'&#39;')+'\',\''+kacir(s).replace(/'/g,'&#39;')+'\')">Taşı</button></div>');
+  ktpKatTasiAlt();
+}
+function ktpKatTasiAlt(){const T=ktpKatlar(),a=v('kt-ha');$('kt-hs').innerHTML='<option value="">(alt kategori yok / koru)</option>'+(T[a]||[]).map(x=>'<option value="'+kacir(x)+'">'+kacir(x)+'</option>').join('');}
+function ktpKatTasiOnay(a,s){
+  const ha=v('kt-ha'),hs=v('kt-hs');if(!ha)return;if(ha===a&&(!s||hs===s)){alert('Hedef kaynakla aynı.');return;}
+  if(!confirm((s?a+' › '+s:a)+' → '+ha+(hs?' › '+hs:'')+'\n\nKitaplar taşınsın mı?'))return;
+  const n=ktpKatTasi(a,s,ha,hs);ktpKatBitir('✅ '+n+' kitap taşındı');
+}
+/* seçilen kitapları taşı */
+function ktpSecTasiForm(){
+  if(!izin(2))return;if(!ktpSecKume.size){alert('Önce kitap seçin.');return;}const T=ktpKatlar();
+  modalGoster('📦 '+ktpSecKume.size+' kitabı taşı','Yeni kategori / alt kategori',
+   '<div class="form-grid"><div class="form-alan"><label for="kt-ha">Ana kategori</label><select id="kt-ha" onchange="ktpKatTasiAlt()">'+Object.keys(T).map(x=>'<option value="'+kacir(x)+'">'+kacir(x)+'</option>').join('')+'</select></div><div class="form-alan"><label for="kt-hs">Alt kategori</label><select id="kt-hs"></select></div></div><div class="form-butonlar"><button class="kaydet-btn" onclick="ktpSecTasiOnay()">Seçili kitapları taşı</button></div>');
+  ktpKatTasiAlt();
+}
+function ktpSecTasiOnay(){
+  const ha=v('kt-ha'),hs=v('kt-hs');if(!ha)return;let n=0;
+  ktpB().forEach(b=>{if(ktpSecKume.has(String(b.id))){b.kat=ha;b.alt=hs;n++;}});
+  ktpSecKume.clear();ktpKatBitir('✅ '+n+' kitap “'+ha+(hs?' › '+hs:'')+'” altına taşındı');
+}
+/* ---- Kitap sayfasından bilgi çekme (Kitapyurdu vb.) + kapak yardımcıları ---- */
+const KTP_SAYFA_SITELER='kitapyurdu.com, idefix.com, dr.com.tr, kitapsepeti.com, nadirkitap.com, 1000kitap.com, goodreads.com, openlibrary.org';
+async function ktpSayfaGetir(url){
+  if(!senkCfg())throw new Error('Bu özellik için ☁️ Drive eşitleme (Apps Script) bağlantısı gerekir.');
+  const r=await sunucu({a:'sayfa',u:url},60000);
+  if(r&&r.hata==='bilinmeyen')throw new Error('Apps Script kodunu bir kez yeniden dağıtmanız gerekiyor (Eşitleme penceresindeki kodu yapıştırıp Dağıt → Yeni sürüm).');
+  if(r&&r.hata==='adres')throw new Error('Bu site desteklenmiyor. Desteklenen: '+KTP_SAYFA_SITELER);
+  if(!r||!r.html)throw new Error('Sayfa alınamadı'+(r&&r.kod?' (HTTP '+r.kod+')':'')+'. Site otomatik erişimi engelliyor olabilir.');
+  return r.html;
+}
+function ktpMutlak(u,taban){if(!u)return '';try{return new URL(u,taban).href;}catch(e){return '';}}
+function ktpSayfaCoz(html,url){
+  const d=new DOMParser().parseFromString(html,'text/html'),o={baslik:'',yazar:'',yayinevi:'',yil:'',isbn:'',kapak:''};
+  const meta=n=>{const e=d.querySelector('meta[property="'+n+'"],meta[name="'+n+'"]');return e?(e.getAttribute('content')||'').trim():'';};
+  const ad=x=>{if(!x)return '';if(Array.isArray(x))return x.map(ad).filter(Boolean).join(', ');if(typeof x==='object')return String(x.name||'').trim();return String(x).trim();};
+  d.querySelectorAll('script[type="application/ld+json"]').forEach(sc=>{
+    try{const j=JSON.parse(sc.textContent),arr=Array.isArray(j)?j:(j['@graph']||[j]);
+      arr.forEach(x=>{if(!x||typeof x!=='object')return;const t=[].concat(x['@type']||[]).join(',');if(!/Book|Product/i.test(t))return;
+        if(!o.baslik)o.baslik=ad(x.name);if(!o.yazar)o.yazar=ad(x.author);if(!o.yayinevi)o.yayinevi=ad(x.publisher)||ad(x.brand);
+        if(!o.isbn)o.isbn=String(x.isbn||x.gtin13||x.gtin||'').replace(/[^0-9Xx]/g,'');
+        if(!o.yil){const m=/((?:19|20)\d{2})/.exec(String(x.datePublished||x.copyrightYear||''));if(m)o.yil=m[1];}
+        if(!o.kapak){const im=Array.isArray(x.image)?x.image[0]:x.image;o.kapak=ktpMutlak(ad(im)||(im&&im.url)||'',url);}
+      });}catch(e){}
+  });
+  const ip=(n)=>{const e=d.querySelector('[itemprop="'+n+'"]');return e?(e.getAttribute('content')||e.textContent||'').trim():'';};
+  if(!o.yazar)o.yazar=ip('author');if(!o.yayinevi)o.yayinevi=ip('publisher');if(!o.isbn)o.isbn=ip('isbn').replace(/[^0-9Xx]/g,'');
+  if(!o.yazar){const e=d.querySelector('.pr_producers__author a,[class*="author"] a');if(e)o.yazar=e.textContent.trim();}
+  if(!o.yayinevi){const e=d.querySelector('.pr_producers__manufacturer a,[class*="publisher"] a,[class*="manufacturer"] a');if(e)o.yayinevi=e.textContent.trim();}
+  if(!o.baslik){const e=d.querySelector('h1');o.baslik=meta('og:title')||(e?e.textContent.trim():'');
+    const pr=o.baslik.split(/\s[-|–]\s/).map(x=>x.trim()).filter(x=>x&&!/kitapyurdu|idefix|d&r|nadirkitap|kitapsepeti|1000kitap|goodreads/i.test(x));
+    if(pr.length){o.baslik=pr[0];if(!o.yazar&&pr[1])o.yazar=pr[1];}}
+  const tx=(d.body?d.body.textContent:'').replace(/\s+/g,' ');
+  if(!o.isbn){const m=/ISBN[^0-9]{0,8}((?:97[89])?[\d-]{9,14}[\dXx])/i.exec(tx);if(m)o.isbn=m[1].replace(/[^0-9Xx]/g,'');}
+  if(!o.yil){const m=/(?:Yayın Tarihi|Basım Tarihi|Basım Yılı|Yayın Yılı|Basım)[^0-9]{0,15}(?:\d{1,2}[./-]\d{1,2}[./-])?((?:19|20)\d{2})/i.exec(tx);if(m)o.yil=m[1];}
+  if(!o.yayinevi){const m=/Yayın\s?evi[:\s]+([^|•\n]{2,50}?)(?:\s{2,}|Yazar|ISBN|Basım|Yayın|Sayfa|$)/i.exec(tx);if(m)o.yayinevi=m[1].trim();}
+  if(!o.kapak){const e=d.querySelector('meta[property="og:image"],link[rel="image_src"]');o.kapak=ktpMutlak(e?(e.getAttribute('content')||e.getAttribute('href')||''):'',url);}
+  o.baslik=o.baslik.replace(/\s+/g,' ').slice(0,200);o.yazar=o.yazar.replace(/\s+/g,' ').slice(0,120);o.yayinevi=o.yayinevi.replace(/\s+/g,' ').slice(0,120);
+  return o;
+}
+function ktpSayfaDoldur(o){
+  const set=(id,x)=>{if(x&&$(id))$(id).value=x;};
+  set('ktp-baslik',o.baslik);set('ktp-yazar',o.yazar);set('ktp-yayinevi',o.yayinevi);set('ktp-yil',o.yil);set('ktp-isbn',o.isbn);
+  if(o.kapak){_ktpNetKapak=o.kapak;set('ktp-kurl',o.kapak);}
+  _kirli.modal=true;
+}
+async function ktpLinktenCek(){
+  const k=$('ktp-net'),u=v('ktp-url');if(!/^https:\/\//i.test(u)){k.textContent='Önce https:// ile başlayan kitap sayfası linkini yapıştırın.';return;}
+  k.textContent='⏳ Sayfa okunuyor…';
+  try{const o=ktpSayfaCoz(await ktpSayfaGetir(u),u),say=['baslik','yazar','yayinevi','yil','isbn','kapak'].filter(x=>o[x]).length;
+    if(!o.baslik&&!o.isbn){k.textContent='⚠️ Sayfadan kitap bilgisi okunamadı. Kitabın tek kitaplık sayfasının linkini yapıştırdığınızdan emin olun; olmazsa bilgileri elle girin.';return;}
+    ktpSayfaDoldur(o);k.textContent='✅ '+say+' bilgi dolduruldu'+(o.kapak?' (kapak dahil)':' (kapak bulunamadı)')+'. Kontrol edip kategoriyi seçin.';
+  }catch(e){k.textContent='⚠️ '+(e&&e.message||e);}
+}
+async function ktpKyAra(){
+  const k=$('ktp-net'),q=(v('ktp-isbn')||(v('ktp-baslik')+' '+v('ktp-yazar'))).trim();
+  if(!q){k.textContent='Önce kitap adı ya da ISBN yazın.';return;}
+  k.textContent='⏳ Kitapyurdu’nda aranıyor…';
+  try{
+    const html=await ktpSayfaGetir('https://www.kitapyurdu.com/index.php?route=product/search&filter_name='+encodeURIComponent(q)),d=new DOMParser().parseFromString(html,'text/html'),G={};
+    d.querySelectorAll('a[href*="/kitap/"]').forEach(a=>{
+      const h=ktpMutlak(a.getAttribute('href'),'https://www.kitapyurdu.com/').split('?')[0];if(!/\/kitap\/.+\/\d+\.html$/.test(h))return;
+      const im=a.querySelector('img'),t=(a.getAttribute('title')||a.textContent||(im&&im.getAttribute('alt'))||'').replace(/\s+/g,' ').trim();
+      if(!G[h]||(t&&t.length>(G[h].length)))G[h]=t;});
+    const L=Object.keys(G).slice(0,8);
+    if(!L.length){k.textContent='Sonuç bulunamadı (ya da site yapısı değişmiş). Kitabın sayfa linkini yapıştırabilirsiniz.';return;}
+    window._kyL=L;
+    k.innerHTML='<b>Birini seçin:</b>'+L.map((h,i)=>'<button type="button" class="btn btn-gri btn-k" style="display:block;width:100%;text-align:left;margin:4px 0;" onclick="ktpKySec('+i+')">'+kacir(G[h]||h)+'</button>').join('');
+  }catch(e){k.textContent='⚠️ '+(e&&e.message||e);}
+}
+function ktpKySec(i){const h=(window._kyL||[])[i];if(!h)return;$('ktp-url').value=h;ktpLinktenCek();}
+/* panodan resim yapıştır (kitap formu açıkken) */
+document.addEventListener('paste',e=>{
+  const inp=$('ktp-kapak');if(!inp||!document.getElementById('modal-arka').classList.contains('aktif'))return;
+  const it=Array.from((e.clipboardData&&e.clipboardData.items)||[]).find(x=>x.kind==='file'&&/^image\//.test(x.type));if(!it)return;
+  const f=it.getAsFile();if(!f)return;const dt=new DataTransfer();dt.items.add(f);inp.files=dt.files;_kirli.modal=true;
+  const n=$('ktp-kapak-not');if(n)n.textContent='✅ Panodaki resim kapak olarak eklenecek ('+Math.round(f.size/1024)+' KB)';e.preventDefault();
+});
+/* ISBN'i olan, kapaksız kitaplara toplu kapak bul */
+async function ktpTopluKapak(){
+  if(!izin(2))return;
+  const L=ktpB().filter(b=>!b.kapak&&!b.kapakUrl&&String(b.isbn||'').replace(/\D/g,'').length>=10);
+  if(!L.length){alert('ISBN’si olup kapağı olmayan kitap yok. (Kitap bilgisine ISBN ekleyince burada kapak aranabilir.)');return;}
+  if(!confirm(L.length+' kitap için kapak aranacak (Open Library ve Google Kitaplar). Birkaç dakika sürebilir; sayfayı kapatmayın. Devam?'))return;
+  let i=0,ok=0,bit=0;const test=u=>new Promise(r=>{const im=new Image();const z=setTimeout(()=>r(false),8000);im.onload=()=>{clearTimeout(z);r(im.naturalWidth>60);};im.onerror=()=>{clearTimeout(z);r(false);};im.src=u;});
+  const bul=async n=>{
+    const ol='https://covers.openlibrary.org/b/isbn/'+n+'-M.jpg?default=false';if(await test(ol))return ol;
+    try{const r=await fetch('https://www.googleapis.com/books/v1/volumes?maxResults=1&fields=items(volumeInfo(imageLinks))&q=isbn:'+n);if(r.ok){const j=await r.json(),il=j.items&&j.items[0]&&j.items[0].volumeInfo.imageLinks;const u=il&&String(il.thumbnail||il.smallThumbnail||'').replace(/^http:/,'https:');if(u&&await test(u))return u;}}catch(e){}
+    return '';
+  };
+  const isci=async()=>{while(i<L.length){const b=L[i++],n=String(b.isbn).replace(/\D/g,'');const u=await bul(n);if(u){b.kapakUrl=u;ok++;}bit++;if(bit%10===0)bildir('🖼️ '+bit+'/'+L.length+' tarandı • '+ok+' kapak bulundu',2500);}};
+  await Promise.all([isci(),isci(),isci()]);
+  ktpYB();ktpRender();bildir('✅ '+ok+' kapak bulundu ('+(L.length-ok)+' kitapta bulunamadı)',6000);
+}
+function ktpRafAyar(){const u=ktpUi();return{g:u.rafg||'sirt',s:u.sir||'ad'};}
+function ktpSirala2(L,s){
+  if(s==='yazar')return L.sort((a,b)=>String(a.yazar||'zzz').localeCompare(String(b.yazar||'zzz'),'tr')||ktpSirala(a,b));
+  if(s==='yeni')return L.sort((a,b)=>String(b.tarih||'').localeCompare(String(a.tarih||''))||ktpSirala(a,b));
+  return L.sort(ktpSirala);
+}
+function ktpSirtHtml(b){
+  const t=String(b.baslik||''),n=t.length,satir=n<=28?1:(n<=64?2:3),uz=Math.ceil(n/satir);
+  const w=34+(satir-1)*21,yk=Math.max(124,Math.min(370,Math.round(uz*7.6+48)));
+  const r=ktpKatRenk(b.baslik+(b.yazar||'')),e=ktpAcikEmanet(b.id),sec=ktpSecKume.has(String(b.id));
+  return '<button type="button" class="ktp-sirt'+(sec?' sec':'')+(e?' emanet':'')+'" data-sb="'+kacir(b.id)+'" onclick="ktpKitapDetay(this.dataset.sb)" title="'+kacir(t+(b.yazar?' — '+b.yazar:''))+'" style="width:'+w+'px;height:'+yk+'px;background:linear-gradient(90deg,'+r.b+','+r.a+' 40%,'+r.b+');"><span>'+kacir(t)+'</span>'+(e?'<i>🤝</i>':'')+'</button>';
+}
+function ktpKapakKartHtml(b){
+  const e=ktpAcikEmanet(b.id),sec=ktpSecKume.has(String(b.id)),r=ktpKatRenk(b.baslik+(b.yazar||'')),kp=(b.kapak||b.kapakUrl);
+  return '<button type="button" class="ktp-kv'+(sec?' sec':'')+(e?' emanet':'')+'" data-sb="'+kacir(b.id)+'" onclick="ktpKitapDetay(this.dataset.sb)" title="'+kacir(b.baslik)+'"><div class="kp" style="background:linear-gradient(160deg,'+r.a+','+r.b+');">'+(kp?'<img data-kb="'+kacir(b.id)+'" alt="" loading="lazy">':'<span>'+kacir(b.baslik)+'</span>')+(e?'<i>🤝</i>':'')+'</div><div class="bs">'+kacir(b.baslik)+'</div>'+(b.yazar?'<div class="yz">'+kacir(b.yazar)+'</div>':'')+'</button>';
+}
+function ktpRafSayfa(anahtar,toplam,ilk){const s=_rafSay[anahtar]||ilk;return Math.min(s,toplam);}
+function ktpRafDaha(anahtar,art){_rafSay[anahtar]=(_rafSay[anahtar]||0)+art;ktpKitapGovde();}
+function ktpRafHtml(grp,anas){
+  let h='';const A=ktpRafAyar(),ilk=A.g==='kapak'?30:48;
+  if(!ktpRafKat||!grp[ktpRafKat]){
+    ktpRafKat='';
+    const tum=anas.reduce((t,a)=>t+Object.keys(grp[a]).reduce((x,s)=>x+grp[a][s].length,0),0);
+    h+='<div class="alt-yazi" style="margin:0 0 8px;">'+anas.length+' dolap • '+tum+' kitap — bir dolaba tıklayın</div><div class="ktp-dolaplar">'+anas.map(a=>{
+      const r=ktpKatRenk(a),altlar=Object.keys(grp[a]),tm=[].concat.apply([],altlar.map(s=>grp[a][s])),n=tm.length,ik=KTP_KAT_IKON[a]||'📚';
+      const mini=tm.slice(0,16).map(b=>'<span style="height:'+(24+ktpHash(b.baslik)%18)+'px;background:'+ktpKatRenk(b.baslik).a+';"></span>').join('');
+      const na=altlar.filter(x=>x!=='—').length;
+      return '<button type="button" class="ktp-dolap" onclick="ktpRafGit(this.dataset.k)" data-k="'+kacir(a)+'" style="--kc:'+r.a+';--kd:'+r.b+';--kl:'+r.acik+';"><div class="ktp-dolap-ust"><span class="ik">'+ik+'</span><b>'+kacir(a)+'</b><small>'+n+' kitap'+(na?' • '+na+' bölüm':'')+'</small></div><div class="ktp-mini">'+mini+'</div></button>';
+    }).join('')+'</div>';
+    return h;
+  }
+  const a=ktpRafKat,r=ktpKatRenk(a),altlar=Object.keys(grp[a]).sort((p,q)=>p.localeCompare(q,'tr')),n=altlar.reduce((t,s)=>t+grp[a][s].length,0);
+  const sel=(id,fn,opts,val)=>'<select aria-label="'+id+'" onchange="'+fn+'" style="padding:5px;border-radius:6px;border:0;">'+opts.map(o=>'<option value="'+o[0]+'"'+(o[0]===val?' selected':'')+'>'+o[1]+'</option>').join('')+'</select>';
+  h+='<div class="ktp-rafust" style="--kc:'+r.a+';--kd:'+r.b+';"><button type="button" class="btn btn-gri btn-k" onclick="ktpRafGit(\'\')">⬅ Tüm dolaplar</button><b>'+(KTP_KAT_IKON[a]||'📚')+' '+kacir(a)+' <small style="font-weight:400;opacity:.85">('+n+' kitap)</small></b><span style="flex:1"></span>'
+    +sel('Görünüm','ktpUiYaz(\'rafg\',this.value);_rafSay={};ktpKitapGovde()',[['sirt','📖 Sırtlar'],['kapak','🖼️ Kapaklar']],A.g)
+    +sel('Sıra','ktpUiYaz(\'sir\',this.value);ktpKitapGovde()',[['ad','A→Z kitap'],['yazar','Yazara göre'],['yeni','Yeni eklenen']],A.s)
+    +(seviye()>=2?'<button type="button" class="btn btn-gri btn-k" onclick="ktpKatDuzenle()">🗂️ Kategorileri düzenle</button>':'')+'</div>';
+  if(altlar.length>1)h+='<div class="ktp-altchip">'+altlar.map(s=>'<a href="#" onclick="document.getElementById(\'raf-'+ktpHash(a+'|'+s)+'\').scrollIntoView({behavior:\'smooth\',block:\'start\'});return false;" style="--kc:'+r.a+';">'+kacir(s==='—'?'(bölümsüz)':s)+' <b>'+grp[a][s].length+'</b></a>').join('')+'</div>';
+  altlar.forEach(s=>{
+    const L=ktpSirala2(grp[a][s].slice(),A.s),key=a+'|'+s,say=ktpRafSayfa(key,L.length,ilk),kalan=L.length-say,ak=kacir(key).replace(/'/g,'&#39;');
+    h+='<div class="ktp-rafbolum" id="raf-'+ktpHash(key)+'" style="--kc:'+r.a+';--kd:'+r.b+';--kl:'+r.acik+';"><div class="ktp-rafetiket">'+kacir(s==='—'?'(alt kategori yok)':s)+' <span class="chip">'+L.length+'</span></div>'
+     +(A.g==='kapak'?'<div class="ktp-kvgrid">'+L.slice(0,say).map(ktpKapakKartHtml).join('')+'</div>':'<div class="ktp-raf">'+L.slice(0,say).map(ktpSirtHtml).join('')+'</div><div class="ktp-tahta"></div>')
+     +(kalan>0?'<div style="text-align:center;margin:8px 0;"><button type="button" class="btn btn-gri btn-k" onclick="ktpRafDaha(this.dataset.k,60)" data-k="'+ak+'">＋ '+Math.min(60,kalan)+' kitap daha göster ('+kalan+' kaldı)</button> <button type="button" class="btn btn-gri btn-k" onclick="ktpRafDaha(this.dataset.k,99999)" data-k="'+ak+'">Tümünü göster</button></div>':'')+'</div>';
+  });
+  return h;
+}
+function ktpRafGit(k){ktpRafKat=k||'';_rafSay={};ktpKitapGovde();window.scrollTo({top:0,behavior:'smooth'});}
+function ktpSepetDegis(id){
+  id=String(id);if(ktpSecKume.has(id))ktpSecKume.delete(id);else ktpSecKume.add(id);ktpSecGuncelle();
+  document.querySelectorAll('.ktp-sirt[data-sb="'+id+'"]').forEach(x=>x.classList.toggle('sec',ktpSecKume.has(id)));
+  const d=$('ktp-sepet-btn');if(d)d.textContent=ktpSecKume.has(id)?'✔ Öneri sepetinde (çıkar)':'➕ Öneri sepetine ekle';
+}
+function ktpKitapDetay(id){
+  const b=ktpB().find(x=>esit(x.id,id));if(!b)return;const e=ktpAcikEmanet(b.id),y=seviye()>=2;
+  const satir=(a,x)=>x?'<div><span class="alt-yazi">'+a+':</span> '+kacir(x)+'</div>':'';
+  const kp=(b.kapak||b.kapakUrl)?'<img data-kb="'+kacir(b.id)+'" alt="" style="width:110px;height:160px;object-fit:cover;border-radius:6px;background:#eef3f7;flex:none;">':'<div style="width:110px;height:160px;border-radius:6px;background:'+ktpKatRenk(b.baslik+(b.yazar||'')).a+';color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;font-weight:700;font-size:13px;flex:none;">'+kacir(b.baslik)+'</div>';
+  modalGoster(b.baslik,b.yazar||'',
+   '<div style="display:flex;gap:14px;flex-wrap:wrap;">'+kp+'<div style="flex:1;min-width:200px;line-height:1.6;">'+satir('Yayınevi',b.yayinevi)+satir('Yıl',b.yil)+satir('ISBN',b.isbn)+satir('Kategori',[b.kat,b.alt].filter(Boolean).join(' › '))+satir('Etiket',b.etiket)+satir('Not',b.not)+(e?'<div><span class="chip" style="background:#fff1d6;color:#8a5a00;">🤝 '+kacir(e.kim)+(e.soz?' • '+tarihYaz(e.soz,true):'')+'</span></div>':'<div><span class="chip" style="background:#e3f4e8;color:#27663a;">Rafta</span></div>')+'</div></div>'
+   +(y?'<div class="form-butonlar" style="margin-top:12px;"><button class="btn btn-altin" id="ktp-sepet-btn" onclick="ktpSepetDegis(\''+kacir(b.id)+'\')">'+(ktpSecKume.has(String(b.id))?'✔ Öneri sepetinde (çıkar)':'➕ Öneri sepetine ekle')+'</button><button class="btn btn-mavi" onclick="modalKapat(true);ktpOneriAc(\''+kacir(b.id)+'\')">💌 Kişiye öner (kart)</button><button class="btn btn-gri" onclick="modalKapat(true);ktpForm(\''+kacir(b.id)+'\')">✏️ Düzenle</button>'+(e?'<button class="btn btn-yesil" onclick="modalKapat(true);ktpIadeForm(\''+kacir(e.id)+'\')">↩️ İade</button>':'<button class="btn btn-mavi" onclick="modalKapat(true);ktpEmanetForm(\''+kacir(b.id)+'\')">🤝 Emanet</button>')+'</div>':''));
+  setTimeout(()=>{const m=document.querySelector('#modal-icerik,.modal-icerik,#modal');if(m)ktpKapakYukle(m);},60);
+}
+/* ---- Kişiye kitap önerisi kartı ---- */
+let _kon={ids:[],t:null};
+function ktpOneriAc(tek){
+  if(!izin(2))return;
+  _kon.ids=tek?[String(tek)]:Array.from(ktpSecKume);
+  if(!_kon.ids.length){alert('⚠️ Önce kitap seçin: kitapları işaretleyin (liste/kapak görünümü) ya da raftaki kitaba tıklayıp “Öneri sepetine ekle” deyin.');return;}
+  const ad=ktpKisiAdlari();
+  modalGoster('💌 Kitap Önerisi Kartı','Logolu kart olarak kişiye gönderin',
+   '<div class="form-grid"><div class="form-alan"><label for="kon-kim">Kime</label><input type="text" id="kon-kim" list="kon-liste" placeholder="Ad Soyad" oninput="ktpOneriKim();ktpOneriOnizle()"><datalist id="kon-liste">'+ad.map(x=>'<option value="'+kacir(x)+'">').join('')+'</datalist></div>'
+   +'<div class="form-alan"><label for="kon-tel">Telefon (WhatsApp)</label><input type="tel" id="kon-tel" placeholder="05xx xxx xx xx"></div></div>'
+   +'<div class="form-alan"><label for="kon-giris">Giriş metni</label><textarea id="kon-giris" rows="3" oninput="ktpOneriOnizle()">Selamün aleyküm {ad},\nSana okumanı tavsiye ettiğim kitaplar:</textarea></div>'
+   +'<div class="form-alan"><label>Kitaplar <span class="alt-yazi">(çıkarmak için ✕)</span></label><div id="kon-kitaplar"></div></div>'
+   +'<div class="form-alan"><label for="kon-not">Kapanış notu</label><textarea id="kon-not" rows="2" oninput="ktpOneriOnizle()">Hayırlı okumalar dilerim.\nGenç Medeniyet Ankara</textarea></div>'
+   +'<div class="form-grid"><div class="form-alan"><label for="kon-tema">Kart rengi</label><select id="kon-tema" onchange="ktpOneriOnizle()">'+Object.keys(KART_TEMA).map(t=>'<option value="'+t+'">'+KART_TEMA[t].ad+'</option>').join('')+'</select></div><div class="form-alan"><label for="kon-logo">Logo</label><select id="kon-logo" onchange="ktpOneriOnizle()"><option value="b">İkisi birlikte</option><option value="v">Medeniyet Vakfı</option><option value="g">Genç Medeniyet</option><option value="">Logo yok</option></select></div></div>'
+   +'<div id="kon-onizleme" style="text-align:center;margin:8px 0;min-height:60px;"></div>'
+   +'<div class="form-butonlar"><button class="kaydet-btn" onclick="ktpOneriGonder()">📤 Gönder (WhatsApp / paylaş)</button><button class="btn btn-gri" onclick="ktpOneriIndir()">⬇️ Kart(lar)ı indir</button></div>'
+   +'<p class="alt-yazi">8’den fazla kitap birden çok karta bölünür. Telefonda paylaşım menüsü açılır; bilgisayarda kart panoya kopyalanıp WhatsApp açılır (Ctrl+V ile yapıştırın).</p>');
+  ktpOneriKitapCiz();ktpOneriOnizle();
+}
+function ktpOneriKitapCiz(){
+  const k=$('kon-kitaplar');if(!k)return;const B=ktpB();
+  k.innerHTML=_kon.ids.map(i=>B.find(b=>esit(b.id,i))).filter(Boolean).map(b=>'<span class="chip" style="font-size:12px;padding:4px 8px;">'+kacir(b.baslik)+(b.yazar?' — '+kacir(b.yazar):'')+' <a href="#" onclick="ktpOneriCikar(\''+kacir(b.id)+'\');return false;" aria-label="Çıkar" style="color:#b02a2a;text-decoration:none;">✕</a></span>').join('')||'<span class="alt-yazi">Kitap kalmadı.</span>';
+}
+function ktpOneriCikar(id){_kon.ids=_kon.ids.filter(x=>String(x)!==String(id));ktpOneriKitapCiz();ktpOneriOnizle();}
+function ktpOneriKim(){const ad=norm($('kon-kim').value),k=kListesi.concat(hListesi).find(x=>x&&norm(x.ad)===ad);if(k&&k.tel&&!$('kon-tel').value)$('kon-tel').value=k.tel;}
+function ktpOneriSayfalar(){
+  const B=_kon.ids.map(i=>ktpB().find(b=>esit(b.id,i))).filter(Boolean),kim=($('kon-kim').value||'').trim(),ad=kim.split(/\s+/)[0]||'';
+  const giris=($('kon-giris').value||'').replace(/\{ad\}/g,kim?kim:'').replace(/\s+,/g,',').replace(/ +\n/g,'\n').trim(),not=($('kon-not').value||'').trim();
+  const P=[];for(let i=0;i<B.length;i+=8)P.push(B.slice(i,i+8));
+  return P.map((p,i)=>{
+    const sat=p.map((b,j)=>'• *'+String(b.baslik).replace(/\*/g,'')+'*'+(b.yazar?' — '+String(b.yazar).replace(/\*/g,''):'')+(b.yayinevi?' ('+b.yayinevi+')':''));
+    return{baslik:'Kitap Önerisi'+(P.length>1?' ('+(i+1)+'/'+P.length+')':''),metin:(i===0&&giris?giris+'\n\n':'')+sat.join('\n')+(i===P.length-1&&not?'\n\n'+not:'')};
+  });
+}
+function ktpOneriDuz(){return ktpOneriSayfalar().map(s=>s.metin.replace(/\*/g,'')).join('\n\n');}
+let _konT=null;
+function ktpOneriOnizle(){
+  clearTimeout(_konT);_konT=setTimeout(async()=>{
+    const kap=$('kon-onizleme');if(!kap)return;const S=ktpOneriSayfalar();if(!S.length){kap.innerHTML='';return;}
+    try{const r=await kartUret(S[0].metin,S[0].baslik,$('kon-tema').value,$('kon-logo').value,'sol'),u=URL.createObjectURL(r.blob);
+      kap.innerHTML='<img src="'+u+'" alt="Kart önizlemesi" style="max-width:100%;width:320px;border-radius:10px;border:1px solid var(--kenar);">'+(S.length>1?'<div class="alt-yazi">İlk kart gösteriliyor ('+S.length+' kart olacak)</div>':'');}
+    catch(e){kap.innerHTML='<span class="alt-yazi">Önizleme hazırlanamadı.</span>';}
+  },350);
+}
+async function ktpOneriKartlar(){
+  const S=ktpOneriSayfalar(),F=[];
+  for(let i=0;i<S.length;i++){const r=await kartUret(S[i].metin,S[i].baslik,$('kon-tema').value,$('kon-logo').value,'sol');F.push(new File([r.blob],'kitap-onerisi-'+(i+1)+'.png',{type:'image/png'}));}
+  return F;
+}
+async function ktpOneriIndir(){
+  const F=await ktpOneriKartlar();F.forEach((f,i)=>setTimeout(()=>{const u=URL.createObjectURL(f),a=document.createElement('a');a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),8000);},i*400));
+  bildir('⬇️ '+F.length+' kart indiriliyor');
+}
+async function ktpOneriGonder(){
+  const F=await ktpOneriKartlar();if(!F.length){alert('⚠️ Kitap yok.');return;}
+  const tel=telNorm($('kon-tel').value),mobil=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if(mobil&&navigator.canShare&&navigator.canShare({files:F})){try{await navigator.share({files:F});bildir('✅ Paylaşım menüsü açıldı');return;}catch(e){if(e&&e.name==='AbortError')return;}}
+  let pano=false;try{if(navigator.clipboard&&window.ClipboardItem){await navigator.clipboard.write([new ClipboardItem({'image/png':F[0]})]);pano=true;}}catch(e){}
+  if(F.length>1||!pano)ktpOneriIndir();
+  const w=window.open(waUrl(tel,''),'_blank');if(w){try{w.opener=null;}catch(e){}}else alert('⚠️ Tarayıcı açılır pencereyi engelledi. İzin verip tekrar deneyin.');
+  bildir(pano?'🖼️ Kart panoya kopyalandı — WhatsApp sohbetine yapıştırın (Ctrl+V)':'🖼️ Kartlar indirildi — WhatsApp sohbetine ekleyin',7000);
+}
 function ktpToplu(hedef,dosya){
   if(!izin(2))return;const katlar=ktpKatlar();let son=['',''];try{son=JSON.parse(localStorage.getItem('mv_ktp_son')||'["",""]');}catch(e){}
   modalGoster('📥 Toplu Kitap Ekle','Her satıra bir kitap yazın',
@@ -7038,7 +7419,7 @@ function ktpTopluKaydet(){
   if(!izin(2))return;let kat=v('ktp-tk'),alt=v('ktp-ta');const L=ktpB(),var_=new Set(L.map(b=>norm(b.baslik)+'|'+norm(b.yazar)));let n=0,tekrar=0,yok=[];const HB=[],kitapAnahtar={},ko=!$('ktp-ko')||$('ktp-ko').checked;let yeniKat=0;L.forEach(b=>{kitapAnahtar[norm(b.baslik)+'|'+norm(b.yazar)]=b;});
   v('ktp-tm').split(/\r?\n/).forEach(s=>{
     s=s.trim();if(!s)return;
-    if(s[0]==='#'){const raw=s.replace(/^#+\s*/,'');if(raw==='-'){kat='';alt='';return;}let b=null;if(raw.includes('›')){const pr=raw.split('›').map(x=>x.trim()),bk=ktpKatBul(pr[0]);if(bk)b={kat:bk.kat,alt:(ktpKatlar()[bk.kat]||[]).find(x=>norm(x)===norm(pr[1]))||''};}if(!b)b=ktpKatBul(raw);if(!b&&ko){const pr=raw.split('›').map(x=>x.trim()).filter(Boolean),ana=pr[0],al=pr[1]||'';if(ana){const o=ktpOzelKat();o[ana]=Array.from(new Set(dizi(o[ana]).concat(al?[al]:[])));yaz(LS_KTPK,o);_kk=null;b={kat:ana,alt:al};yeniKat++;}}if(b){kat=b.kat;alt=b.alt;}else yok.push(s);return;}
+    if(s[0]==='#'){const raw=s.replace(/^#+\s*/,'');if(raw==='-'){kat='';alt='';return;}let b=null;if(raw.includes('›')){const pr=raw.split('›').map(x=>x.trim()),bk=ktpKatBul(pr[0]);if(bk)b={kat:bk.kat,alt:(ktpKatlar()[bk.kat]||[]).find(x=>norm(x)===norm(pr[1]))||''};}if(!b)b=ktpKatBul(raw);if(!b&&ko){const pr=raw.split('›').map(x=>x.trim()).filter(Boolean),ana=pr[0],al=pr[1]||'';if(ana){const o=ktpOzelKat();o[ana]=Array.from(new Set(dizi(o[ana]).concat(al?[al]:[])));yaz(LS_KTPK,o);_kk=_kkM=null;b={kat:ana,alt:al};yeniKat++;}}if(b){kat=b.kat;alt=b.alt;}else yok.push(s);return;}
         const p=s.split(/\t|;/).map(x=>x.trim()),bas=p[0];if(!bas)return;const k=norm(bas)+'|'+norm(p[1]||'');
     if(var_.has(k)){tekrar++;if(kitapAnahtar[k])HB.push(kitapAnahtar[k]);return;}var_.add(k);
     const yb={id:uid(),baslik:bas,yazar:p[1]||'',yayinevi:p[2]||'',yil:(p[3]||'').replace(/\D/g,'').slice(0,4),kat,alt,kapak:false,tarih:bugunIso()};if(p[4])yb.isbn=p[4].replace(/[^0-9Xx-]/g,'').slice(0,20);if(p[5])yb.etiket=p[5].slice(0,120);if(p[6])yb.not=p[6].slice(0,500);L.unshift(yb);kitapAnahtar[k]=yb;HB.push(yb);n++;
