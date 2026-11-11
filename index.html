@@ -2036,7 +2036,6 @@ async function driveYedekGeri(ad){
     bildir('✅ Drive yedeği geri yüklendi ('+sec.length+' bölüm)',5000);guvenlikAc();
   }catch(e){alert('⚠️ Geri yüklenemedi: '+(e&&e.message||e));}
 }
-function kalicilikIste(){MVD.kalici().then(p=>{bildir(p===true?'🔒 Kalıcı depolama verildi':'ℹ️ Tarayıcı kalıcı depolama vermedi (uygulamayı yükleyip sık kullanınca verir)',5000);depoDurumu();});}
 /* Açılışta ve her 30 dk: sessiz kontrol, sorun varsa tek uyarı */
 function guvenlikIzle(){
   if(seviye()<2)return;
@@ -9807,7 +9806,7 @@ async function depoDurumu(){
 }
 async function kalicilikIste(){
   if(!izin(2))return;
-  try{const ok=navigator.storage&&navigator.storage.persist?await navigator.storage.persist():false;bildir(ok?'✅ Kalıcı depolama açıldı':'ℹ️ Tarayıcı izin vermedi (siteyi yer imlerine eklemek yardımcı olabilir)',3500);}catch(e){bildir('ℹ️ Desteklenmiyor');}
+  try{const ok=navigator.storage&&navigator.storage.persist?await navigator.storage.persist():false;bildir(ok?'✅ Kalıcı depolama açıldı':(senkCfg()?'ℹ️ Tarayıcı henüz vermedi: siteyi yer imlerine ekleyin ya da uygulamayı yükleyin, birkaç gün kullanınca verir. Drive eşitlemesi açık olduğu için verileriniz yine de güvende.':'ℹ️ Tarayıcı henüz vermedi: siteyi yer imlerine ekleyin ya da uygulamayı yükleyin. Drive eşitlemesini de bağlayın.'),9000);}catch(e){bildir('ℹ️ Desteklenmiyor');}
   depoDurumu();
 }
 async function tamYedekIndir(resimli){
