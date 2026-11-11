@@ -848,7 +848,7 @@ nav .grup:nth-of-type(1){--gc:#0b4a72}nav .grup:nth-of-type(2){--gc:#c96a12}nav 
 <h3>💽 Depolama</h3>
 <p class="alt-yazi" id="depo-durum">Hesaplanıyor…</p>
 <button class="btn btn-altin admin-only" id="btn-bulut-gecis" style="display:none" onclick="bulutGecisAc()">☁️ Bulut moduna geçişi tamamla</button>
-<div class="form-butonlar"><button class="btn btn-mavi admin-only" onclick="snapPaneli()">🕘 Anlık görüntüler (Geri dön)</button><button class="btn btn-gri admin-only" onclick="kalicilikIste()">🔒 Kalıcı depolamayı iste</button></div>
+<div class="form-butonlar"><button class="btn btn-mavi admin-only" onclick="snapPaneli()">🕘 Anlık görüntüler (Geri dön)</button><button class="btn btn-yesil admin-only" onclick="guvenlikAc()">🛡️ Veri Güvenliği</button><button class="btn btn-gri admin-only" onclick="kalicilikIste()">🔒 Kalıcı depolamayı iste</button></div>
 </div>
 <div id="guv-kap"></div>
 </section>
@@ -1945,6 +1945,117 @@ async function planKart(){
     $('pm-paylas').onclick=async()=>{try{const f=new File([r.blob],'kahvalti-programi.png',{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f]});else bildir('ℹ️ Bu cihaz paylaşımı desteklemiyor; resmi indirin',4000);}catch(e){}};
   }catch(e){kap.innerHTML='<span class="alt-yazi">⚠️ Kart hazırlanamadı.</span>';}
 }
+
+/* ===== Veri Güvenliği (v86): Drive asıl kopya + günlük yedek + durum ekranı ===== */
+const GUV_DURUM={ok:'✅',uy:'⚠️',hata:'❌'};
+function guvYas(t){if(!t)return 'hiç';const s=(Date.now()-t)/36e5;return s<1?Math.max(1,Math.round(s*60))+' dk önce':s<48?Math.round(s)+' saat önce':Math.round(s/24)+' gün önce';}
+function guvZaman(t){return t?new Date(t).toLocaleString('tr-TR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'—';}
+/* Yerel ölçüler (ağ gerektirmez) */
+function guvBekleyenKolonlar(){const ts=oku(SENK_TS,{}),son=oku(SENK_SON,{});return senkKolonlar().filter(k=>(ts[k.ad]||0)>(son[k.ad]||0)).map(k=>k.ad);}
+function guvGerekliResimler(){
+  const g=[];glListesi.forEach(x=>g.push('g:'+x.id));ktListesi.forEach(k=>{if(k.kapak)g.push('k:'+k.id);});
+  dizi(oku(LS_KTP,[])).forEach(k=>{if(k&&k.kapak)g.push('k:ktp'+k.id);});
+  dsListesi.forEach(d=>{if(d.tip==='dosya'&&(d.boyut||0)<=DS_SENK)g.push('d:'+d.id);});return g;
+}
+async function guvenlikTopla(){
+  const S=[],cfg=senkCfg();let drive=null,yed=null,yedHata='';
+  /* 1) Depolama */
+  const k=window.MV_KOTA,kalici=window.MV_KALICI;
+  S.push({d:MVD.mod()==='idb'?(kalici===true?'ok':'uy'):'hata',b:'Bu cihazdaki depolama',m:MVD.mod()==='idb'?('IndexedDB'+(kalici===true?' • kalıcı depolama verildi':' • kalıcı depolama VERİLMEDİ (tarayıcı temizliğinde silinebilir)')+(k?' • '+Math.round(k.kullanim/1048576)+' MB kullanılıyor (%'+Math.round(k.oran*100)+')':'')):'Gelişmiş depo açılamadı; eski sınırlı depolama kullanılıyor'});
+  /* 2) Drive eşitleme */
+  if(!cfg)S.push({d:'hata',b:'Drive eşitleme',m:'KAPALI — veriler yalnızca bu tarayıcıda. Tarayıcı sıfırlanırsa gider. “Eşitleme Ayarları”ndan bağlayın.'});
+  else{
+    const bek=guvBekleyenKolonlar();
+    S.push({d:SENK.hata?'hata':(bek.length?'uy':'ok'),b:'Drive eşitleme',m:SENK.hata?('Bağlanamadı: '+SENK.hata):(bek.length?bek.length+' bölümün değişikliği Drive’a gitmeyi bekliyor ('+bek.slice(0,4).join(', ')+(bek.length>4?'…':'')+')':'Güncel • son eşitleme '+guvZaman(SENK.son))});
+    try{drive=await sunucu({a:'durum'},25000);if(!drive||!drive.ok)drive=null;}catch(e){drive=null;}
+    try{yed=await sunucu({a:'yedekListe'},25000);if(!yed||!yed.ok){yedHata=(yed&&yed.hata)||'';yed=null;}}catch(e){yed=null;}
+    /* 3) Drive günlük yedek */
+    if(!drive)S.push({d:'hata',b:'Drive günlük yedek',m:'Drive’a ulaşılamadı; yedek durumu okunamadı.'});
+    else if(!yed)S.push({d:'hata',b:'Drive günlük yedek',m:yedHata==='bilinmeyen'?'Apps Script kodu ESKİ. Yeni apps-script-kodu.gs’yi yapıştırıp yeniden dağıtın, sonra yedekKur’u çalıştırın.':'Yedek bilgisi alınamadı ('+yedHata+')'});
+    else{
+      const yas=yed.son?(Date.now()-yed.son)/36e5:1e9;
+      S.push({d:!yed.liste.length?'hata':(yed.tetik===false?'uy':(yas>36?'uy':'ok')),b:'Drive günlük yedek',m:!yed.liste.length?'Henüz hiç yedek alınmamış — “Şimdi Drive yedeği al”a basın ve yedekKur’u çalıştırın.':(yed.liste.length+' yedek • sonuncusu '+guvYas(yed.son)+(yed.tetik===false?' • GÜNLÜK ZAMANLAYICI KURULU DEĞİL (Apps Script’te yedekKur’u bir kez çalıştırın)':(yas>36?' • 36 saatten eski, zamanlayıcıyı kontrol edin':' • her gece otomatik')) )});
+    }
+    /* 4) Görseller */
+    const ger=guvGerekliResimler();let yerelVar=0,uzakYok=0,yerelYok=0;
+    for(const a of ger){let y=null;try{y=await idbGet(a);}catch(e){}const sv=!!(drive&&drive.indeks&&(drive.indeks.resim||{})[a]);if(y)yerelVar++;if(y&&drive&&!sv)uzakYok++;if(!y&&sv)yerelYok++;}
+    if(ger.length)S.push({d:!drive?'uy':(uzakYok?'uy':'ok'),b:'Görseller / dosyalar',m:ger.length+' kayıt • bu cihazda '+yerelVar+(drive?' • Drive’a gitmemiş '+uzakYok+(yerelYok?' • bu cihazda eksik '+yerelYok:''):'')+(uzakYok?' (“Şimdi Eşitle” ile gönderilir)':'')});
+  }
+  /* 5) Yerel anlık görüntüler */
+  const sn=await MVD.snapListe();S.push({d:sn.length?'ok':'uy',b:'Yerel anlık görüntüler',m:sn.length?sn.length+' kayıt • sonuncusu '+guvYas(sn[0].t)+' (aynı tarayıcıda durur; tarayıcı silinirse gider)':'Henüz yok'});
+  /* 6) Dosya yedeği */
+  const sy=parseInt(MVD.getItem(LS.yedek)||'0',10)||0,yas2=sy?(Date.now()-sy)/864e5:1e9;
+  S.push({d:yas2>14?'uy':'ok',b:'İndirilen tam yedek (.json)',m:sy?guvYas(sy)+(yas2>14?' — 14 günden eski; “Tam yedek indir” ile yenileyin':''):'Hiç alınmamış — ayda bir indirip e-postanıza/Drive’ınıza atın'});
+  return{S,yed};
+}
+function guvHtml(r){
+  const kotu=r.S.some(x=>x.d==='hata'),uy=r.S.some(x=>x.d==='uy');
+  return '<div class="chip '+(kotu?'uyari':(uy?'':'ok'))+'" style="font-size:14px;padding:6px 10px">'+(kotu?'❌ Dikkat gerektiren eksik var':(uy?'⚠️ Küçük uyarılar var':'✅ Her şey yolunda'))+'</div>'
+   +'<div style="margin-top:10px">'+r.S.map(x=>'<div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #ddd"><div style="font-size:18px">'+GUV_DURUM[x.d]+'</div><div><b>'+kacir(x.b)+'</b><div style="font-size:13px;color:'+(x.d==='hata'?'#b02a2a':'#555')+'">'+kacir(x.m)+'</div></div></div>').join('')+'</div>'
+   +'<div class="form-butonlar" style="margin-top:12px"><button type="button" class="btn btn-mavi" onclick="guvEsitle()">🔄 Şimdi eşitle</button><button type="button" class="btn btn-altin" onclick="guvDriveYedekAl()">💾 Şimdi Drive yedeği al</button><button type="button" class="btn btn-yesil" onclick="driveYedekler()">♻️ Drive yedeklerinden geri yükle</button></div>'
+   +'<div class="form-butonlar"><button type="button" class="btn btn-gri btn-k" onclick="tamYedekIndir(true)">⬇️ Tam yedek indir (görselli)</button><button type="button" class="btn btn-gri btn-k" onclick="snapPaneli()">🕘 Anlık görüntüler</button><button type="button" class="btn btn-gri btn-k" onclick="kalicilikIste()">🔒 Kalıcı depolamayı iste</button></div>'
+   +'<p class="alt-yazi" style="margin-top:8px">Asıl kopya Drive’dadır: her değişiklik ~2 sn içinde şifreli olarak “Medeniyet Vakfı Gençlik – Veri” klasörüne gider. Bu cihazdaki kopya yalnızca çalışma kopyasıdır. Drive’da her gece tarihli yedek alınır (son 30 gün).</p>';
+}
+async function guvenlikAc(){
+  if(!izin(2))return;
+  modalGoster('🛡️ Veri Güvenliği','Verileriniz nerede, ne kadar güvende?','<p class="alt-yazi">⏳ Kontrol ediliyor (Drive’a bağlanılıyor)…</p>');
+  let r;try{r=await guvenlikTopla();}catch(e){modalGoster('🛡️ Veri Güvenliği','','<p>⚠️ Kontrol tamamlanamadı: '+kacir(String(e&&e.message||e))+'</p>');return;}
+  modalGoster('🛡️ Veri Güvenliği','Verileriniz nerede, ne kadar güvende?',guvHtml(r));
+}
+async function guvEsitle(){await senkronla(false);guvenlikAc();}
+async function guvDriveYedekAl(){
+  if(!senkCfg()){alert('⚠️ Önce Drive eşitlemesini bağlayın.');return;}
+  bildir('⏳ Drive yedeği alınıyor…',3000);
+  try{await senkronla(true);const r=await sunucu({a:'yedekAl'},120000);if(!r.ok)throw new Error(r.hata==='bilinmeyen'?'Apps Script kodu eski; yeni kodu yapıştırıp yeniden dağıtın':(r.hata||'yedek'));bildir('✅ Drive yedeği alındı ('+r.ad+')',4000);}
+  catch(e){alert('⚠️ Drive yedeği alınamadı: '+(e&&e.message||e));}
+  guvenlikAc();
+}
+async function driveYedekler(){
+  if(!izin(2))return;if(!senkCfg()){alert('⚠️ Drive eşitlemesi bağlı değil.');return;}
+  modalGoster('♻️ Drive Yedekleri','Geri yüklemeden önce mevcut durumun anlık görüntüsü alınır','<p class="alt-yazi">⏳ Yedekler listeleniyor…</p>');
+  try{
+    const r=await sunucu({a:'yedekListe'},30000);if(!r.ok)throw new Error(r.hata==='bilinmeyen'?'Apps Script kodu eski; yeni kodu yapıştırıp yeniden dağıtın':(r.hata||'liste'));
+    modalGoster('♻️ Drive Yedekleri','Geri yüklemeden önce mevcut durumun anlık görüntüsü alınır',
+      (r.liste.length?r.liste.map(x=>'<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid #ccc;border-radius:8px;padding:8px;margin-bottom:6px"><div><b>'+kacir(x.ad.replace('_',' '))+'</b><div class="alt-yazi" style="margin:0">'+guvYas(x.t)+'</div></div><button type="button" class="btn btn-mavi btn-k" data-ad="'+kacir(x.ad)+'" onclick="driveYedekGeri(this.dataset.ad)">↩️ Geri yükle</button></div>').join(''):'<p>Henüz Drive yedeği yok.</p>')
+      +'<div class="form-butonlar"><button type="button" class="btn btn-gri" onclick="guvenlikAc()">⬅️ Geri</button></div><p class="alt-yazi">Not: Görseller günlük yedeğe dahil değildir; Drive’da ayrıca durur ve eşitlemeyle gelir.</p>');
+  }catch(e){modalGoster('♻️ Drive Yedekleri','','<p>⚠️ '+kacir(String(e&&e.message||e))+'</p><button type="button" class="btn btn-gri" onclick="guvenlikAc()">⬅️ Geri</button>');}
+}
+async function driveYedekGeri(ad){
+  if(!izin(2))return;
+  try{
+    const r=await sunucu({a:'yedekCek',ad},180000);if(!r.ok)throw new Error(r.hata||'yedekCek');
+    const sec=[];for(const kol of senkKolonlar()){const e=(r.kol||{})[kol.ad];if(!e||!e.veri)continue;sec.push([kol,JSON.parse(_dec.decode(await coz(e.veri)))]);}
+    if(!sec.length)throw new Error('Yedekte veri bulunamadı');
+    if(!confirm(ad.replace('_',' ')+' tarihli Drive yedeği geri yüklenecek ('+sec.length+' bölüm). Bu cihazdaki ve Drive’daki güncel veriler bu yedekle DEĞİŞTİRİLECEK.\n\n(Öncesinde otomatik anlık görüntü alınır.)\n\nDevam edilsin mi?'))return;
+    await MVD.snapAl('drive-yedeği-geri-yükleme');senkOncesiYedekAl();
+    const ts=oku(SENK_TS,{}),simdi=Date.now();
+    sec.forEach(([kol,deger])=>{yerelYaz(kol,deger);ts[kol.ad]=simdi;});
+    MVD.setItem(SENK_TS,JSON.stringify(ts));await MVD.flush();
+    await bellekYenile();hepsiniCiz();
+    await senkronla(false);
+    bildir('✅ Drive yedeği geri yüklendi ('+sec.length+' bölüm)',5000);guvenlikAc();
+  }catch(e){alert('⚠️ Geri yüklenemedi: '+(e&&e.message||e));}
+}
+function kalicilikIste(){MVD.kalici().then(p=>{bildir(p===true?'🔒 Kalıcı depolama verildi':'ℹ️ Tarayıcı kalıcı depolama vermedi (uygulamayı yükleyip sık kullanınca verir)',5000);depoDurumu();});}
+/* Açılışta ve her 30 dk: sessiz kontrol, sorun varsa tek uyarı */
+function guvenlikIzle(){
+  if(seviye()<2)return;
+  const son=parseInt(MVD.getItem('mv_guv_uyari')||'0',10)||0;if(Date.now()-son<6*36e5)return;
+  const p=[],cfg=senkCfg();
+  if(!cfg)p.push('Drive eşitleme KAPALI: veriler yalnızca bu tarayıcıda');
+  else{
+    if(SENK.hata&&!/Zaman/.test(SENK.hata))p.push('Drive’a bağlanılamıyor ('+SENK.hata+')');
+    if(guvBekleyenKolonlar().length&&SENK.son&&Date.now()-SENK.son>30*6e4)p.push('değişiklikler 30 dakikadır Drive’a gitmedi');
+    if(typeof SENK.yedekSon==='number'){if(SENK.yedekSon===0)p.push('Drive günlük yedeği henüz kurulmamış');else if(Date.now()-SENK.yedekSon>2*864e5)p.push('Drive yedeği '+Math.round((Date.now()-SENK.yedekSon)/864e5)+' gündür alınmadı');}
+    else if(SENK.yedekSon===undefined&&SENK.son)p.push('Apps Script kodu eski (günlük yedek yok)');
+  }
+  if(!p.length)return;
+  MVD.uyari('guv','🛡️ Veri güvenliği: '+p.join(' • ')+'.','#8a5a00',[{ad:'Ayrıntı',fn:guvenlikAc,kapatinca:1}],()=>{try{MVD.setItem('mv_guv_uyari',String(Date.now()));}catch(e){}});
+}
+/* Kapatırken Drive'a gitmemiş değişiklik varsa uyar + son bir eşitleme dene */
+window.addEventListener('beforeunload',e=>{
+  try{if(senkCfg()&&senkBekleyen()){senkronla(true);e.preventDefault();e.returnValue='';}}catch(x){}
+});
 
 function yapilanHaftalar(){const b=bugunIso();return haftalar.filter(h=>!h.iptal&&h.iso<=b);}
 function katilimOzeti(kid){const y=yapilanHaftalar();return{sayi:y.filter(h=>h.yoklama.includes(String(kid))).length,toplam:y.length};}
@@ -3615,7 +3726,7 @@ function senkDurumYaz(){
   else m='Eşitlendi'+(SENK.son?' '+pad(new Date(SENK.son).getHours())+':'+pad(new Date(SENK.son).getMinutes()):'');
   const y=$('senk-yazi');if(y)y.textContent=m;
   const b=$('btn-senk');if(b){b.classList.toggle('senk-hata',sinif==='hata');b.classList.toggle('senk-ok',!!cfg&&!sinif);}
-  const a=$('senk-arsiv-durum');if(a)a.textContent=cfg?('Durum: '+m+(SENK.hata?' – '+SENK.hata:'')+'. Veriler Drive\'ınızdaki "Medeniyet Vakfı Gençlik – Veri" klasöründe şifreli saklanıyor.'):'Drive’a bağlı değil: veriler yalnızca açık sekmede; sekme kapanınca silinir.';
+  const a=$('senk-arsiv-durum');if(a)a.textContent=cfg?('Durum: '+m+(SENK.hata?' – '+SENK.hata:'')+'. Veriler Drive\'ınızdaki "Medeniyet Vakfı Gençlik – Veri" klasöründe şifreli saklanıyor.'):'Drive’a bağlı DEĞİL: veriler yalnızca bu tarayıcıda durur; tarayıcı verisi silinirse gider.';
 }
 
 /* ---- birleştirme ---- */
@@ -3685,7 +3796,7 @@ async function senkronla(sessiz,ilk){
   SENK.mesgul=true;SENK.hata=null;clearTimeout(SENK.zaman);senkDurumYaz();
   try{
     const d=await sunucu({a:'durum'});
-    if(!d.ok)throw new Error(d.hata==='yetkisiz'?'Şifre/yetki hatası':(d.hata||'durum'));
+    if(!d.ok)throw new Error(d.hata==='yetkisiz'?'Şifre/yetki hatası':(d.hata||'durum'));SENK.yedekSon=d.yedek;
     const ix=d.indeks||{kol:{},resim:{}},ts=oku(SENK_TS,{}),son=oku(SENK_SON,{});let degisti=false,snapYapildi=false;SENK.cak={};
     for(const kol of senkKolonlar()){
       const R=(ix.kol[kol.ad]||{}).ts||0,S=son[kol.ad]||0,var_=(ilk==='birlestir'&&MV_ESKI.var)?(MV_ESKI.ls[kol.k]!==undefined):MVD.getItem(kol.k)!==null;let L=ts[kol.ad]||0;
@@ -3727,12 +3838,14 @@ async function senkronla(sessiz,ilk){
     const rs=await sunucu({a:'rsvp'});let rsvpDeg=false;if(rs&&rs.ok)rsvpDeg=rsvpUygula(rs.rsvp);
     try{const dg=await sunucu({a:'diger'});if(dg&&dg.ok){if(digerUygula(dg))rsvpDeg=true;}}catch(e3){}
     try{const as=await sunucu({a:'anket'});if(as&&as.ok){SENK.eskiKod=false;if(kanketUygula(as.anket))rsvpDeg=true;}else if(as&&as.hata==='bilinmeyen')SENK.eskiKod=true;}catch(e2){}
-    SENK.son=Date.now();
+    SENK.son=Date.now();SENK.deneme=0;
     if(degisti||yeni||rsvpDeg)await bellekYenile();
     if(Object.keys(SENK.cak||{}).length)cakismaPaneli();
   }catch(e){
     SENK.hata=(e&&e.name==='AbortError')?'Zaman aşımı':String(e&&e.message||e);
     if(!sessiz||/yetki/i.test(SENK.hata)){if(!SENK.uyarildi||!sessiz){bildir('⚠️ Eşitleme: '+SENK.hata,4500);SENK.uyarildi=true;}}
+    /* Geçici hata: 15 sn, 30 sn, 1 dk … en çok 5 dk arayla yeniden dene (yetki/şifre hatasında değil: kilitlenmeyi önler) */
+    if(!/yetki|şifre|kilitli/i.test(SENK.hata)){SENK.deneme=(SENK.deneme||0)+1;clearTimeout(SENK.yeniden);SENK.yeniden=setTimeout(()=>senkronla(true),Math.min(300000,15000*Math.pow(2,SENK.deneme-1)));}
   }finally{
     SENK.mesgul=false;senkDurumYaz();
     if(SENK.bekle){SENK.bekle=false;setTimeout(()=>senkronla(true),500);}
@@ -9845,6 +9958,7 @@ async function snapDon(ad){
   if(ok){bildir('✅ Geri dönüldü, sayfa yenileniyor…',2500);setTimeout(()=>location.reload(),700);}else alert('❌ Geri dönülemedi.');
 }
 async function snapSilOnay(ad){if(!confirm('Bu anlık görüntü silinsin mi?'))return;await MVD.snapSil(ad);snapPaneli();}
+setTimeout(guvenlikIzle,25000);setInterval(guvenlikIzle,30*60*1000);
 setTimeout(baslat,0);
 
 /* ====== İletişim Merkezi • Raporlar merkezi ====== */
